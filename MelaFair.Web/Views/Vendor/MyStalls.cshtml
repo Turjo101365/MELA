@@ -1,0 +1,86 @@
+@model MelaFair.Web.Models.ViewModels.MyStallsViewModel
+@{
+    ViewData["Title"] = "My Leased Stalls";
+}
+
+<div class="space-y-8">
+    <!-- Header -->
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="space-y-1">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+                📜 Vendor Certificates
+            </span>
+            <h1 class="text-2xl sm:text-3xl font-black text-slate-900">My Leased Fair Stalls</h1>
+            <p class="text-xs sm:text-sm text-slate-500">
+                Official retail lease certificates, transaction references, and event stall numbers.
+            </p>
+        </div>
+
+        <a asp-controller="Vendor" asp-action="Marketplace" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/20 transition self-start md:self-auto">
+            + Lease More Stalls
+        </a>
+    </div>
+
+    @if (!Model.Bookings.Any())
+    {
+        <div class="bg-white rounded-3xl border border-slate-200 p-12 text-center space-y-4 shadow-sm">
+            <div class="w-16 h-16 rounded-3xl bg-emerald-50 text-emerald-600 mx-auto flex items-center justify-center text-3xl font-bold">
+                🎪
+            </div>
+            <h2 class="text-lg font-bold text-slate-900">No Stalls Leased Yet</h2>
+            <p class="text-xs text-slate-500 max-w-sm mx-auto">
+                You haven't reserved any commercial booths yet. Explore our open fairs to secure high-traffic festival spots!
+            </p>
+            <a asp-controller="Vendor" asp-action="Marketplace" class="inline-block px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition">
+                Browse Marketplace
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            @foreach (var booking in Model.Bookings)
+            {
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4 hover:border-emerald-300 transition">
+                    <div class="flex items-start justify-between border-b border-slate-100 pb-4">
+                        <div>
+                            <span class="text-[10px] font-mono font-bold text-emerald-600 uppercase tracking-widest block">
+                                Ref: @booking.TransactionReference
+                            </span>
+                            <h2 class="text-lg font-bold text-slate-900 mt-1">@booking.FairTitle</h2>
+                            <p class="text-xs text-slate-500">📍 @booking.Location</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="px-3 py-1 rounded-xl bg-emerald-100 text-emerald-800 font-mono font-black text-sm block">
+                                Stall: @booking.StallNumber
+                            </span>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase mt-1 block">@booking.Size</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                        <div class="bg-slate-50 rounded-xl p-2.5">
+                            <span class="block text-[10px] text-slate-400 uppercase font-semibold">Category</span>
+                            <span class="font-bold text-slate-800">@booking.Category</span>
+                        </div>
+                        <div class="bg-slate-50 rounded-xl p-2.5">
+                            <span class="block text-[10px] text-slate-400 uppercase font-semibold">Amount Paid</span>
+                            <span class="font-bold text-emerald-700">$@booking.AmountPaid.ToString("N2")</span>
+                        </div>
+                        <div class="bg-slate-50 rounded-xl p-2.5 col-span-2 sm:col-span-1">
+                            <span class="block text-[10px] text-slate-400 uppercase font-semibold">Payment</span>
+                            <span class="inline-flex items-center gap-1 font-bold text-emerald-700">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> @booking.PaymentStatus
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-2 border-t border-slate-100 text-[11px] text-slate-500">
+                        <span>📅 Fair Dates: @booking.StartDate.ToString("MMM dd") - @booking.EndDate.ToString("MMM dd, yyyy")</span>
+                        <span class="font-mono text-[10px]">Booked: @booking.BookingDate.ToString("yyyy-MM-dd")</span>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

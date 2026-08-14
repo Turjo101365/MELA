@@ -1,0 +1,186 @@
+@model MelaFair.Web.Models.ViewModels.TicketPurchaseViewModel
+@{
+    ViewData["Title"] = "Admission Tickets Booking";
+}
+
+<div class="max-w-4xl mx-auto space-y-8">
+    <!-- Fair Header & Event Summary -->
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="space-y-2">
+            <div class="flex items-center gap-2">
+                <a asp-controller="Visitor" asp-action="BrowseFairs" class="text-xs font-bold text-slate-500 hover:text-slate-700 flex items-center gap-1">
+                    &larr; Back to Events
+                </a>
+                <span class="text-slate-300">&bull;</span>
+                <span class="text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full">Secure Admission Checkout</span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-black text-slate-900">@Model.FairTitle</h1>
+            <div class="flex flex-wrap items-center gap-4 text-xs text-slate-500 font-medium">
+                <span class="flex items-center gap-1">📍 @Model.Location</span>
+                <span class="flex items-center gap-1">🏷️ Admission: $@Model.BaseTicketPrice.ToString("N0") per person</span>
+            </div>
+        </div>
+
+        <!-- Concurrency Badge -->
+        <div class="bg-slate-900 text-white rounded-2xl p-4 max-w-xs text-xs space-y-1">
+            <span class="font-bold text-blue-400 flex items-center gap-1.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                Zero-Oversell Protection
+            </span>
+            <p class="text-[11px] text-slate-300 leading-relaxed">
+                Tickets are issued via <code class="text-amber-300 font-mono">usp_BuyFairTicket</code> with transaction row locks on daily capacity.
+            </p>
+        </div>
+    </div>
+
+    <!-- Purchase Form -->
+    <form asp-controller="Visitor" asp-action="TicketBooking" method="post" id="ticketPurchaseForm">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="FairId" />
+        <input type="hidden" asp-for="FairTitle" />
+        <input type="hidden" asp-for="Location" />
+        <input type="hidden" asp-for="BaseTicketPrice" id="baseTicketPrice" />
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left: Select Operating Day -->
+            <div class="lg:col-span-2 space-y-6">
+                <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-5">
+                    <div class="border-b border-slate-100 pb-3">
+                        <h2 class="text-base font-bold text-slate-900">Step 1: Select Your Operating Visit Date</h2>
+                        <p class="text-xs text-slate-500">Choose an active operating day with available admission quota</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                        @foreach (var day in Model.AvailableDays)
+                        {
+                            if (day.IsSoldOut)
+                            {
+                                <div class="border border-slate-200 bg-slate-100/70 rounded-2xl p-4 opacity-60 cursor-not-allowed">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-xs font-bold text-slate-500">@day.Date.ToString("ddd, MMM dd")</span>
+                                        <span class="text-[10px] font-bold text-rose-600 uppercase bg-rose-50 px-2 py-0.5 rounded">Sold Out</span>
+                                    </div>
+                                    <div class="text-[11px] text-slate-400">@day.TicketsSold / @day.DailyCapacity slots filled</div>
+                                </div>
+                            }
+                            else
+                            {
+                                <label class="border-2 border-slate-200 hover:border-blue-500 rounded-2xl p-4 cursor-pointer select-none transition has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50/50 has-[:checked]:shadow-md">
+                                    <input type="radio" asp-for="FairDayId" value="@day.FairDayId" class="sr-only day-radio" data-date="@day.Date.ToString("dddd, MMM dd, yyyy")" data-remaining="@day.RemainingCapacity" onchange="updateTicketSummary()" />
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-xs font-black text-slate-900">@day.Date.ToString("ddd, MMM dd")</span>
+                                        <span class="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">
+                                            @day.RemainingCapacity Left
+                                        </span>
+                                    </div>
+                                    <div class="text-[11px] text-slate-500">
+                                        Quota: @day.TicketsSold / @day.DailyCapacity sold
+                                    </div>
+                                </label>
+                            }
+                        }
+                    </div>
+                    <span asp-validation-for="FairDayId" class="text-xs text-rose-500 block"></span>
+                </div>
+
+                <!-- Group Quantity Selector -->
+                <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-4">
+                    <div class="border-b border-slate-100 pb-3">
+                        <h2 class="text-base font-bold text-slate-900">Step 2: Choose Number of Admission Passes</h2>
+                        <p class="text-xs text-slate-500">Bulk group purchases supported (up to 50 tickets per order)</p>
+                    </div>
+
+                    <div class="flex items-center space-x-4">
+                        <button type="button" onclick="adjustQty(-1)" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-black text-lg flex items-center justify-center transition">
+                            -
+                        </button>
+                        <input asp-for="Quantity" id="ticketQty" type="number" min="1" max="50" onchange="updateTicketSummary()" class="w-24 text-center py-2.5 rounded-xl border border-slate-300 font-black text-lg text-slate-900 focus:ring-2 focus:ring-blue-500" />
+                        <button type="button" onclick="adjustQty(1)" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-black text-lg flex items-center justify-center transition">
+                            +
+                        </button>
+                        <span class="text-xs text-slate-500 font-medium">Passes for you &amp; your companions</span>
+                    </div>
+                    <span asp-validation-for="Quantity" class="text-xs text-rose-500"></span>
+                </div>
+            </div>
+
+            <!-- Right: Order Summary -->
+            <div class="space-y-6">
+                <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-6 sticky top-24">
+                    <h2 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3">Ticket Order</h2>
+
+                    <div class="space-y-3 text-xs">
+                        <div class="flex justify-between text-slate-600">
+                            <span>Selected Date:</span>
+                            <span id="summaryDate" class="font-bold text-slate-900 italic">None selected</span>
+                        </div>
+                        <div class="flex justify-between text-slate-600">
+                            <span>Ticket Price:</span>
+                            <span class="font-semibold text-slate-800">$@Model.BaseTicketPrice.ToString("N2") each</span>
+                        </div>
+                        <div class="flex justify-between text-slate-600">
+                            <span>Number of Passes:</span>
+                            <span id="summaryQty" class="font-bold text-slate-900">1</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100">
+                        <div class="flex justify-between text-sm font-bold text-slate-900">
+                            <span>Total Due:</span>
+                            <span id="summaryTotal" class="text-lg font-black text-blue-600">
+                                $@Model.BaseTicketPrice.ToString("N2")
+                            </span>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="btnSubmitTickets" disabled class="w-full py-3.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md shadow-blue-600/20 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                        🔒 Complete Ticket Purchase
+                    </button>
+
+                    <p class="text-[11px] text-slate-400 text-center leading-relaxed">
+                        Instant digital pass codes and barcodes generated upon purchase completion.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        function adjustQty(delta) {
+            const qtyInput = document.getElementById('ticketQty');
+            let current = parseInt(qtyInput.value) || 1;
+            current = Math.max(1, Math.min(50, current + delta));
+            qtyInput.value = current;
+            updateTicketSummary();
+        }
+
+        function updateTicketSummary() {
+            const selectedRadio = document.querySelector('.day-radio:checked');
+            const qtyInput = document.getElementById('ticketQty');
+            const basePrice = parseFloat(document.getElementById('baseTicketPrice').value) || 0;
+            const btnSubmit = document.getElementById('btnSubmitTickets');
+
+            const qty = parseInt(qtyInput.value) || 1;
+            document.getElementById('summaryQty').innerText = qty;
+
+            if (selectedRadio) {
+                document.getElementById('summaryDate').innerText = selectedRadio.dataset.date;
+                btnSubmit.disabled = false;
+            } else {
+                document.getElementById('summaryDate').innerText = 'None selected';
+                btnSubmit.disabled = true;
+            }
+
+            const total = qty * basePrice;
+            document.getElementById('summaryTotal').innerText = '$' + total.toFixed(2);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateTicketSummary();
+        });
+    </script>
+}

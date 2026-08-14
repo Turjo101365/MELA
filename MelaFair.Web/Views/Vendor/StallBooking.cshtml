@@ -1,0 +1,215 @@
+@model MelaFair.Web.Models.ViewModels.StallBookingViewModel
+@{
+    ViewData["Title"] = "Stall Booking Checkout";
+}
+
+<div class="space-y-8">
+    <!-- Fair Header & Event Summary -->
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="space-y-2">
+            <div class="flex items-center gap-2">
+                <a asp-controller="Vendor" asp-action="Marketplace" class="text-xs font-bold text-slate-500 hover:text-slate-700 flex items-center gap-1">
+                    &larr; Back to Marketplace
+                </a>
+                <span class="text-slate-300">&bull;</span>
+                <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full">Interactive Stall Map</span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-black text-slate-900">@Model.FairTitle</h1>
+            <div class="flex flex-wrap items-center gap-4 text-xs text-slate-500 font-medium">
+                <span class="flex items-center gap-1">📍 @Model.Location</span>
+                <span class="flex items-center gap-1">📅 @Model.StartDate.ToString("MMM dd") - @Model.EndDate.ToString("MMM dd, yyyy")</span>
+                <span class="flex items-center gap-1">🏷️ Base Price: $@Model.BaseStallPrice.ToString("N0")</span>
+            </div>
+        </div>
+
+        <!-- Concurrency Notice Badge -->
+        <div class="bg-slate-900 text-white rounded-2xl p-4 max-w-sm text-xs space-y-1">
+            <span class="font-bold text-emerald-400 flex items-center gap-1.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                Row-Level UPDLOCK Protected
+            </span>
+            <p class="text-[11px] text-slate-300 leading-relaxed">
+                Stalls are checked out via stored procedure <code class="text-amber-300 font-mono">usp_BuyStall</code>. Locking guarantees no double-booking during concurrent bursts.
+            </p>
+        </div>
+    </div>
+
+    <!-- Booking Form -->
+    <form asp-controller="Vendor" asp-action="StallBooking" method="post" id="stallBookingForm">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="FairId" />
+        <input type="hidden" asp-for="FairTitle" />
+        <input type="hidden" asp-for="Location" />
+        <input type="hidden" asp-for="StartDate" />
+        <input type="hidden" asp-for="EndDate" />
+        <input type="hidden" asp-for="BaseStallPrice" />
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left: Stall Selection Layout -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Filter Category Tabs -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-3 shadow-sm flex items-center gap-2 overflow-x-auto">
+                    <button type="button" onclick="filterCategory('all')" class="category-btn active px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-white transition">
+                        All Stalls (@Model.AllStalls.Count)
+                    </button>
+                    <button type="button" onclick="filterCategory('FoodAndBeverage')" class="category-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+                        🍔 Food
+                    </button>
+                    <button type="button" onclick="filterCategory('Handicrafts')" class="category-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+                        🏺 Handicrafts
+                    </button>
+                    <button type="button" onclick="filterCategory('ClothingAndTextiles')" class="category-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+                        👗 Clothing
+                    </button>
+                    <button type="button" onclick="filterCategory('GamesAndEntertainment')" class="category-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+                        🎯 Games
+                    </button>
+                </div>
+
+                <!-- Stall Layout Grid -->
+                <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-base font-bold text-slate-900">Select Desired Stalls (Multi-Select Allowed)</h2>
+                        <div class="flex items-center gap-3 text-[11px] font-semibold">
+                            <span class="flex items-center gap-1 text-emerald-700"><span class="w-2.5 h-2.5 rounded bg-emerald-500 inline-block"></span> Available</span>
+                            <span class="flex items-center gap-1 text-orange-600"><span class="w-2.5 h-2.5 rounded bg-orange-500 inline-block"></span> Selected</span>
+                            <span class="flex items-center gap-1 text-slate-400"><span class="w-2.5 h-2.5 rounded bg-slate-300 inline-block"></span> Leased (Booked)</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5" id="stallGrid">
+                        @foreach (var stall in Model.AllStalls)
+                        {
+                            var categoryName = stall.Category.ToString();
+                            if (stall.IsBooked)
+                            {
+                                <!-- Booked Stall -->
+                                <div class="stall-item booked border border-slate-200 bg-slate-100/80 rounded-2xl p-3.5 opacity-60 cursor-not-allowed" data-category="@categoryName">
+                                    <div class="flex justify-between items-start">
+                                        <span class="text-xs font-black text-slate-500 font-mono">@stall.StallNumber</span>
+                                        <span class="text-[10px] uppercase font-bold text-slate-400">Leased</span>
+                                    </div>
+                                    <div class="mt-2 text-[10px] text-slate-400 font-medium">@stall.Category</div>
+                                    <div class="mt-1 text-xs font-bold text-slate-400 line-through">$@stall.Price.ToString("N0")</div>
+                                </div>
+                            }
+                            else
+                            {
+                                <!-- Available Selectable Stall -->
+                                <label class="stall-item available stall-cell border-2 border-slate-200 hover:border-emerald-500 bg-white rounded-2xl p-3.5 cursor-pointer select-none transition has-[:checked]:border-orange-500 has-[:checked]:bg-orange-50/50 has-[:checked]:shadow-md" data-category="@categoryName">
+                                    <input type="checkbox" name="SelectedStallIds" value="@stall.StallId" data-price="@stall.Price" data-number="@stall.StallNumber" onchange="updateSummary()" class="sr-only stall-checkbox" />
+                                    <div class="flex justify-between items-start">
+                                        <span class="text-xs font-black text-slate-900 font-mono">@stall.StallNumber</span>
+                                        <span class="text-[10px] uppercase font-bold text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded">Open</span>
+                                    </div>
+                                    <div class="mt-2 text-[10px] text-slate-600 font-semibold truncate">@stall.Category</div>
+                                    <div class="mt-1 flex items-center justify-between">
+                                        <span class="text-xs font-black text-slate-900">$@stall.Price.ToString("N0")</span>
+                                        <span class="text-[10px] text-slate-500">@stall.Size</span>
+                                    </div>
+                                </label>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Checkout & Concurrency Summary -->
+            <div class="space-y-6">
+                <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-6 sticky top-24">
+                    <h2 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3">Lease Summary</h2>
+
+                    <!-- Selected Stall Chips -->
+                    <div>
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-2">Selected Stalls:</span>
+                        <div id="selectedChips" class="flex flex-wrap gap-1.5 min-h-[32px]">
+                            <span class="text-xs text-slate-400 italic">No stalls selected yet.</span>
+                        </div>
+                    </div>
+
+                    <!-- Notes -->
+                    <div>
+                        <label asp-for="Notes" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Business / Stall Notes</label>
+                        <textarea asp-for="Notes" rows="2" class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-orange-500" placeholder="e.g. Traditional clay pottery and handloom silk booth..."></textarea>
+                    </div>
+
+                    <!-- Total Amount Display -->
+                    <div class="bg-slate-50 rounded-2xl p-4 space-y-2 border border-slate-100">
+                        <div class="flex justify-between text-xs text-slate-600">
+                            <span>Selected Stalls Count:</span>
+                            <span id="totalCount" class="font-bold text-slate-900">0</span>
+                        </div>
+                        <div class="flex justify-between text-sm font-bold text-slate-900 pt-2 border-t border-slate-200">
+                            <span>Total Lease Amount:</span>
+                            <span id="totalPrice" class="text-base font-black text-orange-600">$0.00</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="btnSubmitBooking" disabled class="w-full py-3.5 px-4 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm shadow-md shadow-orange-600/20 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                        🔒 Confirm &amp; Lease Stalls
+                    </button>
+
+                    <p class="text-[11px] text-slate-400 text-center leading-relaxed">
+                        Lease transactions are immediate and protected by row locks. Confirmation receipt generated instantly.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        function updateSummary() {
+            const checkboxes = document.querySelectorAll('.stall-checkbox:checked');
+            const chipsContainer = document.getElementById('selectedChips');
+            const totalCountEl = document.getElementById('totalCount');
+            const totalPriceEl = document.getElementById('totalPrice');
+            const btnSubmit = document.getElementById('btnSubmitBooking');
+
+            let total = 0;
+            chipsContainer.innerHTML = '';
+
+            if (checkboxes.length === 0) {
+                chipsContainer.innerHTML = '<span class="text-xs text-slate-400 italic">No stalls selected yet.</span>';
+                btnSubmit.disabled = true;
+            } else {
+                btnSubmit.disabled = false;
+                checkboxes.forEach(cb => {
+                    const price = parseFloat(cb.dataset.price);
+                    const num = cb.dataset.number;
+                    total += price;
+
+                    const chip = document.createElement('span');
+                    chip.className = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-orange-100 text-orange-800 text-xs font-bold';
+                    chip.innerHTML = `${num} ($${price})`;
+                    chipsContainer.appendChild(chip);
+                });
+            }
+
+            totalCountEl.innerText = checkboxes.length;
+            totalPriceEl.innerText = '$' + total.toFixed(2);
+        }
+
+        function filterCategory(category) {
+            const buttons = document.querySelectorAll('.category-btn');
+            buttons.forEach(b => {
+                b.classList.remove('bg-slate-900', 'text-white');
+                b.classList.add('bg-slate-100', 'text-slate-700');
+            });
+            event.target.classList.remove('bg-slate-100', 'text-slate-700');
+            event.target.classList.add('bg-slate-900', 'text-white');
+
+            const items = document.querySelectorAll('.stall-item');
+            items.forEach(item => {
+                if (category === 'all' || item.dataset.category === category) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+    </script>
+}

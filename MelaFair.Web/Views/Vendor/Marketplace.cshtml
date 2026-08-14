@@ -1,0 +1,93 @@
+@model IEnumerable<MelaFair.Web.Models.Entities.Fair>
+@{
+    ViewData["Title"] = "Vendor Stall Marketplace";
+}
+
+<div class="space-y-8">
+    <!-- Header -->
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="space-y-1">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+                🎪 Vendor Portal
+            </span>
+            <h1 class="text-2xl sm:text-3xl font-black text-slate-900">Commercial Stall Marketplace</h1>
+            <p class="text-xs sm:text-sm text-slate-500">
+                Reserve retail and food stalls across upcoming cultural fairs with instant row-locked lease confirmation (<code class="text-emerald-700 font-mono">usp_BuyStall</code>).
+            </p>
+        </div>
+
+        <a asp-controller="Vendor" asp-action="MyStalls" class="px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-md transition self-start md:self-auto whitespace-nowrap">
+            📜 My Leased Stalls
+        </a>
+    </div>
+
+    <!-- Active Fairs for Vendors -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @foreach (var fair in Model)
+        {
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between festival-card">
+                <div>
+                    <!-- Image -->
+                    <div class="h-44 w-full bg-slate-200 relative overflow-hidden">
+                        @if (!string.IsNullOrWhiteSpace(fair.BannerImageUrl))
+                        {
+                            <img src="@fair.BannerImageUrl" alt="@fair.Title" class="w-full h-full object-cover" />
+                        }
+                        else
+                        {
+                            <div class="w-full h-full bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white text-3xl font-bold">
+                                🎪
+                            </div>
+                        }
+                        <div class="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-md text-white text-xs font-bold px-2.5 py-1 rounded-full">
+                            @fair.StartDate.ToString("MMM dd") - @fair.EndDate.ToString("MMM dd, yyyy")
+                        </div>
+                    </div>
+
+                    <!-- Details -->
+                    <div class="p-6 space-y-3">
+                        <h2 class="text-lg font-bold text-slate-900 leading-snug">@fair.Title</h2>
+                        <p class="text-xs text-slate-500 flex items-center gap-1.5">
+                            <svg class="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span>@fair.Location</span>
+                        </p>
+                        <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+                            @fair.Description
+                        </p>
+
+                        <!-- Stall Stats Badge -->
+                        <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-3 flex items-center justify-between text-xs">
+                            <div>
+                                <span class="block text-[10px] text-emerald-700 font-bold uppercase tracking-wider">Available Stalls</span>
+                                <span class="text-base font-black text-emerald-900">@fair.AvailableStalls <span class="text-xs font-normal text-emerald-700">/ @fair.TotalStalls total</span></span>
+                            </div>
+                            <div class="text-right">
+                                <span class="block text-[10px] text-slate-500 uppercase font-semibold">Lease Starts At</span>
+                                <span class="text-sm font-black text-slate-900">$@fair.BaseStallPrice.ToString("N0")</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Action -->
+                <div class="p-6 pt-0">
+                    @if (fair.AvailableStalls > 0)
+                    {
+                        <a asp-controller="Vendor" asp-action="StallBooking" asp-route-fairId="@fair.FairId" class="block text-center w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/20 transition">
+                            Select &amp; Lease Stalls &rarr;
+                        </a>
+                    }
+                    else
+                    {
+                        <button disabled class="block text-center w-full py-2.5 px-4 rounded-xl bg-slate-100 text-slate-400 font-bold text-xs cursor-not-allowed">
+                            All Stalls Leased (Sold Out)
+                        </button>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>

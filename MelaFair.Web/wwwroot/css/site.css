@@ -1,0 +1,33 @@
+/* Custom Festival Styling and Animations for Mela Fair Management */
+
+@keyframes pulseSubtle {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.02); opacity: 0.95; }
+}
+
+.festival-gradient {
+    background: linear-gradient(135deg, #ea580c 0%, #d97706 50%, #e11d48 100%);
+}
+
+.festival-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.festival-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -10px rgba(234, 88, 12, 0.15);
+}
+
+.stall-cell {
+    transition: all 0.15s ease-in-out;
+}
+
+.stall-cell:hover:not(.booked) {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.ticket-pass {
+    background: radial-gradient(circle at top left, transparent 15px, #ffffff 16px),
+                radial-gradient(circle at bottom left, transparent 15px, #ffffff 16px);
+}

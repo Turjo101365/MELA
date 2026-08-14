@@ -1,0 +1,135 @@
+@model MelaFair.Web.Models.ViewModels.AdminDashboardViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Executive Admin Dashboard";
+}
+
+<div class="space-y-8">
+    <!-- Stat Metrics Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <!-- Total Revenue -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-2">
+            <div class="flex items-center justify-between text-slate-500 text-xs font-bold uppercase tracking-wider">
+                <span>Gross Revenue</span>
+                <span class="p-1.5 rounded-lg bg-orange-50 text-orange-600">💰</span>
+            </div>
+            <div class="text-2xl font-black text-slate-900">$@Model.TotalRevenue.ToString("N2")</div>
+            <div class="text-[11px] text-slate-500 flex justify-between">
+                <span>Stalls: $@Model.TotalStallRevenue.ToString("N0")</span>
+                <span>Tickets: $@Model.TotalTicketRevenue.ToString("N0")</span>
+            </div>
+        </div>
+
+        <!-- Total Stalls Leased -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-2">
+            <div class="flex items-center justify-between text-slate-500 text-xs font-bold uppercase tracking-wider">
+                <span>Stall Leases</span>
+                <span class="p-1.5 rounded-lg bg-emerald-50 text-emerald-600">🎪</span>
+            </div>
+            <div class="text-2xl font-black text-slate-900">@Model.TotalStallsBooked / @Model.TotalStalls</div>
+            <div class="w-full bg-slate-100 rounded-full h-1.5 mt-2 overflow-hidden">
+                @{
+                    var stallPct = Model.TotalStalls > 0 ? (Model.TotalStallsBooked * 100) / Model.TotalStalls : 0;
+                }
+                <div class="bg-emerald-500 h-1.5 rounded-full" style="width: @stallPct%"></div>
+            </div>
+        </div>
+
+        <!-- Total Tickets Sold -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-2">
+            <div class="flex items-center justify-between text-slate-500 text-xs font-bold uppercase tracking-wider">
+                <span>Tickets Issued</span>
+                <span class="p-1.5 rounded-lg bg-blue-50 text-blue-600">🎟️</span>
+            </div>
+            <div class="text-2xl font-black text-slate-900">@Model.TotalTicketsSold.ToString("N0")</div>
+            <div class="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
+                <span>⚡ Real-time UPDLOCK Concurrency</span>
+            </div>
+        </div>
+
+        <!-- Total Active Fairs -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-2">
+            <div class="flex items-center justify-between text-slate-500 text-xs font-bold uppercase tracking-wider">
+                <span>Managed Fairs</span>
+                <span class="p-1.5 rounded-lg bg-purple-50 text-purple-600">🏛️</span>
+            </div>
+            <div class="text-2xl font-black text-slate-900">@Model.ActiveFairs Active / @Model.TotalFairs Total</div>
+            <div class="text-[11px] text-slate-500">
+                <span>@Model.TotalJobApplications Open Job Postings</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Action Banner -->
+    <div class="bg-gradient-to-r from-orange-600 to-amber-600 rounded-2xl p-6 text-white flex flex-col md:flex-row items-center justify-between gap-4 shadow-md">
+        <div class="space-y-1">
+            <h2 class="text-xl font-bold">Create New Cultural Fair Schedule</h2>
+            <p class="text-xs text-orange-100">
+                Execute stored procedure <code class="bg-black/30 px-2 py-0.5 rounded font-mono text-amber-200">usp_CreateFair</code> to auto-generate stalls and daily calendar capacities.
+            </p>
+        </div>
+        <a asp-controller="Admin" asp-action="CreateFair" class="px-5 py-2.5 rounded-xl bg-white text-orange-700 font-bold text-xs hover:bg-orange-50 transition shadow-sm whitespace-nowrap">
+            + Provision New Fair
+        </a>
+    </div>
+
+    <!-- SQL View Summary Table (vw_FairSummary) -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden space-y-4 p-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+            <div>
+                <h3 class="text-lg font-bold text-slate-900">Fair Performance Summary</h3>
+                <p class="text-xs text-slate-500">Aggregated directly from database view <code class="text-orange-600 font-mono">vw_FairSummary</code></p>
+            </div>
+            <a asp-controller="Admin" asp-action="Analytics" class="text-xs font-bold text-orange-600 hover:text-orange-700">
+                View Full SQL Analytics &rarr;
+            </a>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 text-slate-600 font-bold uppercase tracking-wider text-[10px]">
+                    <tr>
+                        <th class="py-3 px-4">Fair Title</th>
+                        <th class="py-3 px-4">Dates</th>
+                        <th class="py-3 px-4">Stall Occupancy</th>
+                        <th class="py-3 px-4">Tickets Sold</th>
+                        <th class="py-3 px-4">Stall Rev.</th>
+                        <th class="py-3 px-4">Ticket Rev.</th>
+                        <th class="py-3 px-4 font-black text-slate-900">Total Rev.</th>
+                        <th class="py-3 px-4 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-slate-700">
+                    @foreach (var fair in Model.FairSummaries)
+                    {
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="py-3.5 px-4 font-bold text-slate-900">
+                                @fair.Title
+                                <span class="block text-[10px] font-normal text-slate-500">@fair.Location</span>
+                            </td>
+                            <td class="py-3.5 px-4 whitespace-nowrap">
+                                @fair.StartDate.ToString("MMM dd") - @fair.EndDate.ToString("MMM dd, yyyy")
+                            </td>
+                            <td class="py-3.5 px-4">
+                                <span class="font-bold text-slate-900">@fair.BookedStalls / @fair.TotalStalls</span>
+                                <span class="text-slate-500 text-[10px]">(@fair.StallOccupancyRate%)</span>
+                            </td>
+                            <td class="py-3.5 px-4">
+                                <span class="font-bold text-slate-900">@fair.TotalTicketsSold.ToString("N0")</span>
+                                <span class="text-slate-500 text-[10px]">/ @fair.TotalTicketCapacity.ToString("N0")</span>
+                            </td>
+                            <td class="py-3.5 px-4 font-semibold text-emerald-700">$@fair.StallRevenue.ToString("N0")</td>
+                            <td class="py-3.5 px-4 font-semibold text-blue-700">$@fair.TicketRevenue.ToString("N0")</td>
+                            <td class="py-3.5 px-4 font-black text-slate-900">$@fair.TotalRevenue.ToString("N2")</td>
+                            <td class="py-3.5 px-4 text-right whitespace-nowrap space-x-1">
+                                <a asp-controller="Admin" asp-action="Analytics" asp-route-fairId="@fair.FairId" class="px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-semibold transition">
+                                    Analytics
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

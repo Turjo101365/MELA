@@ -1,0 +1,80 @@
+@model IEnumerable<MelaFair.Web.Models.Entities.Fair>
+@{
+    ViewData["Title"] = "Explore Cultural Fairs & Tickets";
+}
+
+<div class="space-y-8">
+    <!-- Header -->
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="space-y-1">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800">
+                🎟️ Visitor Portal
+            </span>
+            <h1 class="text-2xl sm:text-3xl font-black text-slate-900">Cultural Fairs &amp; Admission Passes</h1>
+            <p class="text-xs sm:text-sm text-slate-500">
+                Reserve admission passes and group tickets with instant capacity validation (<code class="text-blue-700 font-mono">usp_BuyFairTicket</code>).
+            </p>
+        </div>
+
+        <a asp-controller="Visitor" asp-action="MyTickets" class="px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-md transition self-start md:self-auto whitespace-nowrap">
+            🎟️ My Digital Passes
+        </a>
+    </div>
+
+    <!-- Fairs Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @foreach (var fair in Model)
+        {
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between festival-card">
+                <div>
+                    <div class="h-44 w-full bg-slate-200 relative overflow-hidden">
+                        @if (!string.IsNullOrWhiteSpace(fair.BannerImageUrl))
+                        {
+                            <img src="@fair.BannerImageUrl" alt="@fair.Title" class="w-full h-full object-cover" />
+                        }
+                        else
+                        {
+                            <div class="w-full h-full bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white text-3xl font-bold">
+                                🎪
+                            </div>
+                        }
+                        <div class="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-md text-white text-xs font-bold px-2.5 py-1 rounded-full">
+                            $@fair.BaseTicketPrice.ToString("N0") / person
+                        </div>
+                    </div>
+
+                    <div class="p-6 space-y-3">
+                        <h2 class="text-lg font-bold text-slate-900 leading-snug">@fair.Title</h2>
+                        <p class="text-xs text-slate-500 flex items-center gap-1.5">
+                            <svg class="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span>@fair.Location</span>
+                        </p>
+                        <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+                            @fair.Description
+                        </p>
+
+                        <div class="bg-blue-50 border border-blue-100 rounded-2xl p-3 flex items-center justify-between text-xs">
+                            <div>
+                                <span class="block text-[10px] text-blue-700 font-bold uppercase tracking-wider">Festival Dates</span>
+                                <span class="text-xs font-bold text-blue-950">@fair.StartDate.ToString("MMM dd") - @fair.EndDate.ToString("MMM dd")</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="block text-[10px] text-slate-500 uppercase font-semibold">Daily Quota</span>
+                                <span class="text-xs font-black text-slate-900">@fair.DailyCapacity.ToString("N0") slots</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 pt-0">
+                    <a asp-controller="Visitor" asp-action="TicketBooking" asp-route-fairId="@fair.FairId" class="block text-center w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md shadow-blue-600/20 transition">
+                        Select Date &amp; Buy Tickets &rarr;
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

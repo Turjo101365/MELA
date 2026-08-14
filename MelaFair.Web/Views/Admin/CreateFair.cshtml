@@ -1,0 +1,115 @@
+@model MelaFair.Web.Models.ViewModels.CreateFairViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Create New Fair";
+}
+
+<div class="max-w-4xl mx-auto space-y-6">
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
+        <div class="border-b border-slate-100 pb-4">
+            <h2 class="text-xl font-bold text-slate-900">Provision New Cultural Fair</h2>
+            <p class="text-xs text-slate-500 mt-1">
+                Submitting this form invokes stored procedure <code class="text-orange-600 font-mono">usp_CreateFair</code> to create fair records, calendar schedule, and categorized stalls atomically.
+            </p>
+        </div>
+
+        <form asp-controller="Admin" asp-action="CreateFair" method="post" class="space-y-6">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-xs font-semibold text-rose-600 bg-rose-50 p-3 rounded-xl"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Title -->
+                <div class="md:col-span-2">
+                    <label asp-for="Title" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1"></label>
+                    <input asp-for="Title" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" placeholder="e.g. Dhaka International Boishakhi Mela 2026" />
+                    <span asp-validation-for="Title" class="text-xs text-rose-500"></span>
+                </div>
+
+                <!-- Description -->
+                <div class="md:col-span-2">
+                    <label asp-for="Description" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1"></label>
+                    <textarea asp-for="Description" rows="3" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" placeholder="Describe cultural theme, exhibits, foods, and attractions..."></textarea>
+                    <span asp-validation-for="Description" class="text-xs text-rose-500"></span>
+                </div>
+
+                <!-- Location -->
+                <div>
+                    <label asp-for="Location" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1"></label>
+                    <input asp-for="Location" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" placeholder="e.g. Suhrawardy Udyan, Dhaka" />
+                    <span asp-validation-for="Location" class="text-xs text-rose-500"></span>
+                </div>
+
+                <!-- Banner URL -->
+                <div>
+                    <label asp-for="BannerImageUrl" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1"></label>
+                    <input asp-for="BannerImageUrl" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" placeholder="https://images.unsplash.com/photo-..." />
+                    <span asp-validation-for="BannerImageUrl" class="text-xs text-rose-500"></span>
+                </div>
+
+                <!-- Start Date -->
+                <div>
+                    <label asp-for="StartDate" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1"></label>
+                    <input asp-for="StartDate" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" />
+                    <span asp-validation-for="StartDate" class="text-xs text-rose-500"></span>
+                </div>
+
+                <!-- End Date -->
+                <div>
+                    <label asp-for="EndDate" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1"></label>
+                    <input asp-for="EndDate" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" />
+                    <span asp-validation-for="EndDate" class="text-xs text-rose-500"></span>
+                </div>
+
+                <!-- Total Stalls -->
+                <div>
+                    <label asp-for="TotalStalls" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1"></label>
+                    <input asp-for="TotalStalls" type="number" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" />
+                    <span class="text-[10px] text-slate-400">Generates S-001 to S-NNN in Stalls table</span>
+                    <span asp-validation-for="TotalStalls" class="text-xs text-rose-500"></span>
+                </div>
+
+                <!-- Daily Visitor Capacity -->
+                <div>
+                    <label asp-for="DailyCapacity" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1"></label>
+                    <input asp-for="DailyCapacity" type="number" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" />
+                    <span class="text-[10px] text-slate-400">Protected by concurrency lock</span>
+                    <span asp-validation-for="DailyCapacity" class="text-xs text-rose-500"></span>
+                </div>
+
+                <!-- Base Stall Price -->
+                <div>
+                    <label asp-for="BaseStallPrice" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1"></label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 text-sm">$</span>
+                        <input asp-for="BaseStallPrice" type="number" step="0.01" class="w-full pl-8 pr-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" />
+                    </div>
+                    <span asp-validation-for="BaseStallPrice" class="text-xs text-rose-500"></span>
+                </div>
+
+                <!-- Base Ticket Price -->
+                <div>
+                    <label asp-for="BaseTicketPrice" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1"></label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 text-sm">$</span>
+                        <input asp-for="BaseTicketPrice" type="number" step="0.01" class="w-full pl-8 pr-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" />
+                    </div>
+                    <span asp-validation-for="BaseTicketPrice" class="text-xs text-rose-500"></span>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-end space-x-3">
+                <a asp-controller="Admin" asp-action="ManageFairs" class="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">
+                    Cancel
+                </a>
+                <button type="submit" class="px-6 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs shadow-md shadow-orange-600/20 transition">
+                    Execute Stored Procedure &amp; Create Fair
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

@@ -1,0 +1,146 @@
+@model IEnumerable<MelaFair.Web.Models.ViewModels.DailyVisitorCountViewModel>
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Database Analytics (Views)";
+    var summaries = ViewBag.FairSummaries as IEnumerable<MelaFair.Web.Models.ViewModels.FairSummaryViewModel> ?? Enumerable.Empty<MelaFair.Web.Models.ViewModels.FairSummaryViewModel>();
+    var allFairs = ViewBag.AllFairs as IEnumerable<MelaFair.Web.Models.Entities.Fair> ?? Enumerable.Empty<MelaFair.Web.Models.Entities.Fair>();
+    int? selectedFairId = ViewBag.SelectedFairId as int?;
+}
+
+<div class="space-y-8">
+    <!-- Header with Filter -->
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h2 class="text-xl font-bold text-slate-900">SQL View Analytics Engine</h2>
+            <p class="text-xs text-slate-500">Live reporting consumed from <code class="text-orange-600 font-mono">vw_FairSummary</code> and <code class="text-orange-600 font-mono">vw_DailyVisitorCount</code></p>
+        </div>
+
+        <!-- Filter Dropdown -->
+        <form method="get" asp-controller="Admin" asp-action="Analytics" class="flex items-center gap-2">
+            <select name="fairId" onchange="this.form.submit()" class="px-3.5 py-2 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-orange-500 font-semibold text-slate-700 bg-white">
+                <option value="">-- All Fairs Aggregate --</option>
+                @foreach (var fair in allFairs)
+                {
+                    if (selectedFairId == fair.FairId)
+                    {
+                        <option value="@fair.FairId" selected>@fair.Title</option>
+                    }
+                    else
+                    {
+                        <option value="@fair.FairId">@fair.Title</option>
+                    }
+                }
+            </select>
+        </form>
+    </div>
+
+    <!-- Section 1: vw_FairSummary Cards -->
+    <div class="space-y-4">
+        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-orange-500"></span> 
+            vw_FairSummary - Financial &amp; Occupancy Breakdown
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @foreach (var s in summaries.Where(x => !selectedFairId.HasValue || x.FairId == selectedFairId.Value))
+            {
+                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+                    <div class="border-b border-slate-100 pb-3">
+                        <span class="text-[10px] font-bold text-orange-600 uppercase tracking-widest block">Fair #@s.FairId</span>
+                        <h4 class="text-base font-bold text-slate-900">@s.Title</h4>
+                        <span class="text-xs text-slate-500">@s.Location</span>
+                    </div>
+
+                    <!-- Occupancy Gauges -->
+                    <div class="space-y-2 text-xs">
+                        <div class="flex justify-between font-semibold">
+                            <span class="text-slate-600">Stall Occupancy Rate:</span>
+                            <span class="text-emerald-700 font-bold">@s.StallOccupancyRate% (@s.BookedStalls / @s.TotalStalls)</span>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                            <div class="bg-emerald-500 h-2 rounded-full" style="width: @s.StallOccupancyRate%"></div>
+                        </div>
+
+                        <div class="flex justify-between font-semibold pt-1">
+                            <span class="text-slate-600">Ticket Capacity Sold:</span>
+                            <span class="text-blue-700 font-bold">@s.TicketCapacitySoldPercentage% (@s.TotalTicketsSold / @s.TotalTicketCapacity)</span>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                            <div class="bg-blue-500 h-2 rounded-full" style="width: @s.TicketCapacitySoldPercentage%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Revenue Breakdown -->
+                    <div class="bg-slate-50 rounded-xl p-3 grid grid-cols-3 gap-2 text-center text-xs">
+                        <div>
+                            <span class="block text-[10px] text-slate-500 uppercase">Stalls</span>
+                            <span class="font-bold text-slate-900">$@s.StallRevenue.ToString("N0")</span>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] text-slate-500 uppercase">Tickets</span>
+                            <span class="font-bold text-slate-900">$@s.TicketRevenue.ToString("N0")</span>
+                        </div>
+                        <div class="border-l border-slate-200">
+                            <span class="block text-[10px] text-orange-600 uppercase font-bold">Total</span>
+                            <span class="font-black text-orange-700">$@s.TotalRevenue.ToString("N0")</span>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Section 2: vw_DailyVisitorCount Table -->
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden p-6 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+                <h3 class="text-base font-bold text-slate-900">vw_DailyVisitorCount - Operating Day Capacity Analysis</h3>
+                <p class="text-xs text-slate-500">Day-by-day ticket sales and utilization metrics</p>
+            </div>
+            <span class="text-xs px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 font-semibold">
+                @Model.Count() Recorded Operating Day(s)
+            </span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 text-slate-600 font-bold uppercase tracking-wider text-[10px] border-b border-slate-200">
+                    <tr>
+                        <th class="py-3 px-4">Fair Title</th>
+                        <th class="py-3 px-4">Operating Date</th>
+                        <th class="py-3 px-4">Daily Quota</th>
+                        <th class="py-3 px-4">Tickets Sold</th>
+                        <th class="py-3 px-4">Remaining Quota</th>
+                        <th class="py-3 px-4">Capacity Utilization</th>
+                        <th class="py-3 px-4 text-right">Daily Ticket Revenue</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-slate-700">
+                    @foreach (var row in Model)
+                    {
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="py-3.5 px-4 font-bold text-slate-900">@row.FairTitle</td>
+                            <td class="py-3.5 px-4 whitespace-nowrap font-medium text-slate-800">
+                                @row.FairDate.ToString("dddd, MMM dd, yyyy")
+                            </td>
+                            <td class="py-3.5 px-4">@row.DailyCapacity.ToString("N0")</td>
+                            <td class="py-3.5 px-4 font-bold text-blue-700">@row.TicketsSold.ToString("N0")</td>
+                            <td class="py-3.5 px-4 font-semibold text-emerald-700">@row.RemainingCapacity.ToString("N0")</td>
+                            <td class="py-3.5 px-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-20 bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                                        <div class="bg-blue-600 h-1.5 rounded-full" style="width: @row.CapacityUtilizationPercent%"></div>
+                                    </div>
+                                    <span class="font-bold text-slate-800">@row.CapacityUtilizationPercent%</span>
+                                </div>
+                            </td>
+                            <td class="py-3.5 px-4 text-right font-black text-slate-900">
+                                $@row.DailyTicketRevenue.ToString("N2")
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

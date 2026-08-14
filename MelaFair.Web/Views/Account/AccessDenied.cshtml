@@ -1,0 +1,24 @@
+@{
+    ViewData["Title"] = "Access Denied";
+}
+
+<div class="max-w-md mx-auto my-12 text-center space-y-6">
+    <div class="w-16 h-16 rounded-3xl bg-rose-100 text-rose-600 mx-auto flex items-center justify-center text-3xl font-black">
+        🔒
+    </div>
+    <div class="space-y-2">
+        <h1 class="text-2xl font-black text-slate-900">Access Restricted</h1>
+        <p class="text-sm text-slate-500">
+            You do not have the necessary role permissions to access this page. Please use the top quick-switcher to switch into the appropriate demo role.
+        </p>
+    </div>
+
+    <div class="flex items-center justify-center gap-3">
+        <a asp-controller="Home" asp-action="Index" class="px-5 py-2.5 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-slate-800 transition">
+            Back to Home
+        </a>
+        <a asp-controller="Account" asp-action="Login" class="px-5 py-2.5 rounded-xl bg-orange-600 text-white font-bold text-xs hover:bg-orange-700 transition">
+            Switch Account
+        </a>
+    </div>
+</div>

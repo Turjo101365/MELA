@@ -1,0 +1,210 @@
+@model IEnumerable<MelaFair.Web.Models.Entities.Fair>
+@{
+    ViewData["Title"] = "Cultural Fair Management Portal";
+}
+
+<div class="space-y-12">
+    <!-- Hero Festival Banner -->
+    <div class="relative overflow-hidden rounded-3xl festival-gradient text-white shadow-xl">
+        <div class="absolute inset-0 bg-black/20 mix-blend-multiply"></div>
+        <div class="relative z-10 px-6 py-16 sm:px-12 sm:py-20 lg:px-16 flex flex-col lg:flex-row items-center justify-between gap-10">
+            <div class="max-w-2xl space-y-6 text-center lg:text-left">
+                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-semibold uppercase tracking-wider border border-white/30 text-amber-100">
+                    🏮 High-Concurrency Fair Management System
+                </span>
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
+                    Celebrating Culture with Enterprise SQL Concurrency
+                </h1>
+                <p class="text-base sm:text-lg text-orange-100 font-normal leading-relaxed">
+                    A comprehensive fair management architecture built on SQL Server row-level locking (<code class="bg-black/30 px-2 py-0.5 rounded font-mono text-xs text-amber-300">UPDLOCK, ROWLOCK</code>), stored procedures, triggers, and live analytics views.
+                </p>
+                <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2">
+                    <a asp-controller="Visitor" asp-action="BrowseFairs" class="px-6 py-3 rounded-xl bg-white text-orange-700 font-bold text-sm hover:bg-orange-50 shadow-lg transition-all hover:scale-105">
+                        🎟️ Buy Admission Tickets
+                    </a>
+                    <a asp-controller="Vendor" asp-action="Marketplace" class="px-6 py-3 rounded-xl bg-slate-900/80 hover:bg-slate-900 text-white font-bold text-sm backdrop-blur-md border border-white/20 transition-all hover:scale-105">
+                        🎪 Vendor Stall Booking
+                    </a>
+                </div>
+            </div>
+
+            <!-- Stats Highlight Counter Box -->
+            <div class="grid grid-cols-2 gap-4 w-full sm:w-auto min-w-[280px]">
+                <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 text-center">
+                    <span class="block text-3xl font-black text-white">@ViewBag.TotalFairsCount</span>
+                    <span class="text-xs uppercase font-bold text-orange-200 tracking-wider">Active Fairs</span>
+                </div>
+                <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 text-center">
+                    <span class="block text-3xl font-black text-amber-300">@ViewBag.TotalStallsBookedCount</span>
+                    <span class="text-xs uppercase font-bold text-orange-200 tracking-wider">Stalls Leased</span>
+                </div>
+                <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 text-center">
+                    <span class="block text-3xl font-black text-emerald-300">@ViewBag.TotalTicketsSoldCount</span>
+                    <span class="text-xs uppercase font-bold text-orange-200 tracking-wider">Tickets Issued</span>
+                </div>
+                <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 text-center">
+                    <span class="block text-3xl font-black text-white">4</span>
+                    <span class="text-xs uppercase font-bold text-orange-200 tracking-wider">Role Portals</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4 Role Portals Grid -->
+    <div>
+        <div class="text-center max-w-2xl mx-auto mb-8">
+            <h2 class="text-2xl font-bold text-slate-900">Choose Your Role Portal</h2>
+            <p class="text-sm text-slate-500 mt-1">Experience role-based workflows with dedicated views and permissions</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Admin Portal Card -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:border-orange-300 transition-all festival-card flex flex-col justify-between">
+                <div>
+                    <div class="w-12 h-12 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-xl mb-4">
+                        👑
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Fair Administrator</h3>
+                    <p class="text-xs text-slate-500 leading-relaxed mb-4">
+                        Create multi-day fairs with automated stall and calendar generation (<code class="text-orange-600 font-mono">usp_CreateFair</code>), monitor revenue, and view analytics.
+                    </p>
+                </div>
+                <div class="pt-4 border-t border-slate-100">
+                    <a asp-controller="Admin" asp-action="Dashboard" class="block text-center w-full py-2 px-3 rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-semibold text-xs transition">
+                        Admin Dashboard &rarr;
+                    </a>
+                </div>
+            </div>
+
+            <!-- Vendor Portal Card -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:border-emerald-300 transition-all festival-card flex flex-col justify-between">
+                <div>
+                    <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xl mb-4">
+                        🎪
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Fair Vendor</h3>
+                    <p class="text-xs text-slate-500 leading-relaxed mb-4">
+                        Explore interactive stall maps, select retail categories, and lease stalls with row-level transaction safety (<code class="text-emerald-600 font-mono">usp_BuyStall</code>).
+                    </p>
+                </div>
+                <div class="pt-4 border-t border-slate-100">
+                    <a asp-controller="Vendor" asp-action="Marketplace" class="block text-center w-full py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition">
+                        Browse Stalls &rarr;
+                    </a>
+                </div>
+            </div>
+
+            <!-- Visitor Portal Card -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:border-blue-300 transition-all festival-card flex flex-col justify-between">
+                <div>
+                    <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xl mb-4">
+                        🎟️
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Fair Visitor</h3>
+                    <p class="text-xs text-slate-500 leading-relaxed mb-4">
+                        Check real-time daily admission capacity, book single or group tickets (<code class="text-blue-600 font-mono">usp_BuyFairTicket</code>), and access digital QR passes.
+                    </p>
+                </div>
+                <div class="pt-4 border-t border-slate-100">
+                    <a asp-controller="Visitor" asp-action="BrowseFairs" class="block text-center w-full py-2 px-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition">
+                        Get Admission Passes &rarr;
+                    </a>
+                </div>
+            </div>
+
+            <!-- Employee Portal Card -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:border-purple-300 transition-all festival-card flex flex-col justify-between">
+                <div>
+                    <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-xl mb-4">
+                        💼
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Staff &amp; Employee</h3>
+                    <p class="text-xs text-slate-500 leading-relaxed mb-4">
+                        Browse event operations, sound engineering, and ticketing jobs. Submit applications securely (<code class="text-purple-600 font-mono">usp_RecruitEmployee</code>).
+                    </p>
+                </div>
+                <div class="pt-4 border-t border-slate-100">
+                    <a asp-controller="Employee" asp-action="JobListings" class="block text-center w-full py-2 px-3 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs transition">
+                        Browse Job Openings &rarr;
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Featured Fairs Section -->
+    <div class="space-y-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900">Upcoming &amp; Active Cultural Fairs</h2>
+                <p class="text-sm text-slate-500">Live festival schedules and real-time stall/ticket booking status</p>
+            </div>
+            <a asp-controller="Visitor" asp-action="BrowseFairs" class="text-xs font-semibold text-orange-600 hover:text-orange-700 flex items-center gap-1">
+                View All &rarr;
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @foreach (var fair in Model)
+            {
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between festival-card">
+                    <div>
+                        <!-- Fair Banner Image -->
+                        <div class="h-44 w-full bg-slate-200 relative overflow-hidden">
+                            @if (!string.IsNullOrWhiteSpace(fair.BannerImageUrl))
+                            {
+                                <img src="@fair.BannerImageUrl" alt="@fair.Title" class="w-full h-full object-cover" />
+                            }
+                            else
+                            {
+                                <div class="w-full h-full bg-gradient-to-tr from-orange-500 to-amber-400 flex items-center justify-center text-white text-3xl font-bold">
+                                    🎪
+                                </div>
+                            }
+                            <div class="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-md text-white text-xs font-bold px-2.5 py-1 rounded-full">
+                                @fair.StartDate.ToString("MMM dd") - @fair.EndDate.ToString("MMM dd, yyyy")
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="p-5 space-y-3">
+                            <h3 class="text-lg font-bold text-slate-900 leading-snug line-clamp-1">@fair.Title</h3>
+                            <p class="text-xs text-slate-500 flex items-center gap-1.5">
+                                <svg class="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                <span>@fair.Location</span>
+                            </p>
+                            <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+                                @fair.Description
+                            </p>
+
+                            <!-- Availability Badges -->
+                            <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100 text-xs">
+                                <div class="bg-emerald-50 rounded-lg p-2 text-center">
+                                    <span class="block text-emerald-800 font-bold">@fair.AvailableStalls / @fair.TotalStalls</span>
+                                    <span class="text-[10px] text-emerald-600 font-semibold uppercase">Stalls Open</span>
+                                </div>
+                                <div class="bg-blue-50 rounded-lg p-2 text-center">
+                                    <span class="block text-blue-800 font-bold">@fair.DailyCapacity.ToString("N0")</span>
+                                    <span class="text-[10px] text-blue-600 font-semibold uppercase">Daily Capacity</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="p-5 pt-0 grid grid-cols-2 gap-2">
+                        <a asp-controller="Vendor" asp-action="StallBooking" asp-route-fairId="@fair.FairId" class="text-center py-2 px-3 rounded-xl bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 text-slate-700 text-xs font-bold transition">
+                            Lease Stall
+                        </a>
+                        <a asp-controller="Visitor" asp-action="TicketBooking" asp-route-fairId="@fair.FairId" class="text-center py-2 px-3 rounded-xl bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold shadow-sm transition">
+                            Get Ticket ($@fair.BaseTicketPrice.ToString("F0"))
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

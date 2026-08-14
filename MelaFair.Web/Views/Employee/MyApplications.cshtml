@@ -1,0 +1,93 @@
+@model MelaFair.Web.Models.ViewModels.MyApplicationsViewModel
+@{
+    ViewData["Title"] = "My Job Applications";
+}
+
+<div class="space-y-8">
+    <!-- Header -->
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="space-y-1">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-100 text-purple-800">
+                📋 Applicant Tracker
+            </span>
+            <h1 class="text-2xl sm:text-3xl font-black text-slate-900">My Job Applications</h1>
+            <p class="text-xs sm:text-sm text-slate-500">
+                Track your submitted applications and interview review statuses across fair positions.
+            </p>
+        </div>
+
+        <a asp-controller="Employee" asp-action="JobListings" class="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-md shadow-purple-600/20 transition self-start md:self-auto">
+            + Browse Open Jobs
+        </a>
+    </div>
+
+    @if (!Model.Applications.Any())
+    {
+        <div class="bg-white rounded-3xl border border-slate-200 p-12 text-center space-y-4 shadow-sm">
+            <div class="w-16 h-16 rounded-3xl bg-purple-50 text-purple-600 mx-auto flex items-center justify-center text-3xl font-bold">
+                💼
+            </div>
+            <h2 class="text-lg font-bold text-slate-900">No Applications Submitted</h2>
+            <p class="text-xs text-slate-500 max-w-sm mx-auto">
+                You haven't applied for any fair positions yet. Check the job board to apply for operations, ticketing, or sound staff!
+            </p>
+            <a asp-controller="Employee" asp-action="JobListings" class="inline-block px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-md transition">
+                Browse Open Roles
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            @foreach (var app in Model.Applications)
+            {
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4 hover:border-purple-300 transition">
+                    <div class="flex items-start justify-between border-b border-slate-100 pb-3">
+                        <div>
+                            <span class="text-[10px] font-bold text-purple-600 uppercase tracking-widest block">
+                                @app.Department
+                            </span>
+                            <h2 class="text-lg font-bold text-slate-900 mt-0.5">@app.JobTitle</h2>
+                            <span class="text-xs text-slate-500">🎪 @app.FairTitle</span>
+                        </div>
+                        <div class="text-right">
+                            @switch (app.Status)
+                            {
+                                case MelaFair.Core.Enums.ApplicationStatus.Accepted:
+                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                        ✓ Accepted
+                                    </span>
+                                    break;
+                                case MelaFair.Core.Enums.ApplicationStatus.Shortlisted:
+                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 border border-blue-200">
+                                        ★ Shortlisted
+                                    </span>
+                                    break;
+                                case MelaFair.Core.Enums.ApplicationStatus.Rejected:
+                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-200">
+                                        ✕ Rejected
+                                    </span>
+                                    break;
+                                default:
+                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                                        ⏳ Review Pending
+                                    </span>
+                                    break;
+                            }
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 rounded-xl p-3 text-xs space-y-1 text-slate-600">
+                        <span class="font-bold text-slate-800 block text-[10px] uppercase">My Resume Summary:</span>
+                        <p class="line-clamp-3 italic">"@app.ResumeSummary"</p>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-2 border-t border-slate-100 text-[11px] text-slate-500 font-medium">
+                        <span>Wage: $@app.DailyWage.ToString("N0") / day</span>
+                        <span>Submitted: @app.ApplicationDate.ToString("MMM dd, yyyy")</span>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

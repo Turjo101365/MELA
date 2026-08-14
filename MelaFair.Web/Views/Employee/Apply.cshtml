@@ -1,0 +1,73 @@
+@model MelaFair.Web.Models.ViewModels.ApplyJobViewModel
+@{
+    ViewData["Title"] = "Submit Job Application";
+}
+
+<div class="max-w-2xl mx-auto space-y-6">
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
+        <div class="border-b border-slate-100 pb-4 space-y-2">
+            <div class="flex items-center gap-2">
+                <a asp-controller="Employee" asp-action="JobListings" class="text-xs font-bold text-slate-500 hover:text-slate-700">
+                    &larr; Back to Job Board
+                </a>
+                <span class="text-slate-300">&bull;</span>
+                <span class="text-xs font-bold text-purple-700 bg-purple-50 px-2.5 py-0.5 rounded-full">Recruitment Procedure</span>
+            </div>
+            <h1 class="text-2xl font-black text-slate-900">@Model.JobTitle</h1>
+            <div class="flex flex-wrap items-center gap-4 text-xs text-slate-500 font-medium">
+                <span>🎪 @Model.FairTitle</span>
+                <span>🏢 @Model.Department</span>
+                <span class="text-emerald-700 font-bold">💵 Daily Wage: $@Model.DailyWage.ToString("N0")</span>
+            </div>
+        </div>
+
+        <!-- Position Requirements Alert -->
+        <div class="bg-purple-50 border border-purple-100 rounded-2xl p-4 text-xs space-y-1 text-purple-900">
+            <span class="font-bold block uppercase tracking-wider text-[10px] text-purple-700">Job Qualifications</span>
+            <p>@Model.Requirements</p>
+        </div>
+
+        <form asp-controller="Employee" asp-action="Apply" method="post" class="space-y-4">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="JobPostingId" />
+            <input type="hidden" asp-for="JobTitle" />
+            <input type="hidden" asp-for="FairTitle" />
+            <input type="hidden" asp-for="Department" />
+            <input type="hidden" asp-for="DailyWage" />
+            <input type="hidden" asp-for="Requirements" />
+
+            <div asp-validation-summary="ModelOnly" class="text-xs font-semibold text-rose-600 bg-rose-50 p-3 rounded-xl"></div>
+
+            <div>
+                <label asp-for="ContactPhone" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1"></label>
+                <input asp-for="ContactPhone" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" placeholder="+880 1700 000000" />
+                <span asp-validation-for="ContactPhone" class="text-xs text-rose-500"></span>
+            </div>
+
+            <div>
+                <label asp-for="ExperienceYears" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Years of Event / Relevant Experience</label>
+                <input asp-for="ExperienceYears" type="number" min="0" max="40" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" />
+                <span asp-validation-for="ExperienceYears" class="text-xs text-rose-500"></span>
+            </div>
+
+            <div>
+                <label asp-for="ResumeSummary" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Resume Summary &amp; Key Skills</label>
+                <textarea asp-for="ResumeSummary" rows="4" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" placeholder="Summarize your previous event roles, crowd supervision background, certifications, and communication strengths..."></textarea>
+                <span asp-validation-for="ResumeSummary" class="text-xs text-rose-500"></span>
+            </div>
+
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-end space-x-3">
+                <a asp-controller="Employee" asp-action="JobListings" class="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">
+                    Cancel
+                </a>
+                <button type="submit" class="px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-md shadow-purple-600/20 transition">
+                    Submit Job Application
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
