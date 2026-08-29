@@ -31,7 +31,7 @@ public class AccountController : Controller
 
     [HttpGet]
     [AllowAnonymous]
-    public IActionResult Login(string? returnUrl = null)
+    public IActionResult Login(string? returnUrl = null, string? email = null, string? role = null)
     {
         if (User.Identity?.IsAuthenticated == true)
         {
@@ -39,7 +39,12 @@ public class AccountController : Controller
         }
 
         ViewData["ReturnUrl"] = returnUrl;
-        return View(new LoginViewModel { ReturnUrl = returnUrl });
+        return View(new LoginViewModel 
+        { 
+            ReturnUrl = returnUrl, 
+            Email = email ?? string.Empty,
+            TargetRole = role ?? RoleConstants.Visitor
+        });
     }
 
     [HttpPost]
@@ -57,22 +62,36 @@ public class AccountController : Controller
         var user = await _userManager.FindByEmailAsync(model.Email);
         if (user == null)
         {
-            ModelState.AddModelError(string.Empty, "Invalid login attempt. Account not found.");
+            ModelState.AddModelError(string.Empty, "Invalid login credentials. Account not found with this email.");
             return View(model);
         }
 
-        var result = await _signInManager.PasswordSignInAsync(user.UserName!, model.Password, model.RememberMe, lockoutOnFailure: false);
-        if (result.Succeeded)
+        // Verify password
+        var passwordCheck = await _signInManager.CheckPasswordSignInAsync(user, model.Password, lockoutOnFailure: false);
+        if (!passwordCheck.Succeeded)
         {
-            user.LastLoginAt = DateTime.UtcNow;
-            await _userManager.UpdateAsync(user);
-
-            TempData["SuccessMessage"] = $"Welcome back, {user.FullName}!";
-            return RedirectToLocal(returnUrl);
+            ModelState.AddModelError(string.Empty, "Invalid password. Please check your credentials and try again.");
+            return View(model);
         }
 
-        ModelState.AddModelError(string.Empty, "Invalid password or email address.");
-        return View(model);
+        // Verify role if a specific role portal was selected
+        if (!string.IsNullOrWhiteSpace(model.TargetRole))
+        {
+            bool hasRole = await _userManager.IsInRoleAsync(user, model.TargetRole);
+            if (!hasRole)
+            {
+                ModelState.AddModelError(string.Empty, $"Access Denied: This account is registered as '{user.UserRole}', not '{model.TargetRole}'. Please select the '{user.UserRole}' tab to sign in.");
+                return View(model);
+            }
+        }
+
+        // Sign in user
+        await _signInManager.SignInAsync(user, model.RememberMe);
+        user.LastLoginAt = DateTime.UtcNow;
+        await _userManager.UpdateAsync(user);
+
+        TempData["SuccessMessage"] = $"Welcome back, {user.FullName}! Logged in as {user.UserRole}.";
+        return RedirectToLocal(returnUrl);
     }
 
     [HttpGet]
@@ -155,44 +174,66 @@ public class AccountController : Controller
         return View();
     }
 
-    /// <summary>
-    /// Quick one-click demo login helper for seamless review and evaluation
-    /// </summary>
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult AdminLogin()
+    {
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            return RedirectToAction("Dashboard", "Admin");
+        }
+
+        return View();
+    }
+
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> QuickLogin(string role)
+    public async Task<IActionResult> AdminLogin(string email, string password)
     {
-        string email = role.ToLowerInvariant() switch
+        if (!ModelState.IsValid)
         {
-            "admin" => "admin@mela.com",
-            "vendor" => "vendor@mela.com",
-            "visitor" => "visitor@mela.com",
-            "employee" => "employee@mela.com",
-            _ => "visitor@mela.com"
-        };
-
-        var user = await _userManager.FindByEmailAsync(email);
-        if (user != null)
-        {
-            await _signInManager.SignInAsync(user, isPersistent: false);
-            TempData["SuccessMessage"] = $"Logged in as Demo {user.UserRole}: {user.FullName}";
-
-            return role.ToLowerInvariant() switch
-            {
-                "admin" => RedirectToAction("Dashboard", "Admin"),
-                "vendor" => RedirectToAction("Marketplace", "Vendor"),
-                "visitor" => RedirectToAction("BrowseFairs", "Visitor"),
-                "employee" => RedirectToAction("JobListings", "Employee"),
-                _ => RedirectToAction("Index", "Home")
-            };
+            ViewBag.ErrorMessage = "Please enter valid credentials.";
+            return View();
         }
 
-        TempData["ErrorMessage"] = "Demo account not found. Please restart the application to seed default accounts.";
-        return RedirectToAction("Login");
+        // Verify it's the admin email
+        if (email != "tanmoy.cse.20230104124@aust.edu")
+        {
+            ViewBag.ErrorMessage = "Invalid admin credentials.";
+            return View();
+        }
+
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+            ViewBag.ErrorMessage = "Admin account not found.";
+            return View();
+        }
+
+        // Verify it's an admin user
+        if (!await _userManager.IsInRoleAsync(user, RoleConstants.Admin))
+        {
+            ViewBag.ErrorMessage = "This account is not an administrator account.";
+            return View();
+        }
+
+        var result = await _signInManager.PasswordSignInAsync(user.UserName!, password, false, lockoutOnFailure: false);
+        if (result.Succeeded)
+        {
+            user.LastLoginAt = DateTime.UtcNow;
+            await _userManager.UpdateAsync(user);
+
+            TempData["SuccessMessage"] = $"Welcome Admin! Logged in as {user.FullName}";
+            return RedirectToAction("Dashboard", "Admin");
+        }
+
+        ViewBag.ErrorMessage = "Invalid password. Access denied.";
+        return View();
     }
 
     private IActionResult RedirectToLocal(string? returnUrl)
+
     {
         if (Url.IsLocalUrl(returnUrl))
         {

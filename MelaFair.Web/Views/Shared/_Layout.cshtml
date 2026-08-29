@@ -15,6 +15,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVJkEZSMUkrQ6usKGiOL6NwAn2NAIj50tnMYrQIEQrUreQ/yKxeFJ7cuB67v7/QIxxNNUul3obQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -51,48 +54,6 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body class="flex flex-col min-h-full text-slate-800 antialiased selection:bg-orange-500 selection:text-white">
-
-    <!-- Top Demo Role Switcher Bar -->
-    <div class="bg-slate-900 text-slate-300 text-xs py-2 px-4 border-b border-slate-800">
-        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
-            <div class="flex items-center space-x-2">
-                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-orange-500/20 text-orange-400 border border-orange-500/30">
-                    ⚡ Demo Quick-Switch
-                </span>
-                <span class="hidden sm:inline text-slate-400">One-click test accounts:</span>
-            </div>
-            <div class="flex items-center gap-1 sm:gap-2">
-                <form asp-controller="Account" asp-action="QuickLogin" method="post" class="inline">
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" name="role" value="Admin" />
-                    <button type="submit" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-orange-600 hover:text-white transition font-medium text-slate-200">
-                        🔑 Admin
-                    </button>
-                </form>
-                <form asp-controller="Account" asp-action="QuickLogin" method="post" class="inline">
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" name="role" value="Vendor" />
-                    <button type="submit" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-emerald-600 hover:text-white transition font-medium text-slate-200">
-                        🎪 Vendor
-                    </button>
-                </form>
-                <form asp-controller="Account" asp-action="QuickLogin" method="post" class="inline">
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" name="role" value="Visitor" />
-                    <button type="submit" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-blue-600 hover:text-white transition font-medium text-slate-200">
-                        🎟️ Visitor
-                    </button>
-                </form>
-                <form asp-controller="Account" asp-action="QuickLogin" method="post" class="inline">
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" name="role" value="Employee" />
-                    <button type="submit" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-purple-600 hover:text-white transition font-medium text-slate-200">
-                        💼 Employee
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
 
     <!-- Main Navigation Bar -->
     <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">

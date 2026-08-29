@@ -5,6 +5,71 @@
 }
 
 <div class="space-y-8">
+    <!-- Admin Credentials Card -->
+    <div class="bg-gradient-to-br from-red-50 to-orange-50 rounded-2xl border-2 border-red-200 p-6 shadow-sm">
+        <div class="flex items-start justify-between mb-4">
+            <div class="flex items-center gap-3">
+                <div class="p-3 rounded-lg bg-red-600 text-white">
+                    <i class="fas fa-lock text-lg"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900">Administrator Credentials</h3>
+                    <p class="text-xs text-slate-600">Your secure login information</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Email Field -->
+            <div class="bg-white rounded-xl border border-slate-200 p-4 space-y-2">
+                <label class="text-xs font-bold text-slate-600 uppercase tracking-wider flex items-center gap-2">
+                    <i class="fas fa-envelope text-red-600"></i> Email Address
+                </label>
+                <div class="flex items-center gap-2">
+                    <input type="text" 
+                           id="adminEmail"
+                           value="tanmoy.cse.20230104124@aust.edu" 
+                           readonly 
+                           class="flex-1 px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-sm font-mono text-slate-700" />
+                    <button type="button" 
+                            class="copy-btn px-3 py-2 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 font-bold transition"
+                            onclick="copyToClipboard('adminEmail')">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="bg-white rounded-xl border border-slate-200 p-4 space-y-2">
+                <label class="text-xs font-bold text-slate-600 uppercase tracking-wider flex items-center gap-2">
+                    <i class="fas fa-key text-red-600"></i> Password
+                </label>
+                <div class="flex items-center gap-2">
+                    <input type="password" 
+                           id="adminPassword"
+                           value="Turjo124" 
+                           readonly 
+                           class="flex-1 px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-sm font-mono text-slate-700" />
+                    <button type="button" 
+                            class="toggle-pwd px-3 py-2 rounded-lg bg-orange-100 hover:bg-orange-200 text-orange-600 font-bold transition"
+                            onclick="togglePassword('adminPassword')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button type="button" 
+                            class="copy-btn px-3 py-2 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 font-bold transition"
+                            onclick="copyToClipboard('adminPassword')">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 p-3 bg-red-100 border border-red-300 rounded-lg text-xs text-red-700 flex items-start gap-2">
+            <i class="fas fa-info-circle mt-0.5"></i>
+            <span><strong>Security Note:</strong> Keep these credentials secure. Never share with unauthorized personnel.</span>
+        </div>
+    </div>
+
     <!-- Stat Metrics Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         <!-- Total Revenue -->
@@ -133,3 +198,37 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function copyToClipboard(fieldId) {
+            const field = document.getElementById(fieldId);
+            field.select();
+            document.execCommand('copy');
+            
+            // Show feedback
+            const btn = event.target.closest('button');
+            const icon = btn.querySelector('i');
+            const originalClass = icon.className;
+            icon.className = 'fas fa-check text-green-600';
+            
+            setTimeout(() => {
+                icon.className = originalClass;
+            }, 1500);
+        }
+
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const btn = event.target.closest('button');
+            const icon = btn.querySelector('i');
+            
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                field.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        }
+    </script>
+}

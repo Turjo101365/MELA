@@ -23,6 +23,7 @@ public class VisitorController : Controller
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> BrowseFairs()
     {
         var fairs = await _fairService.GetAllFairsAsync(onlyActive: true);

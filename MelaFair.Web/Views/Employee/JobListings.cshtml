@@ -16,9 +16,12 @@
             </p>
         </div>
 
-        <a asp-controller="Employee" asp-action="MyApplications" class="px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-md transition self-start md:self-auto whitespace-nowrap">
-            📋 My Applications
-        </a>
+        @if (User.IsInRole(RoleConstants.Employee))
+        {
+            <a asp-controller="Employee" asp-action="MyApplications" class="px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-md transition self-start md:self-auto whitespace-nowrap">
+                📋 My Applications
+            </a>
+        }
     </div>
 
     <!-- Job Cards -->

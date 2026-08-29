@@ -40,7 +40,7 @@ public static class DbInitializer
             }
 
             // 4. Seed Demo Users
-            var adminUser = await SeedUserAsync(userManager, "tanmoy.cse.20230104124@aust.edu", "Turjo101365", "System Administrator", RoleConstants.Admin);
+            var adminUser = await SeedUserAsync(userManager, "tanmoy.cse.20230104124@aust.edu", "Turjo124", "System Administrator", RoleConstants.Admin);
             var vendorUser = await SeedUserAsync(userManager, "vendor@mela.com", "Vendor@123456", "Karupanna Crafts Ltd", RoleConstants.Vendor);
             var visitorUser = await SeedUserAsync(userManager, "visitor@mela.com", "Visitor@123456", "Rahim Ahmed", RoleConstants.Visitor);
             var employeeUser = await SeedUserAsync(userManager, "employee@mela.com", "Employee@123456", "Tanvir Hasan", RoleConstants.Employee);
@@ -162,7 +162,21 @@ public static class DbInitializer
         string role)
     {
         var existingUser = await userManager.FindByEmailAsync(email);
-        if (existingUser != null) return existingUser;
+        if (existingUser != null)
+        {
+            if (!await userManager.CheckPasswordAsync(existingUser, password))
+            {
+                var token = await userManager.GeneratePasswordResetTokenAsync(existingUser);
+                await userManager.ResetPasswordAsync(existingUser, token, password);
+            }
+            if (!await userManager.IsInRoleAsync(existingUser, role))
+            {
+                await userManager.AddToRoleAsync(existingUser, role);
+            }
+            existingUser.UserRole = role;
+            await userManager.UpdateAsync(existingUser);
+            return existingUser;
+        }
 
         var user = new ApplicationUser
         {

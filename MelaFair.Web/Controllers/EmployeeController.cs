@@ -21,6 +21,7 @@ public class EmployeeController : Controller
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> JobListings(int? fairId = null)
     {
         var postings = await _recruitmentService.GetActiveJobListingsAsync(fairId);
