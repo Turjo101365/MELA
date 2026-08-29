@@ -40,7 +40,7 @@ public static class DbInitializer
             }
 
             // 4. Seed Demo Users
-            var adminUser = await SeedUserAsync(userManager, "admin@mela.com", "Admin@123456", "System Administrator", RoleConstants.Admin);
+            var adminUser = await SeedUserAsync(userManager, "tanmoy.cse.20230104124@aust.edu", "Turjo101365", "System Administrator", RoleConstants.Admin);
             var vendorUser = await SeedUserAsync(userManager, "vendor@mela.com", "Vendor@123456", "Karupanna Crafts Ltd", RoleConstants.Vendor);
             var visitorUser = await SeedUserAsync(userManager, "visitor@mela.com", "Visitor@123456", "Rahim Ahmed", RoleConstants.Visitor);
             var employeeUser = await SeedUserAsync(userManager, "employee@mela.com", "Employee@123456", "Tanvir Hasan", RoleConstants.Employee);
