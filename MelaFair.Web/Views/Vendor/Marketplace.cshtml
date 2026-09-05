@@ -1,6 +1,10 @@
 @model IEnumerable<MelaFair.Web.Models.Entities.Fair>
 @{
-    ViewData["Title"] = "Vendor Stall Marketplace";
+    ViewData["Title"] = "Vendor Commercial Marketplace";
+    string search = ViewBag.Search as string ?? "";
+    string location = ViewBag.Location as string ?? "";
+    decimal? maxPrice = ViewBag.MaxPrice as decimal?;
+    string sortOrder = ViewBag.SortOrder as string ?? "date_asc";
 }
 
 <div class="space-y-8">
@@ -8,7 +12,7 @@
     <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div class="space-y-1">
             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
-                🎪 Vendor Portal
+                🎪 Commercial Marketplace
             </span>
             <h1 class="text-2xl sm:text-3xl font-black text-slate-900">Commercial Stall Marketplace</h1>
             <p class="text-xs sm:text-sm text-slate-500">
@@ -16,78 +20,146 @@
             </p>
         </div>
 
-        <a asp-controller="Vendor" asp-action="MyStalls" class="px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-md transition self-start md:self-auto whitespace-nowrap">
-            📜 My Leased Stalls
-        </a>
+        <div class="flex items-center gap-3 self-start md:self-auto">
+            <a asp-controller="Vendor" asp-action="Dashboard" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">
+                &larr; Dashboard
+            </a>
+            <a asp-controller="Vendor" asp-action="MyStalls" class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-md transition whitespace-nowrap">
+                📜 My Leased Stalls
+            </a>
+        </div>
     </div>
 
-    <!-- Active Fairs for Vendors -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        @foreach (var fair in Model)
-        {
-            <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between festival-card">
-                <div>
-                    <!-- Image -->
-                    <div class="h-44 w-full bg-slate-200 relative overflow-hidden">
-                        @if (!string.IsNullOrWhiteSpace(fair.BannerImageUrl))
+    <!-- Search & Filter Controls Card -->
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+        <form method="get" asp-controller="Vendor" asp-action="Marketplace" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Search Keyword -->
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Search Fairs</label>
+                <div class="relative">
+                    <input type="text" name="search" value="@search" placeholder="e.g. Boishakhi, Folk, Tea..." class="w-full pl-9 pr-3.5 py-2.5 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+                    <i class="fas fa-search absolute left-3 top-3 text-slate-400 text-xs"></i>
+                </div>
+            </div>
+
+            <!-- Location Filter -->
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Venue / City</label>
+                <div class="relative">
+                    <input type="text" name="location" value="@location" placeholder="e.g. Dhaka, Chattogram..." class="w-full pl-9 pr-3.5 py-2.5 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+                    <i class="fas fa-map-marker-alt absolute left-3 top-3 text-slate-400 text-xs"></i>
+                </div>
+            </div>
+
+            <!-- Sort By -->
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Sort Festivals By</label>
+                <select name="sortOrder" class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none font-semibold text-slate-700 bg-white">
+                    <option value="date_asc" selected="@(sortOrder == "date_asc")">📅 Nearest Opening Date</option>
+                    <option value="price_asc" selected="@(sortOrder == "price_asc")">💲 Stall Price: Low to High</option>
+                    <option value="price_desc" selected="@(sortOrder == "price_desc")">💲 Stall Price: High to Low</option>
+                    <option value="stalls_desc" selected="@(sortOrder == "stalls_desc")">🎪 Most Open Stalls</option>
+                </select>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-end gap-2">
+                <button type="submit" class="flex-1 py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/20 transition flex items-center justify-center gap-1.5">
+                    <i class="fas fa-filter text-xs"></i>
+                    <span>Apply Filters</span>
+                </button>
+                @if (!string.IsNullOrWhiteSpace(search) || !string.IsNullOrWhiteSpace(location) || sortOrder != "date_asc")
+                {
+                    <a asp-controller="Vendor" asp-action="Marketplace" class="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs transition" title="Clear Filters">
+                        <i class="fas fa-undo"></i>
+                    </a>
+                }
+            </div>
+        </form>
+    </div>
+
+    <!-- Active Fairs Results Grid -->
+    @if (!Model.Any())
+    {
+        <div class="bg-white rounded-3xl border border-slate-200 p-12 text-center space-y-4 shadow-sm">
+            <div class="w-16 h-16 rounded-3xl bg-slate-100 text-slate-400 mx-auto flex items-center justify-center text-3xl font-bold">
+                🔍
+            </div>
+            <h2 class="text-lg font-bold text-slate-900">No Matching Festivals Found</h2>
+            <p class="text-xs text-slate-500 max-w-sm mx-auto">
+                No active fairs matched your search criteria. Try modifying your search keyword or clearing filters.
+            </p>
+            <a asp-controller="Vendor" asp-action="Marketplace" class="inline-block px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition">
+                Reset All Filters
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @foreach (var fair in Model)
+            {
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between hover:border-emerald-300 hover:shadow-lg transition festival-card">
+                    <div>
+                        <!-- Image -->
+                        <div class="h-44 w-full bg-slate-200 relative overflow-hidden">
+                            @if (!string.IsNullOrWhiteSpace(fair.BannerImageUrl))
+                            {
+                                <img src="@fair.BannerImageUrl" alt="@fair.Title" class="w-full h-full object-cover" />
+                            }
+                            else
+                            {
+                                <div class="w-full h-full bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white text-3xl font-bold">
+                                    🎪
+                                </div>
+                            }
+                            <div class="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-md text-white text-xs font-bold px-2.5 py-1 rounded-full">
+                                @fair.StartDate.ToString("MMM dd") - @fair.EndDate.ToString("MMM dd, yyyy")
+                            </div>
+                        </div>
+
+                        <!-- Details -->
+                        <div class="p-6 space-y-3">
+                            <h2 class="text-lg font-bold text-slate-900 leading-snug">@fair.Title</h2>
+                            <p class="text-xs text-slate-500 flex items-center gap-1.5">
+                                <i class="fas fa-map-marker-alt text-slate-400"></i>
+                                <span>@fair.Location</span>
+                            </p>
+                            <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+                                @fair.Description
+                            </p>
+
+                            <!-- Stall Stats Badge -->
+                            <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-3 flex items-center justify-between text-xs">
+                                <div>
+                                    <span class="block text-[10px] text-emerald-700 font-bold uppercase tracking-wider">Available Stalls</span>
+                                    <span class="text-base font-black text-emerald-900">@fair.AvailableStalls <span class="text-xs font-normal text-emerald-700">/ @fair.TotalStalls total</span></span>
+                                </div>
+                                <div class="text-right">
+                                    <span class="block text-[10px] text-slate-500 uppercase font-semibold">Lease Starts At</span>
+                                    <span class="text-sm font-black text-slate-900">$@fair.BaseStallPrice.ToString("N0")</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Action -->
+                    <div class="p-6 pt-0">
+                        @if (fair.AvailableStalls > 0)
                         {
-                            <img src="@fair.BannerImageUrl" alt="@fair.Title" class="w-full h-full object-cover" />
+                            <a asp-controller="Vendor" asp-action="StallBooking" asp-route-fairId="@fair.FairId" class="block text-center w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/20 transition">
+                                Select &amp; Lease Stalls &rarr;
+                            </a>
                         }
                         else
                         {
-                            <div class="w-full h-full bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white text-3xl font-bold">
-                                🎪
-                            </div>
+                            <button disabled class="block text-center w-full py-2.5 px-4 rounded-xl bg-slate-100 text-slate-400 font-bold text-xs cursor-not-allowed">
+                                All Stalls Leased (Sold Out)
+                            </button>
                         }
-                        <div class="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-md text-white text-xs font-bold px-2.5 py-1 rounded-full">
-                            @fair.StartDate.ToString("MMM dd") - @fair.EndDate.ToString("MMM dd, yyyy")
-                        </div>
-                    </div>
-
-                    <!-- Details -->
-                    <div class="p-6 space-y-3">
-                        <h2 class="text-lg font-bold text-slate-900 leading-snug">@fair.Title</h2>
-                        <p class="text-xs text-slate-500 flex items-center gap-1.5">
-                            <svg class="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                            <span>@fair.Location</span>
-                        </p>
-                        <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed">
-                            @fair.Description
-                        </p>
-
-                        <!-- Stall Stats Badge -->
-                        <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-3 flex items-center justify-between text-xs">
-                            <div>
-                                <span class="block text-[10px] text-emerald-700 font-bold uppercase tracking-wider">Available Stalls</span>
-                                <span class="text-base font-black text-emerald-900">@fair.AvailableStalls <span class="text-xs font-normal text-emerald-700">/ @fair.TotalStalls total</span></span>
-                            </div>
-                            <div class="text-right">
-                                <span class="block text-[10px] text-slate-500 uppercase font-semibold">Lease Starts At</span>
-                                <span class="text-sm font-black text-slate-900">$@fair.BaseStallPrice.ToString("N0")</span>
-                            </div>
-                        </div>
                     </div>
                 </div>
-
-                <!-- Card Action -->
-                <div class="p-6 pt-0">
-                    @if (fair.AvailableStalls > 0)
-                    {
-                        <a asp-controller="Vendor" asp-action="StallBooking" asp-route-fairId="@fair.FairId" class="block text-center w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/20 transition">
-                            Select &amp; Lease Stalls &rarr;
-                        </a>
-                    }
-                    else
-                    {
-                        <button disabled class="block text-center w-full py-2.5 px-4 rounded-xl bg-slate-100 text-slate-400 font-bold text-xs cursor-not-allowed">
-                            All Stalls Leased (Sold Out)
-                        </button>
-                    }
-                </div>
-            </div>
-        }
-    </div>
+            }
+        </div>
+    }
 </div>

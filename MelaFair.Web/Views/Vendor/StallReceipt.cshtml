@@ -1,0 +1,216 @@
+@model MelaFair.Web.Models.ViewModels.StallReceiptViewModel
+@{
+    ViewData["Title"] = $"Commercial Trade Permit - {Model.StallNumber}";
+}
+
+<div class="max-w-4xl mx-auto my-6 space-y-6">
+    <!-- Top Action Bar (Hidden when printing) -->
+    <div class="flex items-center justify-between no-print bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+        <a asp-controller="Vendor" asp-action="MyStalls" class="text-xs font-bold text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back to My Stalls</span>
+        </a>
+
+        <div class="flex items-center gap-3">
+            <a asp-controller="Vendor" asp-action="Dashboard" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">
+                Vendor Dashboard
+            </a>
+            <button type="button" onclick="window.print()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/20 transition flex items-center gap-2">
+                <i class="fas fa-print"></i>
+                <span>Print Official Permit / Invoice</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Official Printable Certificate Document -->
+    <div class="bg-white rounded-3xl border-2 border-slate-300 shadow-xl overflow-hidden print-container relative">
+        <!-- Security Watermark Pattern -->
+        <div class="absolute inset-0 opacity-[0.03] pointer-events-none flex items-center justify-center select-none font-black text-9xl uppercase tracking-widest text-slate-900 rotate-[-25deg]">
+            MELA OFFICIAL
+        </div>
+
+        <!-- Document Header -->
+        <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-emerald-950 text-white p-8 sm:p-10 border-b-4 border-emerald-500 relative">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                <div class="space-y-2">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-500 text-white flex items-center justify-center font-black text-2xl shadow-lg shadow-emerald-500/30">
+                            M
+                        </div>
+                        <div>
+                            <h1 class="text-2xl sm:text-3xl font-black tracking-tight uppercase">MELA Event Authority</h1>
+                            <p class="text-xs text-emerald-300 font-medium tracking-wider uppercase">Official Cultural Fair &amp; Commercial Expo Licensing</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-left sm:text-right space-y-1">
+                    <span class="inline-block px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-mono font-bold uppercase tracking-wider">
+                        CERTIFICATE OF ALLOCATION
+                    </span>
+                    <div class="text-xs text-slate-400 font-mono">Permit Ref: <span class="text-white font-bold">@Model.TransactionReference</span></div>
+                    <div class="text-xs text-slate-400">Issue Date: @Model.BookingDate.ToString("MMM dd, yyyy HH:mm") UTC</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Certificate Body -->
+        <div class="p-8 sm:p-10 space-y-8">
+            <!-- Stall Highlight Banner -->
+            <div class="bg-gradient-to-br from-emerald-50 via-teal-50 to-slate-50 rounded-2xl border-2 border-emerald-200 p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                <div class="space-y-1">
+                    <span class="text-[10px] font-bold text-emerald-700 uppercase tracking-widest block">Allocated Festival Stall</span>
+                    <h2 class="text-2xl sm:text-3xl font-black text-slate-900 font-mono flex items-center gap-3">
+                        <span>Booth #@Model.StallNumber</span>
+                        <span class="text-xs font-bold text-emerald-800 bg-emerald-200/80 px-2.5 py-0.5 rounded-full uppercase">
+                            @Model.PaymentStatus
+                        </span>
+                    </h2>
+                    <p class="text-xs text-slate-600">
+                        Category: <strong class="text-slate-900">@Model.Category</strong> &bull; Size Class: <strong class="text-slate-900">@Model.Size</strong>
+                    </p>
+                </div>
+
+                <div class="text-left sm:text-right bg-white p-4 rounded-xl border border-emerald-200/70 shadow-sm">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Lease Fee Paid</span>
+                    <span class="text-2xl font-black text-emerald-700 font-mono">$@Model.AmountPaid.ToString("N2")</span>
+                    <span class="block text-[10px] text-slate-500">Row-Lock Concurrency Verified</span>
+                </div>
+            </div>
+
+            <!-- Two Columns Specs Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-2">
+                <!-- Left: Vendor & Fair Information -->
+                <div class="space-y-4">
+                    <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider border-b border-slate-200 pb-2 flex items-center gap-2">
+                        <i class="fas fa-building text-emerald-600"></i>
+                        <span>Licensee &amp; Festival Particulars</span>
+                    </h3>
+
+                    <div class="space-y-3 text-xs">
+                        <div class="flex justify-between py-1 border-b border-slate-100">
+                            <span class="text-slate-500">Authorized Vendor:</span>
+                            <span class="font-bold text-slate-900">@Model.VendorName</span>
+                        </div>
+                        <div class="flex justify-between py-1 border-b border-slate-100">
+                            <span class="text-slate-500">Contact Email:</span>
+                            <span class="font-mono text-slate-700">@Model.VendorEmail</span>
+                        </div>
+                        <div class="flex justify-between py-1 border-b border-slate-100">
+                            <span class="text-slate-500">Exhibition Title:</span>
+                            <span class="font-bold text-slate-900">@Model.FairTitle</span>
+                        </div>
+                        <div class="flex justify-between py-1 border-b border-slate-100">
+                            <span class="text-slate-500">Exhibition Venue:</span>
+                            <span class="font-semibold text-slate-800">@Model.Location</span>
+                        </div>
+                        <div class="flex justify-between py-1 border-b border-slate-100">
+                            <span class="text-slate-500">Exhibition Operating Period:</span>
+                            <span class="font-bold text-emerald-800">@Model.StartDate.ToString("MMM dd, yyyy") &mdash; @Model.EndDate.ToString("MMM dd, yyyy")</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Commercial Terms & Concurrency Validation -->
+                <div class="space-y-4">
+                    <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider border-b border-slate-200 pb-2 flex items-center gap-2">
+                        <i class="fas fa-receipt text-emerald-600"></i>
+                        <span>Transaction &amp; Regulatory Verification</span>
+                    </h3>
+
+                    <div class="space-y-3 text-xs">
+                        <div class="flex justify-between py-1 border-b border-slate-100">
+                            <span class="text-slate-500">Transaction ID:</span>
+                            <span class="font-mono font-bold text-slate-900">@Model.TransactionReference</span>
+                        </div>
+                        <div class="flex justify-between py-1 border-b border-slate-100">
+                            <span class="text-slate-500">Concurrency Lock:</span>
+                            <span class="font-mono text-emerald-700 font-bold">SQL UPDLOCK (usp_BuyStall)</span>
+                        </div>
+                        <div class="flex justify-between py-1 border-b border-slate-100">
+                            <span class="text-slate-500">Estimated Daily Footfall:</span>
+                            <span class="font-semibold text-slate-800">~@Model.EstimatedDailyFootfall.ToString("N0") Visitors/day</span>
+                        </div>
+                        <div class="flex justify-between py-1 border-b border-slate-100">
+                            <span class="text-slate-500">Commercial Trade Rights:</span>
+                            <span class="font-semibold text-slate-800">Retail, Showcase &amp; POS</span>
+                        </div>
+                        @if (!string.IsNullOrWhiteSpace(Model.Notes))
+                        {
+                            <div class="py-1">
+                                <span class="text-slate-500 block mb-0.5">Special Vendor Notes:</span>
+                                <span class="italic text-slate-700 bg-slate-50 p-2 rounded-lg block border border-slate-100">"@Model.Notes"</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Barcode & Official Signature Row -->
+            <div class="pt-6 border-t-2 border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-6">
+                <!-- Barcode Simulation -->
+                <div class="space-y-1.5 text-center sm:text-left">
+                    <div class="h-10 flex items-center space-x-1 opacity-80">
+                        <div class="w-1 h-full bg-slate-900"></div>
+                        <div class="w-0.5 h-full bg-slate-900"></div>
+                        <div class="w-2 h-full bg-slate-900"></div>
+                        <div class="w-1.5 h-full bg-slate-900"></div>
+                        <div class="w-0.5 h-full bg-slate-900"></div>
+                        <div class="w-1 h-full bg-slate-900"></div>
+                        <div class="w-2 h-full bg-slate-900"></div>
+                        <div class="w-0.5 h-full bg-slate-900"></div>
+                        <div class="w-1 h-full bg-slate-900"></div>
+                        <div class="w-2.5 h-full bg-slate-900"></div>
+                        <div class="w-0.5 h-full bg-slate-900"></div>
+                        <div class="w-1 h-full bg-slate-900"></div>
+                        <div class="w-2 h-full bg-slate-900"></div>
+                        <div class="w-0.5 h-full bg-slate-900"></div>
+                        <div class="w-1.5 h-full bg-slate-900"></div>
+                    </div>
+                    <span class="block font-mono text-[10px] font-black text-slate-700 uppercase tracking-wider">
+                        *@Model.TransactionReference*
+                    </span>
+                </div>
+
+                <!-- Official Signature Seal -->
+                <div class="text-center sm:text-right space-y-1">
+                    <div class="inline-block border-b-2 border-slate-800 pb-1 px-6 font-serif italic text-sm text-slate-800 font-bold">
+                        Syed A. Rahman
+                    </div>
+                    <span class="block text-[10px] uppercase font-bold text-slate-500 tracking-wider">
+                        Director of Fair Logistics &amp; Operations
+                    </span>
+                    <span class="block text-[9px] text-slate-400">
+                        MELA Fair Central Management Committee
+                    </span>
+                </div>
+            </div>
+
+            <!-- Footer Legal Notice -->
+            <div class="bg-slate-50 rounded-2xl p-4 text-[10px] text-slate-500 leading-relaxed space-y-1 border border-slate-100">
+                <p><strong>Exhibition Guidelines:</strong> 1. This permit must be presented at the gate entry during booth setup hours. 2. Sub-leasing or transfer of stalls to non-registered third parties is strictly prohibited. 3. Safety, fire regulation compliance, and waste management standards must be strictly adhered to during operating hours.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @@media print {
+        body {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+        }
+        header, footer, .no-print {
+            display: none !important;
+        }
+        main {
+            padding: 0 !important;
+            max-width: 100% !important;
+        }
+        .print-container {
+            border: 1px solid #cbd5e1 !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+        }
+    }
+</style>

@@ -254,7 +254,7 @@ public class AccountController : Controller
         if (User.IsInRole(RoleConstants.Admin))
             return RedirectToAction("Dashboard", "Admin");
         if (User.IsInRole(RoleConstants.Vendor))
-            return RedirectToAction("Marketplace", "Vendor");
+            return RedirectToAction("Dashboard", "Vendor");
         if (User.IsInRole(RoleConstants.Visitor))
             return RedirectToAction("BrowseFairs", "Visitor");
         if (User.IsInRole(RoleConstants.Employee))
