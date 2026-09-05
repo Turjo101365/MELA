@@ -108,4 +108,32 @@ public class StallRepository : IStallRepository
             .Include(b => b.Vendor)
             .FirstOrDefaultAsync(b => b.StallBookingId == bookingId);
     }
+
+    public async Task<bool> CancelBookingAsync(int bookingId, string vendorId)
+    {
+        var booking = await _context.StallBookings
+            .Include(b => b.Stall)
+            .Include(b => b.Fair)
+            .FirstOrDefaultAsync(b => b.StallBookingId == bookingId && b.VendorId == vendorId);
+
+        if (booking == null || booking.PaymentStatus == PaymentStatus.Refunded)
+        {
+            return false;
+        }
+
+        booking.PaymentStatus = PaymentStatus.Refunded;
+
+        if (booking.Stall != null)
+        {
+            booking.Stall.IsBooked = false;
+        }
+
+        if (booking.Fair != null)
+        {
+            booking.Fair.AvailableStalls = await _context.Stalls.CountAsync(s => s.FairId == booking.FairId && !s.IsBooked);
+        }
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
 }

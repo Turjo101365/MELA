@@ -93,6 +93,9 @@ public class StallItemDto
 public class MyStallsViewModel
 {
     public List<StallBookingItemDto> Bookings { get; set; } = new();
+    public int TotalBookings => Bookings.Count;
+    public decimal TotalInvested => Bookings.Where(b => b.PaymentStatus == PaymentStatus.Paid).Sum(b => b.AmountPaid);
+    public int ActiveStallsCount => Bookings.Count(b => b.EndDate >= DateTime.Today && b.PaymentStatus == PaymentStatus.Paid);
 }
 
 public class StallBookingItemDto
@@ -110,6 +113,61 @@ public class StallBookingItemDto
     public DateTime BookingDate { get; set; }
     public PaymentStatus PaymentStatus { get; set; }
     public string TransactionReference { get; set; } = string.Empty;
+    public string? Notes { get; set; }
+    public bool IsUpcoming => StartDate > DateTime.Today;
+    public bool IsOngoing => StartDate <= DateTime.Today && EndDate >= DateTime.Today;
+    public bool IsPast => EndDate < DateTime.Today;
+}
+
+/// <summary>
+/// Comprehensive dashboard view model for commercial fair vendors
+/// </summary>
+public class VendorDashboardViewModel
+{
+    public string VendorName { get; set; } = string.Empty;
+    public string VendorEmail { get; set; } = string.Empty;
+    public int TotalStallsLeased { get; set; }
+    public int ActiveFairsCount { get; set; }
+    public decimal TotalAmountInvested { get; set; }
+    public int UpcomingFairsCount { get; set; }
+    public decimal AverageStallRate => TotalStallsLeased > 0 ? TotalAmountInvested / TotalStallsLeased : 0;
+
+    // Next nearest upcoming event
+    public StallBookingItemDto? NextUpcomingBooking { get; set; }
+    public int DaysUntilNextFair { get; set; }
+
+    // Lists
+    public List<StallBookingItemDto> RecentBookings { get; set; } = new();
+    public List<Fair> RecommendedFairs { get; set; } = new();
+
+    // Chart.js analytics dictionaries
+    public Dictionary<string, int> CategoryDistribution { get; set; } = new();
+    public Dictionary<string, decimal> SpendingByFair { get; set; } = new();
+}
+
+/// <summary>
+/// View model for Official Stall Lease Permit & Tax Invoice
+/// </summary>
+public class StallReceiptViewModel
+{
+    public int BookingId { get; set; }
+    public int StallId { get; set; }
+    public string TransactionReference { get; set; } = string.Empty;
+    public string VendorName { get; set; } = string.Empty;
+    public string VendorEmail { get; set; } = string.Empty;
+    public string FairTitle { get; set; } = string.Empty;
+    public string Location { get; set; } = string.Empty;
+    public DateTime StartDate { get; set; }
+    public DateTime EndDate { get; set; }
+    public string StallNumber { get; set; } = string.Empty;
+    public StallCategory Category { get; set; }
+    public StallSize Size { get; set; }
+    public decimal AmountPaid { get; set; }
+    public DateTime BookingDate { get; set; }
+    public PaymentStatus PaymentStatus { get; set; }
+    public string? Notes { get; set; }
+    public decimal BasePrice { get; set; }
+    public decimal EstimatedDailyFootfall { get; set; }
 }
 
 /// <summary>
