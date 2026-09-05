@@ -119,6 +119,21 @@ public class AccountController : Controller
             return View(model);
         }
 
+        // Security rule: Disallow self-registration as Admin
+        if (string.Equals(model.UserRole, RoleConstants.Admin, StringComparison.OrdinalIgnoreCase))
+        {
+            ModelState.AddModelError(nameof(model.UserRole), "Registration as Administrator is not permitted. Admin accounts must be created manually by system administrators.");
+            return View(model);
+        }
+
+        // Validate allowed self-registration roles
+        var allowedRoles = new[] { RoleConstants.Vendor, RoleConstants.Visitor, RoleConstants.Employee };
+        if (!allowedRoles.Contains(model.UserRole))
+        {
+            ModelState.AddModelError(nameof(model.UserRole), "Please select a valid account role (Vendor, Visitor, or Employee).");
+            return View(model);
+        }
+
         var existingUser = await _userManager.FindByEmailAsync(model.Email);
         if (existingUser != null)
         {
@@ -191,40 +206,36 @@ public class AccountController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AdminLogin(string email, string password)
     {
-        if (!ModelState.IsValid)
+        if (!ModelState.IsValid || string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
         {
-            ViewBag.ErrorMessage = "Please enter valid credentials.";
-            return View();
-        }
-
-        // Verify it's the admin email
-        if (email != "tanmoy.cse.20230104124@aust.edu")
-        {
-            ViewBag.ErrorMessage = "Invalid admin credentials.";
+            ViewBag.ErrorMessage = "Please enter valid administrator credentials.";
             return View();
         }
 
         var user = await _userManager.FindByEmailAsync(email);
         if (user == null)
         {
-            ViewBag.ErrorMessage = "Admin account not found.";
+            ViewBag.ErrorMessage = "Invalid administrator credentials.";
             return View();
         }
 
-        // Verify it's an admin user
-        if (!await _userManager.IsInRoleAsync(user, RoleConstants.Admin))
+        // Validate administrator role via Identity Role and UserRole property
+        bool isAdmin = await _userManager.IsInRoleAsync(user, RoleConstants.Admin) || 
+                       string.Equals(user.UserRole, RoleConstants.Admin, StringComparison.OrdinalIgnoreCase);
+
+        if (!isAdmin)
         {
-            ViewBag.ErrorMessage = "This account is not an administrator account.";
+            ViewBag.ErrorMessage = "Access Denied: This account does not have Administrator privileges.";
             return View();
         }
 
-        var result = await _signInManager.PasswordSignInAsync(user.UserName!, password, false, lockoutOnFailure: false);
+        var result = await _signInManager.PasswordSignInAsync(user.UserName!, password, isPersistent: false, lockoutOnFailure: false);
         if (result.Succeeded)
         {
             user.LastLoginAt = DateTime.UtcNow;
             await _userManager.UpdateAsync(user);
 
-            TempData["SuccessMessage"] = $"Welcome Admin! Logged in as {user.FullName}";
+            TempData["SuccessMessage"] = $"Welcome back, Administrator {user.FullName}!";
             return RedirectToAction("Dashboard", "Admin");
         }
 
