@@ -2,22 +2,22 @@
     ViewData["Title"] = "Access Denied";
 }
 
-<div class="max-w-md mx-auto my-12 text-center space-y-6">
-    <div class="w-16 h-16 rounded-3xl bg-rose-100 text-rose-600 mx-auto flex items-center justify-center text-3xl font-black">
-        🔒
+<div class="max-w-md mx-auto my-14 text-center space-y-6">
+    <div class="w-16 h-16 rounded-3xl bg-rose-50 border border-rose-200 text-rose-600 mx-auto flex items-center justify-center text-2xl font-black shadow-sm">
+        <i class="fa-solid fa-lock"></i>
     </div>
     <div class="space-y-2">
-        <h1 class="text-2xl font-black text-slate-900">Access Restricted</h1>
-        <p class="text-sm text-slate-500">
-            You do not have the necessary role permissions to access this page. Please use the top quick-switcher to switch into the appropriate demo role.
+        <h1 class="text-2xl sm:text-3xl font-black text-[#1c3c18]">Access Restricted</h1>
+        <p class="text-xs sm:text-sm text-[#557b4f] leading-relaxed">
+            You do not have the necessary role permissions to access this page. Please switch into an authorized role portal to continue.
         </p>
     </div>
 
-    <div class="flex items-center justify-center gap-3">
-        <a asp-controller="Home" asp-action="Index" class="px-5 py-2.5 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-slate-800 transition">
+    <div class="flex items-center justify-center gap-3 pt-2">
+        <a asp-controller="Home" asp-action="Index" class="px-5 py-2.5 rounded-xl bg-white border border-[#cce0c6] text-[#1c3c18] font-bold text-xs hover:bg-[#e5efe2] transition shadow-xs">
             Back to Home
         </a>
-        <a asp-controller="Account" asp-action="Login" class="px-5 py-2.5 rounded-xl bg-orange-600 text-white font-bold text-xs hover:bg-orange-700 transition">
+        <a asp-controller="Account" asp-action="Login" class="px-5 py-2.5 rounded-xl bg-[#2e5d26] text-white font-bold text-xs hover:bg-[#1c3c18] transition shadow-md shadow-[#2e5d26]/20">
             Switch Account
         </a>
     </div>
