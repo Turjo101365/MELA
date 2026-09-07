@@ -6,7 +6,7 @@
 <div class="-mx-3 sm:-mx-6 lg:-mx-10 -mt-2 sm:-mt-3 space-y-12">
 
     <!-- 1. Hero Banner with Cultural Gradient & Smooth Bottom Curve -->
-    <div class="relative text-white overflow-hidden pt-12 pb-24 sm:pb-32 px-6 sm:px-12 text-center"
+    <div class="relative text-white overflow-hidden pt-12 pb-16 sm:pb-20 px-6 sm:px-12 text-center"
          style="background: linear-gradient(135deg, rgba(20, 42, 18, 0.94) 0%, rgba(36, 75, 30, 0.88) 55%, rgba(55, 102, 45, 0.82) 100%), url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1800&q=80') center/cover no-repeat;">
         
         <div class="max-w-3xl mx-auto space-y-4 relative z-10">
@@ -43,93 +43,6 @@
             <svg class="relative block w-full h-10 sm:h-16 text-[#eef3eb]" viewBox="0 0 1200 120" preserveAspectRatio="none" fill="currentColor">
                 <path d="M0,0 C150,90 350,-40 500,60 C650,160 900,10 1200,40 L1200,120 L0,120 Z"></path>
             </svg>
-        </div>
-    </div>
-
-    <!-- 2. Three Info Cards (Overlapping Hero) -->
-    <div class="max-w-6xl mx-auto -mt-16 sm:-mt-20 relative z-20 px-4 sm:px-6">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-            
-            <!-- Card 1: Pass & Ticketing Hotline -->
-            <div class="bg-white rounded-[2rem] p-7 sm:p-8 border border-[#dce8d8] shadow-lg flex flex-col justify-between hover:shadow-xl transition-all group">
-                <div class="space-y-4">
-                    <div class="w-12 h-12 rounded-2xl bg-[#e5efe2] text-[#2e5d26] group-hover:bg-[#2e5d26] group-hover:text-white flex items-center justify-center text-lg transition-colors shadow-sm">
-                        <i class="fa-solid fa-phone"></i>
-                    </div>
-                    <div>
-                        <span class="text-[10px] font-black uppercase text-[#2e5d26] tracking-wider block">Visitor &amp; Passes Hotline</span>
-                        <h3 class="text-lg sm:text-xl font-black text-slate-900 mt-1">+880 (02) 987-6543</h3>
-                        <p class="text-xs font-semibold text-slate-600 mt-0.5">Mobile / WhatsApp: +880 1700-987654</p>
-                    </div>
-                    <p class="text-xs text-slate-500 leading-relaxed">
-                        Assistance with electronic admission passes, group discounts, refund inquiries, and festival calendars.
-                    </p>
-                </div>
-                <div class="pt-6 border-t border-[#eef3eb] flex items-center justify-between">
-                    <a href="tel:+88029876543" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#2e5d26] hover:text-[#142a12] transition">
-                        <i class="fa-solid fa-phone-volume text-[11px]"></i>
-                        <span>Call Hotline</span>
-                    </a>
-                    <button type="button" onclick="navigator.clipboard.writeText('+88029876543'); alert('Hotline copied to clipboard!');" 
-                            class="text-xs text-slate-400 hover:text-slate-600 transition" title="Copy Number">
-                        <i class="fa-regular fa-copy"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Card 2: Vendor & Stalls Secretariat (Primary Highlight Card) -->
-            <div class="bg-gradient-to-br from-[#142a12] via-[#244f21] to-[#1c3c18] rounded-[2rem] p-7 sm:p-8 border border-white/10 shadow-2xl text-white flex flex-col justify-between md:-translate-y-3 hover:shadow-2xl transition-all group">
-                <div class="space-y-4">
-                    <div class="w-12 h-12 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center text-lg shadow-md">
-                        <i class="fa-solid fa-store"></i>
-                    </div>
-                    <div>
-                        <span class="text-[10px] font-black uppercase text-amber-300 tracking-wider block">Vendor Stalls &amp; Licensing</span>
-                        <h3 class="text-lg sm:text-xl font-black text-white mt-1">support@melafair.com</h3>
-                        <p class="text-xs font-semibold text-[#c0dec0] mt-0.5">stalls@melafair.com</p>
-                    </div>
-                    <p class="text-xs text-[#d0e5cc] leading-relaxed">
-                        Commercial stall leasing permits, artisan pavilion sponsorships, utility connections, and trade partnerships.
-                    </p>
-                </div>
-                <div class="pt-6 border-t border-white/10 flex items-center justify-between">
-                    <a href="mailto:support@melafair.com" class="inline-flex items-center gap-1.5 text-xs font-bold text-amber-300 hover:text-white transition">
-                        <i class="fa-solid fa-envelope text-[11px]"></i>
-                        <span>Email Desk</span>
-                    </a>
-                    <button type="button" onclick="navigator.clipboard.writeText('support@melafair.com'); alert('Email address copied to clipboard!');" 
-                            class="text-xs text-[#c0dec0] hover:text-white transition" title="Copy Email">
-                        <i class="fa-regular fa-copy"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Card 3: Central Secretariat HQ -->
-            <div class="bg-white rounded-[2rem] p-7 sm:p-8 border border-[#dce8d8] shadow-lg flex flex-col justify-between hover:shadow-xl transition-all group">
-                <div class="space-y-4">
-                    <div class="w-12 h-12 rounded-2xl bg-[#e5efe2] text-[#2e5d26] group-hover:bg-[#2e5d26] group-hover:text-white flex items-center justify-center text-lg transition-colors shadow-sm">
-                        <i class="fa-solid fa-location-dot"></i>
-                    </div>
-                    <div>
-                        <span class="text-[10px] font-black uppercase text-[#2e5d26] tracking-wider block">Operations Secretariat</span>
-                        <h3 class="text-lg sm:text-xl font-black text-slate-900 mt-1">Suhrawardy Udyan</h3>
-                        <p class="text-xs font-semibold text-slate-600 mt-0.5">Room 104, Cultural Pavilion Complex, Dhaka</p>
-                    </div>
-                    <p class="text-xs text-slate-500 leading-relaxed">
-                        On-site festival administrative headquarters, vendor badge verification center, and lost &amp; found desk.
-                    </p>
-                </div>
-                <div class="pt-6 border-t border-[#eef3eb] flex items-center justify-between">
-                    <a href="#locationMapSection" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#2e5d26] hover:text-[#142a12] transition">
-                        <i class="fa-solid fa-map-pin text-[11px]"></i>
-                        <span>Transit &amp; Venue Map</span>
-                    </a>
-                    <span class="text-[11px] text-emerald-700 font-bold bg-[#e5efe2] px-2.5 py-0.5 rounded-full">
-                        Gate 1 Access
-                    </span>
-                </div>
-            </div>
-
         </div>
     </div>
 
