@@ -1,154 +1,197 @@
 @{
-    ViewData["Title"] = "MelaFair Event Coordination & Support Desk";
+    ViewData["Title"] = "Event Coordination & Central Support Desk";
 }
 
 <!-- Main Contact Page Container -->
-<div class="-mx-3 sm:-mx-6 lg:-mx-10 -mt-2 sm:-mt-3">
+<div class="-mx-3 sm:-mx-6 lg:-mx-10 -mt-2 sm:-mt-3 space-y-12">
 
-    <!-- 1. Hero Banner with Cultural Festival Foliage & Torn Paper Edge -->
+    <!-- 1. Hero Banner with Cultural Gradient & Smooth Bottom Curve -->
     <div class="relative text-white overflow-hidden pt-12 pb-24 sm:pb-32 px-6 sm:px-12 text-center"
-         style="background: linear-gradient(135deg, rgba(20, 42, 18, 0.92) 0%, rgba(36, 75, 30, 0.85) 60%, rgba(55, 102, 45, 0.8) 100%), url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1800&q=80') center/cover no-repeat;">
+         style="background: linear-gradient(135deg, rgba(20, 42, 18, 0.94) 0%, rgba(36, 75, 30, 0.88) 55%, rgba(55, 102, 45, 0.82) 100%), url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1800&q=80') center/cover no-repeat;">
         
         <div class="max-w-3xl mx-auto space-y-4 relative z-10">
             <!-- Pill Badge -->
             <div>
-                <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-xs font-bold tracking-wide text-[#e5efe2] shadow-sm">
+                <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs font-bold tracking-wide text-[#e5efe2] shadow-sm">
                     <i class="fa-solid fa-headset text-amber-300"></i>
-                    <span>MELA Fair Operations &amp; Support Desk</span>
+                    <span>MELA Fair Central Operations &amp; Support Hub</span>
                 </span>
             </div>
 
             <!-- Page Title -->
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight drop-shadow-md">
+            <h1 class="text-3xl sm:text-4xl lg:text-6xl font-black tracking-tight drop-shadow-md">
                 Contact Event Coordination
             </h1>
 
             <!-- Subtitle -->
-            <p class="text-[#e5efe2] text-xs sm:text-sm max-w-xl mx-auto leading-relaxed font-normal">
-                Have questions regarding cultural fair schedules, vendor stall allocations, ticket pass reservations, or staff recruitment? Reach out to our central operations desk.
+            <p class="text-[#d0e5cc] text-xs sm:text-sm lg:text-base max-w-2xl mx-auto leading-relaxed font-normal">
+                Directly connect with our festival secretariat for stall leasing permits, visitor entry passes, staff recruitment, or emergency assistance.
             </p>
+
+            <!-- Live Status Pill -->
+            <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-xs font-semibold text-emerald-300">
+                <span class="relative flex h-2.5 w-2.5">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                </span>
+                <span>Operations Desk Online &bull; Typical Response &lt; 15 Minutes</span>
+            </div>
         </div>
 
-        <!-- Torn / Ripped Paper Wave SVG Edge Divider -->
+        <!-- Smooth Curved Wave SVG Edge Divider -->
         <div class="absolute -bottom-1 left-0 right-0 w-full overflow-hidden leading-none z-10 pointer-events-none">
-            <svg class="relative block w-full h-12 sm:h-16 text-[#eef3eb]" viewBox="0 0 1200 120" preserveAspectRatio="none" fill="currentColor">
-                <path d="M0,0 L25,20 L55,5 L85,25 L120,8 L155,22 L190,6 L230,24 L270,10 L310,22 L350,7 L390,25 L430,9 L470,24 L510,8 L550,22 L590,7 L630,25 L670,9 L710,23 L750,7 L790,24 L830,10 L870,22 L910,8 L950,25 L990,9 L1030,24 L1070,8 L1110,22 L1150,9 L1200,20 L1200,120 L0,120 Z"></path>
+            <svg class="relative block w-full h-10 sm:h-16 text-[#eef3eb]" viewBox="0 0 1200 120" preserveAspectRatio="none" fill="currentColor">
+                <path d="M0,0 C150,90 350,-40 500,60 C650,160 900,10 1200,40 L1200,120 L0,120 Z"></path>
             </svg>
         </div>
     </div>
 
     <!-- 2. Three Info Cards (Overlapping Hero) -->
-    <div class="max-w-5xl mx-auto -mt-12 sm:-mt-16 relative z-20 px-4 sm:px-6">
+    <div class="max-w-6xl mx-auto -mt-16 sm:-mt-20 relative z-20 px-4 sm:px-6">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
             
-            <!-- Card 1: Support Hotline -->
-            <div class="bg-[#fbfaf4] rounded-[2rem] p-7 border border-[#e8e4d2] shadow-lg flex flex-col justify-between hover:shadow-xl transition-all">
-                <div>
-                    <!-- Circular Icon Badge -->
-                    <div class="w-12 h-12 rounded-full bg-[#2e5d26] text-white flex items-center justify-center text-lg mb-5 shadow">
+            <!-- Card 1: Pass & Ticketing Hotline -->
+            <div class="bg-white rounded-[2rem] p-7 sm:p-8 border border-[#dce8d8] shadow-lg flex flex-col justify-between hover:shadow-xl transition-all group">
+                <div class="space-y-4">
+                    <div class="w-12 h-12 rounded-2xl bg-[#e5efe2] text-[#2e5d26] group-hover:bg-[#2e5d26] group-hover:text-white flex items-center justify-center text-lg transition-colors shadow-sm">
                         <i class="fa-solid fa-phone"></i>
                     </div>
-                    <span class="text-[10px] font-bold uppercase text-[#2e5d26] tracking-wider">Ticketing Hotline</span>
-                    <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-2">+880 (02) 987-6543</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed mb-6">
-                        Direct phone assistance for visitor pass issues, bulk admission bookings, and general fair schedule inquiries.
-                    </p>
-                </div>
-                <div>
-                    <a href="tel:+88029876543" class="inline-flex items-center gap-2 text-xs font-bold text-[#2e5d26] hover:text-[#1c3c18] transition">
-                        <i class="fa-regular fa-circle-right"></i>
-                        <span>Call Support Desk</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Card 2: Email (Highlighted Dark Green Card) -->
-            <div class="bg-[#244f21] rounded-[2rem] p-7 border border-[#31642d] shadow-2xl text-white flex flex-col justify-between md:-translate-y-2 hover:shadow-2xl transition-all">
-                <div>
-                    <!-- Circular Icon Badge (Light Green) -->
-                    <div class="w-12 h-12 rounded-full bg-[#8cb748] text-white flex items-center justify-center text-lg mb-5 shadow">
-                        <i class="fa-solid fa-envelope"></i>
+                    <div>
+                        <span class="text-[10px] font-black uppercase text-[#2e5d26] tracking-wider block">Visitor &amp; Passes Hotline</span>
+                        <h3 class="text-lg sm:text-xl font-black text-slate-900 mt-1">+880 (02) 987-6543</h3>
+                        <p class="text-xs font-semibold text-slate-600 mt-0.5">Mobile / WhatsApp: +880 1700-987654</p>
                     </div>
-                    <span class="text-[10px] font-bold uppercase text-[#8cb748] tracking-wider">Vendor &amp; Stalls Desk</span>
-                    <h3 class="text-lg sm:text-xl font-bold text-white mb-2">support@melafair.com</h3>
-                    <p class="text-xs text-white/80 leading-relaxed mb-6">
-                        Email our event management desk for stall licensing queries, corporate festival partnerships, and technical support.
+                    <p class="text-xs text-slate-500 leading-relaxed">
+                        Assistance with electronic admission passes, group discounts, refund inquiries, and festival calendars.
                     </p>
                 </div>
-                <div>
-                    <a href="mailto:support@melafair.com" class="inline-flex items-center gap-2 text-xs font-bold text-[#a7cc9c] hover:text-white transition">
-                        <i class="fa-regular fa-circle-right"></i>
-                        <span>Send Email</span>
+                <div class="pt-6 border-t border-[#eef3eb] flex items-center justify-between">
+                    <a href="tel:+88029876543" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#2e5d26] hover:text-[#142a12] transition">
+                        <i class="fa-solid fa-phone-volume text-[11px]"></i>
+                        <span>Call Hotline</span>
                     </a>
+                    <button type="button" onclick="navigator.clipboard.writeText('+88029876543'); alert('Hotline copied to clipboard!');" 
+                            class="text-xs text-slate-400 hover:text-slate-600 transition" title="Copy Number">
+                        <i class="fa-regular fa-copy"></i>
+                    </button>
                 </div>
             </div>
 
-            <!-- Card 3: Central Operations HQ -->
-            <div class="bg-[#fbfaf4] rounded-[2rem] p-7 border border-[#e8e4d2] shadow-lg flex flex-col justify-between hover:shadow-xl transition-all">
-                <div>
-                    <!-- Circular Icon Badge -->
-                    <div class="w-12 h-12 rounded-full bg-[#2e5d26] text-white flex items-center justify-center text-lg mb-5 shadow">
+            <!-- Card 2: Vendor & Stalls Secretariat (Primary Highlight Card) -->
+            <div class="bg-gradient-to-br from-[#142a12] via-[#244f21] to-[#1c3c18] rounded-[2rem] p-7 sm:p-8 border border-white/10 shadow-2xl text-white flex flex-col justify-between md:-translate-y-3 hover:shadow-2xl transition-all group">
+                <div class="space-y-4">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center text-lg shadow-md">
+                        <i class="fa-solid fa-store"></i>
+                    </div>
+                    <div>
+                        <span class="text-[10px] font-black uppercase text-amber-300 tracking-wider block">Vendor Stalls &amp; Licensing</span>
+                        <h3 class="text-lg sm:text-xl font-black text-white mt-1">support@melafair.com</h3>
+                        <p class="text-xs font-semibold text-[#c0dec0] mt-0.5">stalls@melafair.com</p>
+                    </div>
+                    <p class="text-xs text-[#d0e5cc] leading-relaxed">
+                        Commercial stall leasing permits, artisan pavilion sponsorships, utility connections, and trade partnerships.
+                    </p>
+                </div>
+                <div class="pt-6 border-t border-white/10 flex items-center justify-between">
+                    <a href="mailto:support@melafair.com" class="inline-flex items-center gap-1.5 text-xs font-bold text-amber-300 hover:text-white transition">
+                        <i class="fa-solid fa-envelope text-[11px]"></i>
+                        <span>Email Desk</span>
+                    </a>
+                    <button type="button" onclick="navigator.clipboard.writeText('support@melafair.com'); alert('Email address copied to clipboard!');" 
+                            class="text-xs text-[#c0dec0] hover:text-white transition" title="Copy Email">
+                        <i class="fa-regular fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 3: Central Secretariat HQ -->
+            <div class="bg-white rounded-[2rem] p-7 sm:p-8 border border-[#dce8d8] shadow-lg flex flex-col justify-between hover:shadow-xl transition-all group">
+                <div class="space-y-4">
+                    <div class="w-12 h-12 rounded-2xl bg-[#e5efe2] text-[#2e5d26] group-hover:bg-[#2e5d26] group-hover:text-white flex items-center justify-center text-lg transition-colors shadow-sm">
                         <i class="fa-solid fa-location-dot"></i>
                     </div>
-                    <span class="text-[10px] font-bold uppercase text-[#2e5d26] tracking-wider">Operations Center</span>
-                    <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-2">Suhrawardy Udyan, Dhaka</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed mb-6">
-                        Central festival coordination headquarters and on-site vendor verification pavilion in Dhaka, Bangladesh.
+                    <div>
+                        <span class="text-[10px] font-black uppercase text-[#2e5d26] tracking-wider block">Operations Secretariat</span>
+                        <h3 class="text-lg sm:text-xl font-black text-slate-900 mt-1">Suhrawardy Udyan</h3>
+                        <p class="text-xs font-semibold text-slate-600 mt-0.5">Room 104, Cultural Pavilion Complex, Dhaka</p>
+                    </div>
+                    <p class="text-xs text-slate-500 leading-relaxed">
+                        On-site festival administrative headquarters, vendor badge verification center, and lost &amp; found desk.
                     </p>
                 </div>
-                <div>
-                    <a href="#map" class="inline-flex items-center gap-2 text-xs font-bold text-[#2e5d26] hover:text-[#1c3c18] transition">
-                        <i class="fa-regular fa-circle-right"></i>
-                        <span>View on Map</span>
+                <div class="pt-6 border-t border-[#eef3eb] flex items-center justify-between">
+                    <a href="#locationMapSection" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#2e5d26] hover:text-[#142a12] transition">
+                        <i class="fa-solid fa-map-pin text-[11px]"></i>
+                        <span>Transit &amp; Venue Map</span>
                     </a>
+                    <span class="text-[11px] text-emerald-700 font-bold bg-[#e5efe2] px-2.5 py-0.5 rounded-full">
+                        Gate 1 Access
+                    </span>
                 </div>
             </div>
 
         </div>
     </div>
 
-    <!-- 3. Working Time & Map (Left) + Contact Form (Right) -->
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-16">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+    <!-- 3. Working Time & Location (Left) + Contact Form (Right) -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
             
-            <!-- Left Column: Working Time & Location Map -->
-            <div class="lg:col-span-6 space-y-6">
+            <!-- Left Column: Operating Hours, Transit & Google Map (6 Cols) -->
+            <div class="lg:col-span-6 space-y-6" id="locationMapSection">
                 
-                <!-- Working Time Header -->
-                <div>
-                    <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mb-2">
-                        Fair Operating Hours
-                    </h2>
-                    <p class="text-xs text-slate-500 leading-relaxed">
-                        Our event staff and digital concurrency verification systems operate around the clock during active fair seasons.
-                    </p>
+                <!-- Operating Hours Card -->
+                <div class="bg-white rounded-[2rem] p-6 sm:p-8 border border-[#dce8d8] shadow-sm space-y-5">
+                    <div>
+                        <span class="text-[10px] font-black uppercase tracking-wider text-[#2e5d26] bg-[#e5efe2] px-3 py-1 rounded-full">
+                            Operational Timings
+                        </span>
+                        <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-2">
+                            Festival &amp; Secretariat Hours
+                        </h2>
+                    </div>
+
+                    <div class="space-y-3.5 text-xs text-slate-700 font-medium">
+                        <div class="flex items-start gap-3 p-3 bg-[#f6f9f4] rounded-2xl border border-[#e2ece0]">
+                            <i class="fa-solid fa-clock text-[#2e5d26] text-sm mt-0.5 shrink-0"></i>
+                            <div>
+                                <span class="block font-bold text-slate-900">Fairgrounds Public Access</span>
+                                <span class="text-slate-500 text-[11px]">Every day: 8:00 AM &ndash; 10:00 PM (Turnstiles open at 7:45 AM)</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3 p-3 bg-[#f6f9f4] rounded-2xl border border-[#e2ece0]">
+                            <i class="fa-solid fa-store text-[#2e5d26] text-sm mt-0.5 shrink-0"></i>
+                            <div>
+                                <span class="block font-bold text-slate-900">Stall Lease &amp; Vendor Secretariat</span>
+                                <span class="text-slate-500 text-[11px]">Monday &ndash; Saturday: 9:00 AM &ndash; 6:00 PM</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3 p-3 bg-[#f6f9f4] rounded-2xl border border-[#e2ece0]">
+                            <i class="fa-solid fa-kit-medical text-emerald-600 text-sm mt-0.5 shrink-0"></i>
+                            <div>
+                                <span class="block font-bold text-slate-900">Emergency &amp; First Aid Booth</span>
+                                <span class="text-slate-500 text-[11px]">24/7 on grounds during active festival dates</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Schedule List -->
-                <div class="space-y-2.5 text-xs text-slate-700 font-medium pt-1">
-                    <div class="flex items-center gap-2.5">
-                        <i class="fa-solid fa-clock text-[#2e5d26] text-sm"></i>
-                        <span>Fair Ground Hours : Everyday 8:00 AM - 10:00 PM</span>
+                <!-- Location Map & Transit Card -->
+                <div class="bg-white rounded-[2rem] p-6 sm:p-8 border border-[#dce8d8] shadow-sm space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-map-location-dot text-[#2e5d26]"></i>
+                            <span>Venue Coordinates: Suhrawardy Udyan</span>
+                        </h3>
+                        <span class="text-[10px] font-bold bg-[#e5efe2] text-[#2e5d26] px-2.5 py-1 rounded-full">
+                            Dhaka, Bangladesh
+                        </span>
                     </div>
-                    <div class="flex items-center gap-2.5">
-                        <i class="fa-solid fa-store text-[#2e5d26] text-sm"></i>
-                        <span>Stall Booking Desk : Monday - Saturday (9:00 AM - 6:00 PM)</span>
-                    </div>
-                    <div class="flex items-center gap-2.5">
-                        <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
-                        <span>Digital Ticket Passes : Instant 24/7 Real-Time Concurrency</span>
-                    </div>
-                </div>
 
-                <!-- Location Map Header -->
-                <div class="pt-4">
-                    <h3 class="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-map-location-dot text-[#2e5d26]"></i>
-                        <span>Event Location : Suhrawardy Udyan, Dhaka</span>
-                    </h3>
-
-                    <!-- Interactive Styled Map Box -->
-                    <div id="map" class="rounded-2xl overflow-hidden shadow-md border border-slate-200 h-64 sm:h-72 w-full relative bg-slate-100">
+                    <!-- Embedded Map Container -->
+                    <div class="rounded-2xl overflow-hidden shadow-inner border border-slate-200 h-64 sm:h-72 w-full relative bg-slate-100">
                         <iframe 
                             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3652.285885061614!2d90.39572247593257!3d23.73719468928096!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b8ef6c747551%3A0xc3b8602b7811956!2sSuhrawardy%20Udyan!5e0!3m2!1sen!2sbd!4v1700000000000!5m2!1sen!2sbd" 
                             class="w-full h-full border-0" 
@@ -157,63 +200,118 @@
                             referrerpolicy="no-referrer-when-downgrade">
                         </iframe>
                     </div>
+
+                    <!-- Public Transit Navigation Tips -->
+                    <div class="pt-2 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-600">
+                        <div class="flex items-start gap-2">
+                            <i class="fa-solid fa-train-subway text-[#2e5d26] text-xs mt-0.5"></i>
+                            <div>
+                                <strong class="font-bold block text-slate-800">Metro Rail</strong>
+                                <span>TSC / Dhaka University Station (3 min walk)</span>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <i class="fa-solid fa-square-parking text-[#2e5d26] text-xs mt-0.5"></i>
+                            <div>
+                                <strong class="font-bold block text-slate-800">Vehicle Parking</strong>
+                                <span>Designated visitor parking at Gate #2 &amp; #4</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
 
-            <!-- Right Column: Get In Touch Contact Form -->
-            <div class="lg:col-span-6 space-y-4">
+            <!-- Right Column: Interactive Inquiry Form (6 Cols) -->
+            <div class="lg:col-span-6 space-y-5">
                 
-                <!-- Pill Badge -->
-                <div>
-                    <span class="inline-block px-4 py-1 rounded-full border border-[#2e5d26]/30 text-[#2e5d26] text-xs font-bold bg-[#e5efe2]">
-                        Inquiries &amp; Support
-                    </span>
-                </div>
+                <div class="bg-white rounded-[2.5rem] p-7 sm:p-10 border border-[#dce8d8] shadow-lg space-y-6">
+                    
+                    <div>
+                        <span class="text-[10px] font-black uppercase tracking-wider text-[#2e5d26] bg-[#e5efe2] px-3 py-1 rounded-full">
+                            Online Coordination Desk
+                        </span>
+                        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mt-2">
+                            Send an Official Inquiry
+                        </h2>
+                        <p class="text-xs text-slate-500 mt-1">
+                            Choose your inquiry category for prioritized routing to our specialized department.
+                        </p>
+                    </div>
 
-                <!-- Headline -->
-                <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                    Get In Touch !
-                </h2>
-                <p class="text-xs text-slate-500">
-                    Send your inquiry regarding fair scheduling, stall leasing, or ticket passes.
-                </p>
+                    <!-- Category Pills Selector -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                            Inquiry Category
+                        </label>
+                        <div class="flex flex-wrap gap-2 text-xs font-bold" id="categoryPillContainer">
+                            <button type="button" onclick="selectCategory('Visitor Passes', this)" 
+                                    class="cat-pill px-3.5 py-1.5 rounded-full bg-[#2e5d26] text-white shadow-sm transition">
+                                🎟️ Passes &amp; Tickets
+                            </button>
+                            <button type="button" onclick="selectCategory('Stall Leasing', this)" 
+                                    class="cat-pill px-3.5 py-1.5 rounded-full bg-[#f6f9f4] hover:bg-[#eef4ed] text-slate-700 border border-[#dce8d8] transition">
+                                🏪 Stall Leasing
+                            </button>
+                            <button type="button" onclick="selectCategory('Staff & Careers', this)" 
+                                    class="cat-pill px-3.5 py-1.5 rounded-full bg-[#f6f9f4] hover:bg-[#eef4ed] text-slate-700 border border-[#dce8d8] transition">
+                                💼 Staff &amp; Careers
+                            </button>
+                            <button type="button" onclick="selectCategory('General Support', this)" 
+                                    class="cat-pill px-3.5 py-1.5 rounded-full bg-[#f6f9f4] hover:bg-[#eef4ed] text-slate-700 border border-[#dce8d8] transition">
+                                💬 General Support
+                            </button>
+                        </div>
+                    </div>
 
-                <!-- Form Card with Soft Cream Inputs -->
-                <div class="bg-white rounded-[2rem] p-7 sm:p-9 border border-slate-100 shadow-xl">
-                    <form asp-controller="Home" asp-action="Contact" method="post" class="space-y-4">
+                    <form asp-controller="Home" asp-action="Contact" method="post" class="space-y-5">
                         @Html.AntiForgeryToken()
+                        <input type="hidden" name="category" id="inquiryCategoryInput" value="Visitor Passes" />
+
+                        <!-- Full Name Field -->
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                                Full Name or Organization <span class="text-rose-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <i class="fa-solid fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                                <input type="text" name="name" placeholder="e.g. Tanvir Ahmed or Bengal Crafts Ltd." required 
+                                       class="w-full pl-10 pr-4 py-3 rounded-2xl border border-[#dce8d8] bg-[#f6f9f4] text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2e5d26]/30 transition" />
+                            </div>
+                        </div>
 
                         <!-- Email Field -->
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Email Address</label>
-                            <input type="email" name="email" placeholder="you@example.com" required 
-                                   class="w-full bg-[#f6f2e8] text-slate-800 placeholder-slate-400 text-xs sm:text-sm px-5 py-3 rounded-full outline-none border border-[#e8dfcf] focus:ring-2 focus:ring-[#8cb748]/40 transition" />
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                                Email Address <span class="text-rose-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                                <input type="email" name="email" placeholder="you@example.com" required 
+                                       class="w-full pl-10 pr-4 py-3 rounded-2xl border border-[#dce8d8] bg-[#f6f9f4] text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2e5d26]/30 transition" />
+                            </div>
                         </div>
 
-                        <!-- Name Field -->
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Full Name</label>
-                            <input type="text" name="name" placeholder="Your Name or Vendor Organization" required 
-                                   class="w-full bg-[#f6f2e8] text-slate-800 placeholder-slate-400 text-xs sm:text-sm px-5 py-3 rounded-full outline-none border border-[#e8dfcf] focus:ring-2 focus:ring-[#8cb748]/40 transition" />
-                        </div>
-
-                        <!-- Message Field -->
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Inquiry Details</label>
-                            <textarea name="message" rows="4" placeholder="Specify your stall booking, ticket pass, or general inquiry..." required 
-                                      class="w-full bg-[#f6f2e8] text-slate-800 placeholder-slate-400 text-xs sm:text-sm px-5 py-3.5 rounded-3xl outline-none border border-[#e8dfcf] focus:ring-2 focus:ring-[#8cb748]/40 transition resize-none"></textarea>
+                        <!-- Inquiry Details Field -->
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                                Inquiry Details &amp; Message <span class="text-rose-500">*</span>
+                            </label>
+                            <textarea name="message" rows="5" required 
+                                      placeholder="Please specify your requirements, ticket code (if applicable), stall number, or question in detail..." 
+                                      class="w-full px-4 py-3.5 rounded-3xl border border-[#dce8d8] bg-[#f6f9f4] text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2e5d26]/30 transition resize-none leading-relaxed"></textarea>
                         </div>
 
                         <!-- Submit Button -->
                         <div class="pt-2">
                             <button type="submit" 
-                                    class="px-8 py-3 rounded-full bg-[#8cb748] hover:bg-[#7ba33c] text-white text-xs sm:text-sm font-bold shadow-md transition-all hover:scale-105 flex items-center gap-2">
-                                <i class="fa-solid fa-paper-plane text-xs"></i>
-                                <span>Send Inquiry</span>
+                                    class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#2e5d26] hover:bg-[#1c3c18] text-white text-xs sm:text-sm font-bold shadow-md transition-all hover:scale-105 flex items-center justify-center gap-2.5">
+                                <i class="fa-solid fa-paper-plane text-amber-300"></i>
+                                <span>Send Official Inquiry</span>
                             </button>
                         </div>
                     </form>
+
                 </div>
 
             </div>
@@ -221,4 +319,79 @@
         </div>
     </div>
 
+    <!-- 4. Frequently Asked Questions (Accordion) -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="bg-white rounded-[2.5rem] p-8 sm:p-12 border border-[#dce8d8] shadow-sm space-y-6">
+            <div class="max-w-2xl space-y-2">
+                <span class="text-xs font-bold text-[#2e5d26] uppercase tracking-wider bg-[#e5efe2] px-3 py-1 rounded-full">
+                    Self-Service Support
+                </span>
+                <h3 class="text-2xl font-black text-slate-900">Frequently Asked Questions</h3>
+                <p class="text-xs text-slate-500">Quick answers to common festival and administrative inquiries.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                
+                <!-- FAQ 1 -->
+                <div class="bg-[#f6f9f4] rounded-2xl p-5 border border-[#e2ece0] space-y-2">
+                    <h4 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-question text-[#2e5d26]"></i>
+                        <span>How soon do I receive my admission pass?</span>
+                    </h4>
+                    <p class="text-xs text-slate-600 leading-relaxed pl-6">
+                        Immediately upon checkout completion. Your digital pass with encrypted QR code and barcode is instantly placed in your "My Digital Passes" vault and ready for turnstile scanning.
+                    </p>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="bg-[#f6f9f4] rounded-2xl p-5 border border-[#e2ece0] space-y-2">
+                    <h4 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-question text-[#2e5d26]"></i>
+                        <span>How is vendor stall double-booking prevented?</span>
+                    </h4>
+                    <p class="text-xs text-slate-600 leading-relaxed pl-6">
+                        Our backend leverages SQL Server transaction row-level locks (<code class="font-mono text-[#2e5d26]">UPDLOCK, ROWLOCK</code>). The moment a vendor books a stall, it is locked against simultaneous transactions.
+                    </p>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="bg-[#f6f9f4] rounded-2xl p-5 border border-[#e2ece0] space-y-2">
+                    <h4 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-question text-[#2e5d26]"></i>
+                        <span>When will I hear back about my staff application?</span>
+                    </h4>
+                    <p class="text-xs text-slate-600 leading-relaxed pl-6">
+                        Applications are screened daily. Shortlisted candidates receive phone confirmation and schedule notification within 48 to 72 hours of submission.
+                    </p>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="bg-[#f6f9f4] rounded-2xl p-5 border border-[#e2ece0] space-y-2">
+                    <h4 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-question text-[#2e5d26]"></i>
+                        <span>Is there emergency security on the fairgrounds?</span>
+                    </h4>
+                    <p class="text-xs text-slate-600 leading-relaxed pl-6">
+                        Yes, a dedicated Police Control Room and certified Red Crescent medical aid post operate inside the festival grounds throughout all open hours.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 </div>
+
+@section Scripts {
+    <script>
+        function selectCategory(category, btn) {
+            document.getElementById('inquiryCategoryInput').value = category;
+            document.querySelectorAll('.cat-pill').forEach(p => {
+                p.classList.remove('bg-[#2e5d26]', 'text-white');
+                p.classList.add('bg-[#f6f9f4]', 'text-slate-700', 'border', 'border-[#dce8d8]');
+            });
+            btn.classList.add('bg-[#2e5d26]', 'text-white');
+            btn.classList.remove('bg-[#f6f9f4]', 'text-slate-700', 'border', 'border-[#dce8d8]');
+        }
+    </script>
+}
