@@ -8,121 +8,141 @@
     <!-- Stat Metrics Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         <!-- Total Revenue -->
-        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-2">
-            <div class="flex items-center justify-between text-slate-500 text-xs font-bold uppercase tracking-wider">
+        <div class="bg-white rounded-3xl border border-[#dce8d8] p-5 sm:p-6 shadow-sm space-y-2 hover:shadow-md transition">
+            <div class="flex items-center justify-between text-[#557b4f] text-xs font-bold uppercase tracking-wider">
                 <span>Gross Revenue</span>
-                <span class="p-1.5 rounded-lg bg-orange-50 text-orange-600">💰</span>
+                <span class="w-8 h-8 rounded-xl bg-[#e5efe2] text-[#2e5d26] flex items-center justify-center text-sm shadow-xs">
+                    <i class="fa-solid fa-coins"></i>
+                </span>
             </div>
-            <div class="text-2xl font-black text-slate-900">$@Model.TotalRevenue.ToString("N2")</div>
-            <div class="text-[11px] text-slate-500 flex justify-between">
-                <span>Stalls: $@Model.TotalStallRevenue.ToString("N0")</span>
-                <span>Tickets: $@Model.TotalTicketRevenue.ToString("N0")</span>
+            <div class="text-2xl sm:text-3xl font-black text-[#1c3c18]">$@Model.TotalRevenue.ToString("N2")</div>
+            <div class="text-[11px] text-slate-500 flex justify-between pt-1 border-t border-[#f0f6ee]">
+                <span>Stalls: <strong class="text-slate-700">$@Model.TotalStallRevenue.ToString("N0")</strong></span>
+                <span>Tickets: <strong class="text-slate-700">$@Model.TotalTicketRevenue.ToString("N0")</strong></span>
             </div>
         </div>
 
         <!-- Total Stalls Leased -->
-        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-2">
-            <div class="flex items-center justify-between text-slate-500 text-xs font-bold uppercase tracking-wider">
+        <div class="bg-white rounded-3xl border border-[#dce8d8] p-5 sm:p-6 shadow-sm space-y-2 hover:shadow-md transition">
+            <div class="flex items-center justify-between text-[#557b4f] text-xs font-bold uppercase tracking-wider">
                 <span>Stall Leases</span>
-                <span class="p-1.5 rounded-lg bg-emerald-50 text-emerald-600">🎪</span>
+                <span class="w-8 h-8 rounded-xl bg-[#e5efe2] text-[#2e5d26] flex items-center justify-center text-sm shadow-xs">
+                    <i class="fa-solid fa-store"></i>
+                </span>
             </div>
-            <div class="text-2xl font-black text-slate-900">@Model.TotalStallsBooked / @Model.TotalStalls</div>
-            <div class="w-full bg-slate-100 rounded-full h-1.5 mt-2 overflow-hidden">
+            <div class="text-2xl sm:text-3xl font-black text-[#1c3c18]">@Model.TotalStallsBooked / @Model.TotalStalls</div>
+            <div class="w-full bg-[#eef3eb] rounded-full h-2 mt-2 overflow-hidden">
                 @{
                     var stallPct = Model.TotalStalls > 0 ? (Model.TotalStallsBooked * 100) / Model.TotalStalls : 0;
                 }
-                <div class="bg-emerald-500 h-1.5 rounded-full" style="width: @stallPct%"></div>
+                <div class="bg-gradient-to-r from-[#2e5d26] to-[#4e8740] h-2 rounded-full transition-all duration-500" style="width: @stallPct%"></div>
             </div>
         </div>
 
         <!-- Total Tickets Sold -->
-        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-2">
-            <div class="flex items-center justify-between text-slate-500 text-xs font-bold uppercase tracking-wider">
+        <div class="bg-white rounded-3xl border border-[#dce8d8] p-5 sm:p-6 shadow-sm space-y-2 hover:shadow-md transition">
+            <div class="flex items-center justify-between text-[#557b4f] text-xs font-bold uppercase tracking-wider">
                 <span>Tickets Issued</span>
-                <span class="p-1.5 rounded-lg bg-blue-50 text-blue-600">🎟️</span>
+                <span class="w-8 h-8 rounded-xl bg-[#e5efe2] text-[#2e5d26] flex items-center justify-center text-sm shadow-xs">
+                    <i class="fa-solid fa-ticket"></i>
+                </span>
             </div>
-            <div class="text-2xl font-black text-slate-900">@Model.TotalTicketsSold.ToString("N0")</div>
-            <div class="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
-                <span>⚡ Real-time UPDLOCK Concurrency</span>
+            <div class="text-2xl sm:text-3xl font-black text-[#1c3c18]">@Model.TotalTicketsSold.ToString("N0")</div>
+            <div class="text-[11px] text-[#2e5d26] font-semibold flex items-center gap-1.5 pt-1">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
+                </span>
+                <span>Real-time UPDLOCK Concurrency</span>
             </div>
         </div>
 
         <!-- Total Active Fairs -->
-        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-2">
-            <div class="flex items-center justify-between text-slate-500 text-xs font-bold uppercase tracking-wider">
+        <div class="bg-white rounded-3xl border border-[#dce8d8] p-5 sm:p-6 shadow-sm space-y-2 hover:shadow-md transition">
+            <div class="flex items-center justify-between text-[#557b4f] text-xs font-bold uppercase tracking-wider">
                 <span>Managed Fairs</span>
-                <span class="p-1.5 rounded-lg bg-purple-50 text-purple-600">🏛️</span>
+                <span class="w-8 h-8 rounded-xl bg-[#e5efe2] text-[#2e5d26] flex items-center justify-center text-sm shadow-xs">
+                    <i class="fa-solid fa-landmark"></i>
+                </span>
             </div>
-            <div class="text-2xl font-black text-slate-900">@Model.ActiveFairs Active / @Model.TotalFairs Total</div>
-            <div class="text-[11px] text-slate-500">
-                <span>@Model.TotalJobApplications Open Job Postings</span>
+            <div class="text-2xl sm:text-3xl font-black text-[#1c3c18]">@Model.ActiveFairs Active / @Model.TotalFairs Total</div>
+            <div class="text-[11px] text-slate-500 pt-1 border-t border-[#f0f6ee]">
+                <span><strong class="text-slate-700">@Model.TotalJobApplications</strong> Open Job Postings</span>
             </div>
         </div>
     </div>
 
     <!-- Quick Action Banner -->
-    <div class="bg-gradient-to-r from-orange-600 to-amber-600 rounded-2xl p-6 text-white flex flex-col md:flex-row items-center justify-between gap-4 shadow-md">
-        <div class="space-y-1">
-            <h2 class="text-xl font-bold">Create New Cultural Fair Schedule</h2>
-            <p class="text-xs text-orange-100">
-                Execute stored procedure <code class="bg-black/30 px-2 py-0.5 rounded font-mono text-amber-200">usp_CreateFair</code> to auto-generate stalls and daily calendar capacities.
+    <div class="relative overflow-hidden bg-gradient-to-r from-[#142a12] via-[#244f21] to-[#1c3c18] rounded-3xl p-6 sm:p-7 text-white flex flex-col md:flex-row items-center justify-between gap-5 shadow-xl border border-[#23491f]">
+        <!-- Decorative blur element -->
+        <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+        <div class="space-y-1.5 relative z-10">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-emerald-300 text-[10px] font-bold uppercase tracking-wider mb-1">
+                <i class="fa-solid fa-bolt text-amber-300"></i> Stored Procedure Provisioning
+            </div>
+            <h2 class="text-xl sm:text-2xl font-black tracking-tight">Create New Cultural Fair Schedule</h2>
+            <p class="text-xs text-[#d0e5cc] leading-relaxed max-w-2xl">
+                Execute stored procedure <code class="bg-black/30 px-2 py-0.5 rounded font-mono text-emerald-300 border border-white/15">usp_CreateFair</code> to auto-generate stalls, inventory, and daily calendar capacities.
             </p>
         </div>
-        <a asp-controller="Admin" asp-action="CreateFair" class="px-5 py-2.5 rounded-xl bg-white text-orange-700 font-bold text-xs hover:bg-orange-50 transition shadow-sm whitespace-nowrap">
-            + Provision New Fair
+        <a asp-controller="Admin" asp-action="CreateFair" class="relative z-10 px-6 py-3 rounded-full bg-white hover:bg-[#e5efe2] text-[#1c3c18] font-bold text-xs shadow-lg transition-all duration-300 hover:scale-105 active:scale-95 whitespace-nowrap flex items-center gap-2">
+            <i class="fa-solid fa-plus text-[#2e5d26]"></i>
+            <span>Provision New Fair</span>
         </a>
     </div>
 
     <!-- SQL View Summary Table (vw_FairSummary) -->
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden space-y-4 p-6">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+    <div class="bg-white rounded-3xl border border-[#dce8d8] shadow-sm overflow-hidden space-y-4 p-6 sm:p-7">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#eef3eb] pb-4">
             <div>
-                <h3 class="text-lg font-bold text-slate-900">Fair Performance Summary</h3>
-                <p class="text-xs text-slate-500">Aggregated directly from database view <code class="text-orange-600 font-mono">vw_FairSummary</code></p>
+                <h3 class="text-lg font-black text-[#1c3c18]">Fair Performance Summary</h3>
+                <p class="text-xs text-slate-500">Aggregated directly from database view <code class="text-[#2e5d26] font-mono bg-[#e5efe2] px-2 py-0.5 rounded-md">vw_FairSummary</code></p>
             </div>
-            <a asp-controller="Admin" asp-action="Analytics" class="text-xs font-bold text-orange-600 hover:text-orange-700">
-                View Full SQL Analytics &rarr;
+            <a asp-controller="Admin" asp-action="Analytics" class="text-xs font-bold text-[#2e5d26] hover:text-[#1c3c18] transition flex items-center gap-1.5 group">
+                <span>View Full SQL Analytics</span>
+                <i class="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
             </a>
         </div>
 
         <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
-                <thead class="bg-slate-50 text-slate-600 font-bold uppercase tracking-wider text-[10px]">
+                <thead class="bg-[#eef5ec] text-[#2e5d26] font-bold uppercase tracking-wider text-[10px]">
                     <tr>
-                        <th class="py-3 px-4">Fair Title</th>
-                        <th class="py-3 px-4">Dates</th>
-                        <th class="py-3 px-4">Stall Occupancy</th>
-                        <th class="py-3 px-4">Tickets Sold</th>
-                        <th class="py-3 px-4">Stall Rev.</th>
-                        <th class="py-3 px-4">Ticket Rev.</th>
-                        <th class="py-3 px-4 font-black text-slate-900">Total Rev.</th>
-                        <th class="py-3 px-4 text-right">Actions</th>
+                        <th class="py-3.5 px-4 rounded-l-xl">Fair Title</th>
+                        <th class="py-3.5 px-4">Dates</th>
+                        <th class="py-3.5 px-4">Stall Occupancy</th>
+                        <th class="py-3.5 px-4">Tickets Sold</th>
+                        <th class="py-3.5 px-4">Stall Rev.</th>
+                        <th class="py-3.5 px-4">Ticket Rev.</th>
+                        <th class="py-3.5 px-4 font-black text-[#1c3c18]">Total Rev.</th>
+                        <th class="py-3.5 px-4 text-right rounded-r-xl">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 text-slate-700">
+                <tbody class="divide-y divide-[#f0f6ee] text-slate-700">
                     @foreach (var fair in Model.FairSummaries)
                     {
-                        <tr class="hover:bg-slate-50 transition">
-                            <td class="py-3.5 px-4 font-bold text-slate-900">
+                        <tr class="hover:bg-[#f8faf7] transition-colors">
+                            <td class="py-4 px-4 font-bold text-[#1c3c18]">
                                 @fair.Title
                                 <span class="block text-[10px] font-normal text-slate-500">@fair.Location</span>
                             </td>
-                            <td class="py-3.5 px-4 whitespace-nowrap">
+                            <td class="py-4 px-4 whitespace-nowrap text-slate-600">
                                 @fair.StartDate.ToString("MMM dd") - @fair.EndDate.ToString("MMM dd, yyyy")
                             </td>
-                            <td class="py-3.5 px-4">
-                                <span class="font-bold text-slate-900">@fair.BookedStalls / @fair.TotalStalls</span>
+                            <td class="py-4 px-4">
+                                <span class="font-bold text-[#1c3c18]">@fair.BookedStalls / @fair.TotalStalls</span>
                                 <span class="text-slate-500 text-[10px]">(@fair.StallOccupancyRate%)</span>
                             </td>
-                            <td class="py-3.5 px-4">
-                                <span class="font-bold text-slate-900">@fair.TotalTicketsSold.ToString("N0")</span>
+                            <td class="py-4 px-4">
+                                <span class="font-bold text-[#1c3c18]">@fair.TotalTicketsSold.ToString("N0")</span>
                                 <span class="text-slate-500 text-[10px]">/ @fair.TotalTicketCapacity.ToString("N0")</span>
                             </td>
-                            <td class="py-3.5 px-4 font-semibold text-emerald-700">$@fair.StallRevenue.ToString("N0")</td>
-                            <td class="py-3.5 px-4 font-semibold text-blue-700">$@fair.TicketRevenue.ToString("N0")</td>
-                            <td class="py-3.5 px-4 font-black text-slate-900">$@fair.TotalRevenue.ToString("N2")</td>
-                            <td class="py-3.5 px-4 text-right whitespace-nowrap space-x-1">
-                                <a asp-controller="Admin" asp-action="Analytics" asp-route-fairId="@fair.FairId" class="px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-semibold transition">
+                            <td class="py-4 px-4 font-semibold text-emerald-800">$@fair.StallRevenue.ToString("N0")</td>
+                            <td class="py-4 px-4 font-semibold text-[#2e5d26]">$@fair.TicketRevenue.ToString("N0")</td>
+                            <td class="py-4 px-4 font-black text-[#1c3c18] text-sm">$@fair.TotalRevenue.ToString("N2")</td>
+                            <td class="py-4 px-4 text-right whitespace-nowrap space-x-1">
+                                <a asp-controller="Admin" asp-action="Analytics" asp-route-fairId="@fair.FairId" class="px-3 py-1.5 rounded-full bg-[#e5efe2] hover:bg-[#2e5d26] text-[#2e5d26] hover:text-white text-[11px] font-bold transition-all shadow-xs">
                                     Analytics
                                 </a>
                             </td>
