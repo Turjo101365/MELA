@@ -11,7 +11,7 @@ namespace MelaFair.Web.Controllers;
 /// <summary>
 /// Controller for Fair Vendors to browse available stalls and checkout with high-concurrency safety
 /// </summary>
-[Authorize(Roles = RoleConstants.Vendor)]
+[Authorize(Roles = $"{RoleConstants.Vendor},{RoleConstants.Admin}")]
 public class VendorController : Controller
 {
     private readonly FairService _fairService;
@@ -155,7 +155,8 @@ public class VendorController : Controller
             return Challenge();
         }
 
-        var vm = await _stallBookingService.GetStallReceiptAsync(id, vendorId);
+        bool isAdmin = User.IsInRole(RoleConstants.Admin);
+        var vm = await _stallBookingService.GetStallReceiptAsync(id, vendorId, isAdmin);
         if (vm == null)
         {
             TempData["ErrorMessage"] = "Stall lease certificate was not found or access is unauthorized.";
@@ -175,7 +176,8 @@ public class VendorController : Controller
             return Challenge();
         }
 
-        var (success, message) = await _stallBookingService.CancelBookingAsync(bookingId, vendorId);
+        bool isAdmin = User.IsInRole(RoleConstants.Admin);
+        var (success, message) = await _stallBookingService.CancelBookingAsync(bookingId, vendorId, isAdmin);
         if (success)
         {
             TempData["SuccessMessage"] = message;
@@ -193,7 +195,8 @@ public class VendorController : Controller
     {
         var vendorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (string.IsNullOrEmpty(vendorId)) return Challenge();
-        return View(await _recruitmentService.GetVendorJobsAsync(vendorId));
+        bool isAdmin = User.IsInRole(RoleConstants.Admin);
+        return View(await _recruitmentService.GetVendorJobsAsync(vendorId, isAdmin));
     }
 
     [HttpGet]
@@ -226,7 +229,8 @@ public class VendorController : Controller
     {
         var vendorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (string.IsNullOrEmpty(vendorId)) return Challenge();
-        TempData[await _recruitmentService.DeleteVendorJobAsync(jobPostingId, vendorId) ? "SuccessMessage" : "ErrorMessage"] =
+        bool isAdmin = User.IsInRole(RoleConstants.Admin);
+        TempData[await _recruitmentService.DeleteVendorJobAsync(jobPostingId, vendorId, isAdmin) ? "SuccessMessage" : "ErrorMessage"] =
             "Job posting closed.";
         return RedirectToAction(nameof(Jobs));
     }
@@ -236,7 +240,8 @@ public class VendorController : Controller
     {
         var vendorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (string.IsNullOrEmpty(vendorId)) return Challenge();
-        var model = await _recruitmentService.GetVendorApplicationsAsync(jobPostingId, vendorId);
+        bool isAdmin = User.IsInRole(RoleConstants.Admin);
+        var model = await _recruitmentService.GetVendorApplicationsAsync(jobPostingId, vendorId, isAdmin);
         return model is null ? NotFound() : View(model);
     }
 
@@ -245,7 +250,8 @@ public class VendorController : Controller
     {
         var vendorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (string.IsNullOrEmpty(vendorId)) return Challenge();
-        var result = await _recruitmentService.ReviewVendorApplicationAsync(applicationId, status, vendorId);
+        bool isAdmin = User.IsInRole(RoleConstants.Admin);
+        var result = await _recruitmentService.ReviewVendorApplicationAsync(applicationId, status, vendorId, isAdmin);
         TempData[result.success ? "SuccessMessage" : "ErrorMessage"] = result.message;
         return RedirectToAction(nameof(JobApplications), new { jobPostingId });
     }

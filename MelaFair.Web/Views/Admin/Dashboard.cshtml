@@ -72,6 +72,69 @@
         </div>
     </div>
 
+    <!-- Universal Operational Command Deck -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <!-- Vendor Stalls Command Card -->
+        <a asp-controller="Admin" asp-action="Stalls" class="group bg-white rounded-3xl border border-[#dce8d8] p-6 shadow-sm hover:shadow-md hover:border-[#2e5d26] transition-all flex flex-col justify-between">
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <div class="w-12 h-12 rounded-2xl bg-[#e5efe2] text-[#2e5d26] group-hover:bg-[#2e5d26] group-hover:text-white flex items-center justify-center text-lg shadow-xs transition-all duration-300">
+                        <i class="fa-solid fa-store"></i>
+                    </div>
+                    <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-[#eef3eb] text-[#2e5d26]">Unrestricted</span>
+                </div>
+                <div>
+                    <h3 class="text-base font-black text-[#1c3c18] group-hover:text-[#2e5d26] transition-colors">Vendor Stalls & Leases</h3>
+                    <p class="text-xs text-slate-500 mt-1 leading-relaxed">Inspect commercial stall inventory across fairs, view leaseholder vendors, download lease certificates, and manage floor spaces.</p>
+                </div>
+            </div>
+            <div class="pt-4 mt-4 border-t border-[#f0f6ee] flex items-center justify-between text-xs font-bold text-[#2e5d26]">
+                <span>Manage All Stalls</span>
+                <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+            </div>
+        </a>
+
+        <!-- Visitor Passes Command Card -->
+        <a asp-controller="Admin" asp-action="Passes" class="group bg-white rounded-3xl border border-[#dce8d8] p-6 shadow-sm hover:shadow-md hover:border-[#2e5d26] transition-all flex flex-col justify-between">
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <div class="w-12 h-12 rounded-2xl bg-[#e5efe2] text-[#2e5d26] group-hover:bg-[#2e5d26] group-hover:text-white flex items-center justify-center text-lg shadow-xs transition-all duration-300">
+                        <i class="fa-solid fa-ticket"></i>
+                    </div>
+                    <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-[#eef3eb] text-[#2e5d26]">Admissions</span>
+                </div>
+                <div>
+                    <h3 class="text-base font-black text-[#1c3c18] group-hover:text-[#2e5d26] transition-colors">Visitor Passes & Gate Capacity</h3>
+                    <p class="text-xs text-slate-500 mt-1 leading-relaxed">Monitor daily gate capacities, gate throughput, ticket codes, attendee issuance, and live UPDLOCK transaction safety.</p>
+                </div>
+            </div>
+            <div class="pt-4 mt-4 border-t border-[#f0f6ee] flex items-center justify-between text-xs font-bold text-[#2e5d26]">
+                <span>Manage Gate Passes</span>
+                <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+            </div>
+        </a>
+
+        <!-- Staff Recruitment Command Card -->
+        <a asp-controller="Admin" asp-action="StaffJobs" class="group bg-white rounded-3xl border border-[#dce8d8] p-6 shadow-sm hover:shadow-md hover:border-[#2e5d26] transition-all flex flex-col justify-between">
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <div class="w-12 h-12 rounded-2xl bg-[#e5efe2] text-[#2e5d26] group-hover:bg-[#2e5d26] group-hover:text-white flex items-center justify-center text-lg shadow-xs transition-all duration-300">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </div>
+                    <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-[#eef3eb] text-[#2e5d26]">Recruitment</span>
+                </div>
+                <div>
+                    <h3 class="text-base font-black text-[#1c3c18] group-hover:text-[#2e5d26] transition-colors">Staff Jobs & Hiring Desk</h3>
+                    <p class="text-xs text-slate-500 mt-1 leading-relaxed">Inspect vendor staff job openings, examine applicant experience summaries, and directly accept or reject candidate applications.</p>
+                </div>
+            </div>
+            <div class="pt-4 mt-4 border-t border-[#f0f6ee] flex items-center justify-between text-xs font-bold text-[#2e5d26]">
+                <span>Recruitment Desk</span>
+                <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+            </div>
+        </a>
+    </div>
+
     <!-- Quick Action Banner -->
     <div class="relative overflow-hidden bg-gradient-to-r from-[#142a12] via-[#244f21] to-[#1c3c18] rounded-3xl p-6 sm:p-7 text-white flex flex-col md:flex-row items-center justify-between gap-5 shadow-xl border border-[#23491f]">
         <!-- Decorative blur element -->

@@ -112,12 +112,12 @@ public class RecruitmentService
         return vm;
     }
 
-    public async Task<List<VendorJobPostingItemDto>> GetVendorJobsAsync(string vendorId)
+    public async Task<List<VendorJobPostingItemDto>> GetVendorJobsAsync(string vendorId, bool isAdmin = false)
     {
-        var jobs = await _employeeRepository.GetVendorJobPostingsAsync(vendorId);
+        var jobs = await _employeeRepository.GetVendorJobPostingsAsync(vendorId, isAdmin);
         return jobs.Select(j => new VendorJobPostingItemDto
         {
-            JobPostingId = j.JobPostingId, Title = j.Title, FairTitle = j.Fair.Title,
+            JobPostingId = j.JobPostingId, Title = j.Title, FairTitle = j.Fair?.Title ?? "N/A",
             PositionsAvailable = j.PositionsAvailable, PositionsFilled = j.PositionsFilled,
             ApplicationCount = j.Applications.Count, IsActive = j.IsActive,
             ApplicationDeadline = j.ApplicationDeadline
@@ -169,30 +169,30 @@ public class RecruitmentService
         return (true, isNew ? "Job posting created." : "Job posting updated.");
     }
 
-    public async Task<bool> DeleteVendorJobAsync(int jobPostingId, string vendorId)
+    public async Task<bool> DeleteVendorJobAsync(int jobPostingId, string vendorId, bool isAdmin = false)
     {
-        var job = await _employeeRepository.GetVendorJobPostingAsync(jobPostingId, vendorId);
+        var job = await _employeeRepository.GetVendorJobPostingAsync(jobPostingId, vendorId, isAdmin);
         if (job is null) return false;
         job.IsActive = false; // Retain applications for an auditable employment record.
         await _employeeRepository.SaveChangesAsync();
         return true;
     }
 
-    public async Task<VendorJobApplicationsViewModel?> GetVendorApplicationsAsync(int jobPostingId, string vendorId)
+    public async Task<VendorJobApplicationsViewModel?> GetVendorApplicationsAsync(int jobPostingId, string vendorId, bool isAdmin = false)
     {
-        var job = await _employeeRepository.GetVendorJobPostingAsync(jobPostingId, vendorId);
+        var job = await _employeeRepository.GetVendorJobPostingAsync(jobPostingId, vendorId, isAdmin);
         if (job is null) return null;
-        var applications = await _employeeRepository.GetVendorApplicationsAsync(jobPostingId, vendorId);
+        var applications = await _employeeRepository.GetVendorApplicationsAsync(jobPostingId, vendorId, isAdmin);
         return new VendorJobApplicationsViewModel { JobPostingId = jobPostingId, JobTitle = job.Title,
             Applications = applications.Select(a => new VendorApplicationItemDto { ApplicationId = a.JobApplicationId,
-                EmployeeName = a.Employee.FullName, EmployeeEmail = a.Employee.Email ?? string.Empty, ContactPhone = a.ContactPhone,
+                EmployeeName = a.Employee?.FullName ?? "N/A", EmployeeEmail = a.Employee?.Email ?? string.Empty, ContactPhone = a.ContactPhone,
                 ResumeSummary = a.ResumeSummary, ExperienceYears = a.ExperienceYears, ApplicationDate = a.ApplicationDate, Status = a.Status }).ToList() };
     }
 
-    public async Task<(bool success, string message)> ReviewVendorApplicationAsync(int applicationId, ApplicationStatus status, string vendorId)
+    public async Task<(bool success, string message)> ReviewVendorApplicationAsync(int applicationId, ApplicationStatus status, string vendorId, bool isAdmin = false)
     {
         if (status is not (ApplicationStatus.Accepted or ApplicationStatus.Rejected)) return (false, "Choose Accepted or Rejected.");
-        var jobs = await _employeeRepository.GetVendorJobPostingsAsync(vendorId);
+        var jobs = await _employeeRepository.GetVendorJobPostingsAsync(vendorId, isAdmin);
         var application = jobs.SelectMany(j => j.Applications).FirstOrDefault(a => a.JobApplicationId == applicationId);
         if (application is null) return (false, "Application not found.");
         if (application.Status != ApplicationStatus.Pending) return (false, "Only pending applications can be reviewed.");

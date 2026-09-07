@@ -15,17 +15,26 @@
             </div>
         </div>
 
-        <div class="flex items-center space-x-2">
-            <a asp-controller="Admin" asp-action="Dashboard" class="px-4 py-2 text-xs font-bold rounded-full @(ViewContext.RouteData.Values["action"]?.ToString() == "Dashboard" ? "bg-[#2e5d26] text-white shadow-sm shadow-[#2e5d26]/20" : "bg-[#e5efe2] text-[#2e5d26] hover:bg-[#d8ebd4]") transition-all duration-200">
+        <div class="flex items-center flex-wrap gap-1.5 sm:gap-2">
+            <a asp-controller="Admin" asp-action="Dashboard" class="px-3.5 py-1.5 text-xs font-bold rounded-full @(ViewContext.RouteData.Values["action"]?.ToString() == "Dashboard" ? "bg-[#2e5d26] text-white shadow-sm shadow-[#2e5d26]/20" : "bg-[#e5efe2] text-[#2e5d26] hover:bg-[#d8ebd4]") transition-all duration-200">
                 Overview
             </a>
-            <a asp-controller="Admin" asp-action="CreateFair" class="px-4 py-2 text-xs font-bold rounded-full @(ViewContext.RouteData.Values["action"]?.ToString() == "CreateFair" ? "bg-[#2e5d26] text-white shadow-sm shadow-[#2e5d26]/20" : "bg-[#e5efe2] text-[#2e5d26] hover:bg-[#d8ebd4]") transition-all duration-200">
-                + Create Fair
+            <a asp-controller="Admin" asp-action="Stalls" class="px-3.5 py-1.5 text-xs font-bold rounded-full @(ViewContext.RouteData.Values["action"]?.ToString() == "Stalls" ? "bg-[#2e5d26] text-white shadow-sm shadow-[#2e5d26]/20" : "bg-[#e5efe2] text-[#2e5d26] hover:bg-[#d8ebd4]") transition-all duration-200">
+                <i class="fa-solid fa-store mr-1 text-[10px]"></i> Vendor Stalls
             </a>
-            <a asp-controller="Admin" asp-action="ManageFairs" class="px-4 py-2 text-xs font-bold rounded-full @(ViewContext.RouteData.Values["action"]?.ToString() == "ManageFairs" ? "bg-[#2e5d26] text-white shadow-sm shadow-[#2e5d26]/20" : "bg-[#e5efe2] text-[#2e5d26] hover:bg-[#d8ebd4]") transition-all duration-200">
+            <a asp-controller="Admin" asp-action="Passes" class="px-3.5 py-1.5 text-xs font-bold rounded-full @(ViewContext.RouteData.Values["action"]?.ToString() == "Passes" ? "bg-[#2e5d26] text-white shadow-sm shadow-[#2e5d26]/20" : "bg-[#e5efe2] text-[#2e5d26] hover:bg-[#d8ebd4]") transition-all duration-200">
+                <i class="fa-solid fa-ticket mr-1 text-[10px]"></i> Passes & Capacity
+            </a>
+            <a asp-controller="Admin" asp-action="StaffJobs" class="px-3.5 py-1.5 text-xs font-bold rounded-full @(ViewContext.RouteData.Values["action"]?.ToString() == "StaffJobs" ? "bg-[#2e5d26] text-white shadow-sm shadow-[#2e5d26]/20" : "bg-[#e5efe2] text-[#2e5d26] hover:bg-[#d8ebd4]") transition-all duration-200">
+                <i class="fa-solid fa-briefcase mr-1 text-[10px]"></i> Staff Jobs
+            </a>
+            <a asp-controller="Admin" asp-action="ManageFairs" class="px-3.5 py-1.5 text-xs font-bold rounded-full @(ViewContext.RouteData.Values["action"]?.ToString() == "ManageFairs" ? "bg-[#2e5d26] text-white shadow-sm shadow-[#2e5d26]/20" : "bg-[#e5efe2] text-[#2e5d26] hover:bg-[#d8ebd4]") transition-all duration-200">
                 Manage Events
             </a>
-            <a asp-controller="Admin" asp-action="Analytics" class="px-4 py-2 text-xs font-bold rounded-full @(ViewContext.RouteData.Values["action"]?.ToString() == "Analytics" ? "bg-[#2e5d26] text-white shadow-sm shadow-[#2e5d26]/20" : "bg-[#e5efe2] text-[#2e5d26] hover:bg-[#d8ebd4]") transition-all duration-200">
+            <a asp-controller="Admin" asp-action="CreateFair" class="px-3.5 py-1.5 text-xs font-bold rounded-full @(ViewContext.RouteData.Values["action"]?.ToString() == "CreateFair" ? "bg-[#2e5d26] text-white shadow-sm shadow-[#2e5d26]/20" : "bg-[#e5efe2] text-[#2e5d26] hover:bg-[#d8ebd4]") transition-all duration-200">
+                + Create Fair
+            </a>
+            <a asp-controller="Admin" asp-action="Analytics" class="px-3.5 py-1.5 text-xs font-bold rounded-full @(ViewContext.RouteData.Values["action"]?.ToString() == "Analytics" ? "bg-[#2e5d26] text-white shadow-sm shadow-[#2e5d26]/20" : "bg-[#e5efe2] text-[#2e5d26] hover:bg-[#d8ebd4]") transition-all duration-200">
                 Analytics (Views)
             </a>
         </div>

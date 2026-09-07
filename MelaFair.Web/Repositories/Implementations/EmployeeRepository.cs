@@ -115,26 +115,26 @@ public class EmployeeRepository : IEmployeeRepository
         return posting.JobPostingId;
     }
 
-    public async Task<IEnumerable<JobPosting>> GetVendorJobPostingsAsync(string vendorId)
+    public async Task<IEnumerable<JobPosting>> GetVendorJobPostingsAsync(string vendorId, bool isAdmin = false)
     {
         return await _context.JobPostings.Include(j => j.Fair)
             .Include(j => j.Applications)
-            .Where(j => j.VendorId == vendorId)
+            .Where(j => isAdmin || j.VendorId == vendorId)
             .OrderByDescending(j => j.CreatedAt).ToListAsync();
     }
 
-    public async Task<JobPosting?> GetVendorJobPostingAsync(int jobPostingId, string vendorId)
+    public async Task<JobPosting?> GetVendorJobPostingAsync(int jobPostingId, string vendorId, bool isAdmin = false)
     {
         return await _context.JobPostings.Include(j => j.Fair)
             .Include(j => j.Applications)
-            .FirstOrDefaultAsync(j => j.JobPostingId == jobPostingId && j.VendorId == vendorId);
+            .FirstOrDefaultAsync(j => j.JobPostingId == jobPostingId && (isAdmin || j.VendorId == vendorId));
     }
 
-    public async Task<IEnumerable<JobApplication>> GetVendorApplicationsAsync(int jobPostingId, string vendorId)
+    public async Task<IEnumerable<JobApplication>> GetVendorApplicationsAsync(int jobPostingId, string vendorId, bool isAdmin = false)
     {
         return await _context.JobApplications.Include(a => a.Employee)
             .Include(a => a.JobPosting).ThenInclude(j => j.Fair)
-            .Where(a => a.JobPostingId == jobPostingId && a.JobPosting.VendorId == vendorId)
+            .Where(a => a.JobPostingId == jobPostingId && (isAdmin || a.JobPosting.VendorId == vendorId))
             .OrderByDescending(a => a.ApplicationDate).ToListAsync();
     }
 

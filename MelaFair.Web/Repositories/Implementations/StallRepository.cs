@@ -118,12 +118,12 @@ public class StallRepository : IStallRepository
             .ToListAsync();
     }
 
-    public async Task<bool> CancelBookingAsync(int bookingId, string vendorId)
+    public async Task<bool> CancelBookingAsync(int bookingId, string vendorId, bool isAdmin = false)
     {
         var booking = await _context.StallBookings
             .Include(b => b.Stall)
             .Include(b => b.Fair)
-            .FirstOrDefaultAsync(b => b.StallBookingId == bookingId && b.VendorId == vendorId);
+            .FirstOrDefaultAsync(b => b.StallBookingId == bookingId && (isAdmin || b.VendorId == vendorId));
 
         if (booking == null || booking.PaymentStatus == PaymentStatus.Refunded)
         {

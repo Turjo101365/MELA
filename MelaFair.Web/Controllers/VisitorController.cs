@@ -10,7 +10,7 @@ namespace MelaFair.Web.Controllers;
 /// <summary>
 /// Controller for Fair Visitors to browse events, check live capacity, and buy group tickets
 /// </summary>
-[Authorize(Roles = RoleConstants.Visitor)]
+[Authorize(Roles = $"{RoleConstants.Visitor},{RoleConstants.Admin}")]
 public class VisitorController : Controller
 {
     private readonly FairService _fairService;

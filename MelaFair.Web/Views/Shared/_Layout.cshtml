@@ -226,7 +226,16 @@
                             @if (User.IsInRole(RoleConstants.Admin))
                             {
                                 <a asp-controller="Admin" asp-action="Dashboard" class="px-4 py-2 rounded-2xl text-xs font-bold text-[#2e5d26] bg-[#e5efe2] flex items-center gap-2">
-                                    <i class="fa-solid fa-shield-halved"></i> Admin Panel
+                                    <i class="fa-solid fa-shield-halved"></i> Admin Control Center
+                                </a>
+                                <a asp-controller="Admin" asp-action="Stalls" class="px-4 py-2 rounded-2xl text-xs font-bold text-[#2e5d26] bg-[#e5efe2] flex items-center gap-2">
+                                    <i class="fa-solid fa-store"></i> All Stalls & Leases
+                                </a>
+                                <a asp-controller="Admin" asp-action="Passes" class="px-4 py-2 rounded-2xl text-xs font-bold text-[#2e5d26] bg-[#e5efe2] flex items-center gap-2">
+                                    <i class="fa-solid fa-ticket"></i> Passes & Capacity
+                                </a>
+                                <a asp-controller="Admin" asp-action="StaffJobs" class="px-4 py-2 rounded-2xl text-xs font-bold text-[#2e5d26] bg-[#e5efe2] flex items-center gap-2">
+                                    <i class="fa-solid fa-briefcase"></i> Staff Recruitment Desk
                                 </a>
                             }
                             @if (User.IsInRole(RoleConstants.Vendor))

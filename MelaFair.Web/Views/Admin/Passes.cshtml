@@ -1,0 +1,258 @@
+@model MelaFair.Web.Models.ViewModels.AdminPassesViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Visitor Passes & Admissions";
+}
+
+<div class="space-y-6">
+    <!-- Header Title & Action Bar -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#e5efe2] text-[#2e5d26] text-xs font-bold uppercase tracking-wider mb-1 shadow-xs">
+                <i class="fa-solid fa-ticket"></i> Global Admissions & Passes Command
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-black text-[#1c3c18] tracking-tight">Fair Passes & Gate Capacity</h2>
+            <p class="text-xs sm:text-sm text-[#557b4f]">Real-time visibility into day schedule capacities, gate admissions, ticket codes, and UPDLOCK concurrency safety.</p>
+        </div>
+        <div class="flex items-center gap-2">
+            <a asp-controller="Visitor" asp-action="BrowseFairs" class="px-4 py-2.5 rounded-full bg-white hover:bg-[#e5efe2] border border-[#dbe6d6] text-[#2e5d26] font-bold text-xs shadow-xs transition-all flex items-center gap-2">
+                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                <span>Visitor Pass Portal</span>
+            </a>
+            @if (Model.SelectedFairId.HasValue && Model.SelectedFairId > 0)
+            {
+                <a asp-controller="Visitor" asp-action="TicketBooking" asp-route-fairId="@Model.SelectedFairId" class="px-4 py-2.5 rounded-full bg-[#2e5d26] hover:bg-[#1c3c18] text-white font-bold text-xs shadow-sm shadow-[#2e5d26]/20 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-ticket-simple text-xs"></i>
+                    <span>Test Buy Passes</span>
+                </a>
+            }
+        </div>
+    </div>
+
+    <!-- Metrics Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white rounded-3xl border border-[#dce8d8] p-5 shadow-sm space-y-1.5">
+            <div class="flex items-center justify-between text-xs font-bold text-[#557b4f] uppercase tracking-wider">
+                <span>Passes Issued</span>
+                <span class="w-8 h-8 rounded-xl bg-[#e5efe2] text-[#2e5d26] flex items-center justify-center text-sm shadow-xs"><i class="fa-solid fa-ticket"></i></span>
+            </div>
+            <div class="text-2xl sm:text-3xl font-black text-[#1c3c18]">@Model.TotalTicketsSold.ToString("N0")</div>
+            <div class="text-[11px] text-[#2e5d26] font-semibold flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>Real-time UPDLOCK Concurrency</span>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-[#dce8d8] p-5 shadow-sm space-y-1.5">
+            <div class="flex items-center justify-between text-xs font-bold text-[#557b4f] uppercase tracking-wider">
+                <span>Total Ticket Revenue</span>
+                <span class="w-8 h-8 rounded-xl bg-[#e5efe2] text-[#2e5d26] flex items-center justify-center text-sm shadow-xs"><i class="fa-solid fa-coins"></i></span>
+            </div>
+            <div class="text-2xl sm:text-3xl font-black text-emerald-800">$@Model.TotalTicketRevenue.ToString("N2")</div>
+            <div class="text-[11px] text-slate-500">Gross visitor gate admissions</div>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-[#dce8d8] p-5 shadow-sm space-y-1.5">
+            <div class="flex items-center justify-between text-xs font-bold text-[#557b4f] uppercase tracking-wider">
+                <span>Total Fair Capacity</span>
+                <span class="w-8 h-8 rounded-xl bg-[#e5efe2] text-[#2e5d26] flex items-center justify-center text-sm shadow-xs"><i class="fa-solid fa-people-group"></i></span>
+            </div>
+            <div class="text-2xl sm:text-3xl font-black text-[#1c3c18]">@Model.TotalFairCapacity.ToString("N0")</div>
+            <div class="text-[11px] text-slate-500">Across @Model.TotalOperatingDays operating days</div>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-[#dce8d8] p-5 shadow-sm space-y-1.5">
+            <div class="flex items-center justify-between text-xs font-bold text-[#557b4f] uppercase tracking-wider">
+                <span>Gate Capacity Utilization</span>
+                <span class="w-8 h-8 rounded-xl bg-[#e5efe2] text-[#2e5d26] flex items-center justify-center text-sm shadow-xs"><i class="fa-solid fa-chart-pie"></i></span>
+            </div>
+            <div class="text-2xl sm:text-3xl font-black text-[#1c3c18]">@Model.OverallUtilizationPercent%</div>
+            <div class="w-full bg-[#eef3eb] rounded-full h-1.5 overflow-hidden">
+                <div class="bg-[#2e5d26] h-1.5 rounded-full" style="width: @Model.OverallUtilizationPercent%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter & Search Controls -->
+    <div class="bg-white rounded-3xl border border-[#dce8d8] p-5 shadow-sm">
+        <form method="get" asp-action="Passes" class="flex flex-wrap items-center gap-3">
+            <div class="flex-1 min-w-[200px]">
+                <label class="block text-[10px] font-bold uppercase tracking-wider text-[#557b4f] mb-1">Filter By Fair</label>
+                <select name="fairId" onchange="this.form.submit()" class="w-full text-xs font-semibold px-3 py-2 rounded-xl border border-[#dbe6d6] bg-[#f8faf7] text-[#1c3c18] focus:outline-none focus:ring-2 focus:ring-[#2e5d26]">
+                    <option value="">-- All Cultural Fairs --</option>
+                    @foreach (var fair in Model.Fairs)
+                    {
+                        <option value="@fair.FairId" selected="@(Model.SelectedFairId == fair.FairId)">@fair.Title</option>
+                    }
+                </select>
+            </div>
+
+            <div class="flex-1 min-w-[240px]">
+                <label class="block text-[10px] font-bold uppercase tracking-wider text-[#557b4f] mb-1">Search Gate Passes / Visitors</label>
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <input type="text" name="search" value="@Model.SearchQuery" placeholder="Ticket code, visitor name, email..." class="w-full text-xs px-3 py-2 pl-9 rounded-xl border border-[#dbe6d6] bg-[#f8faf7] text-[#1c3c18] focus:outline-none focus:ring-2 focus:ring-[#2e5d26]" />
+                </div>
+            </div>
+
+            <div class="flex items-end gap-2 pt-4">
+                <button type="submit" class="px-5 py-2 rounded-xl bg-[#2e5d26] text-white font-bold text-xs shadow-xs hover:bg-[#1c3c18] transition">Filter</button>
+                @if (Model.SelectedFairId.HasValue || !string.IsNullOrEmpty(Model.SearchQuery))
+                {
+                    <a asp-action="Passes" class="px-3 py-2 rounded-xl bg-[#e5efe2] text-[#2e5d26] font-bold text-xs hover:bg-[#d8ebd4] transition">Reset</a>
+                }
+            </div>
+        </form>
+    </div>
+
+    <!-- Operating Days & Capacity Breakdown -->
+    <div class="bg-white rounded-3xl border border-[#dce8d8] shadow-sm overflow-hidden">
+        <div class="p-5 border-b border-[#eef3eb] flex items-center justify-between">
+            <div>
+                <h3 class="font-black text-base text-[#1c3c18]">Fair Operating Days & Daily Capacity Schedule</h3>
+                <p class="text-xs text-slate-500">Atomic ticket purchasing throttles at daily capacity limit using stored procedure <code class="bg-[#e5efe2] text-[#2e5d26] px-1.5 py-0.5 rounded font-mono">usp_BuyTickets</code></p>
+            </div>
+            <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-[#e5efe2] text-[#2e5d26]">@Model.OperatingDays.Count Operating Days</span>
+        </div>
+
+        @if (!Model.OperatingDays.Any())
+        {
+            <div class="p-8 text-center text-slate-500 text-xs">
+                No fair operating days found matching your filter criteria.
+            </div>
+        }
+        else
+        {
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-[#eef5ec] text-[#2e5d26] font-bold uppercase tracking-wider text-[10px]">
+                        <tr>
+                            <th class="py-3.5 px-4 rounded-l-xl">Fair & Date</th>
+                            <th class="py-3.5 px-4">Operating Hours</th>
+                            <th class="py-3.5 px-4">Gate Capacity</th>
+                            <th class="py-3.5 px-4">Passes Sold</th>
+                            <th class="py-3.5 px-4">Available Remaining</th>
+                            <th class="py-3.5 px-4">Capacity Gauge</th>
+                            <th class="py-3.5 px-4">Ticket Rev.</th>
+                            <th class="py-3.5 px-4 text-right rounded-r-xl">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-[#f0f6ee] text-slate-700">
+                        @foreach (var day in Model.OperatingDays)
+                        {
+                            <tr class="hover:bg-[#f8faf7] transition-colors">
+                                <td class="py-3.5 px-4">
+                                    <span class="font-bold text-[#1c3c18] block">@day.FairTitle</span>
+                                    <span class="text-[11px] text-[#557b4f] font-semibold">@day.Date.ToString("dddd, MMM dd, yyyy")</span>
+                                </td>
+                                <td class="py-3.5 px-4 text-slate-600 whitespace-nowrap">
+                                    <i class="fa-regular fa-clock text-slate-400 mr-1"></i>
+                                    @day.OperatingHours
+                                </td>
+                                <td class="py-3.5 px-4 font-bold text-[#1c3c18]">
+                                    @day.DailyCapacity.ToString("N0")
+                                </td>
+                                <td class="py-3.5 px-4 font-semibold text-emerald-800">
+                                    @day.TicketsSold.ToString("N0")
+                                </td>
+                                <td class="py-3.5 px-4">
+                                    @if (day.AvailableCapacity <= 0)
+                                    {
+                                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-red-100 text-red-700">SOLD OUT</span>
+                                    }
+                                    else if (day.AvailableCapacity < 50)
+                                    {
+                                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">@day.AvailableCapacity Left</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#e5efe2] text-[#2e5d26]">@day.AvailableCapacity Open</span>
+                                    }
+                                </td>
+                                <td class="py-3.5 px-4 min-w-[140px]">
+                                    <div class="flex items-center gap-2">
+                                        <div class="flex-1 bg-[#eef3eb] rounded-full h-2 overflow-hidden">
+                                            <div class="bg-[#2e5d26] h-2 rounded-full" style="width: @Math.Min(100, day.UtilizationPercent)%"></div>
+                                        </div>
+                                        <span class="text-[10px] font-bold text-slate-600 w-10">@day.UtilizationPercent%</span>
+                                    </div>
+                                </td>
+                                <td class="py-3.5 px-4 font-bold text-[#1c3c18]">
+                                    $@day.Revenue.ToString("N0")
+                                </td>
+                                <td class="py-3.5 px-4 text-right">
+                                    <a asp-controller="Visitor" asp-action="TicketBooking" asp-route-fairId="@day.FairId" class="px-3 py-1 rounded-full bg-[#e5efe2] hover:bg-[#2e5d26] text-[#2e5d26] hover:text-white text-[11px] font-bold transition shadow-xs">
+                                        Book Pass
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+
+    <!-- Recent Ticket Transactions Table -->
+    <div class="bg-white rounded-3xl border border-[#dce8d8] shadow-sm overflow-hidden">
+        <div class="p-5 border-b border-[#eef3eb] flex items-center justify-between">
+            <div>
+                <h3 class="font-black text-base text-[#1c3c18]">Recent Issued Gate Passes & Tickets</h3>
+                <p class="text-xs text-slate-500">Atomic admission records issued to visitors</p>
+            </div>
+            <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-[#eef3eb] text-slate-700">Displaying up to 50 passes</span>
+        </div>
+
+        @if (!Model.RecentTickets.Any())
+        {
+            <div class="p-8 text-center text-slate-500 text-xs">
+                No tickets have been purchased yet.
+            </div>
+        }
+        else
+        {
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-[#eef5ec] text-[#2e5d26] font-bold uppercase tracking-wider text-[10px]">
+                        <tr>
+                            <th class="py-3.5 px-4 rounded-l-xl">Ticket Code</th>
+                            <th class="py-3.5 px-4">Cultural Fair</th>
+                            <th class="py-3.5 px-4">Visit Date</th>
+                            <th class="py-3.5 px-4">Attendee / Visitor</th>
+                            <th class="py-3.5 px-4">Amount Paid</th>
+                            <th class="py-3.5 px-4 text-right rounded-r-xl">Issued Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-[#f0f6ee] text-slate-700">
+                        @foreach (var ticket in Model.RecentTickets)
+                        {
+                            <tr class="hover:bg-[#f8faf7] transition-colors">
+                                <td class="py-3.5 px-4 font-mono font-bold text-[#1c3c18]">
+                                    <span class="bg-[#e5efe2] text-[#2e5d26] px-2.5 py-1 rounded-lg text-[11px] border border-[#dbe6d6]">
+                                        <i class="fa-solid fa-barcode mr-1"></i>@ticket.TicketCode
+                                    </span>
+                                </td>
+                                <td class="py-3.5 px-4 font-bold text-[#1c3c18]">
+                                    @ticket.FairTitle
+                                </td>
+                                <td class="py-3.5 px-4 text-slate-600">
+                                    @ticket.VisitDate.ToString("MMM dd, yyyy")
+                                </td>
+                                <td class="py-3.5 px-4">
+                                    <span class="font-bold text-[#1c3c18] block">@ticket.VisitorName</span>
+                                    <span class="text-[10px] text-slate-500 font-mono">@ticket.VisitorEmail</span>
+                                </td>
+                                <td class="py-3.5 px-4 font-bold text-emerald-800">
+                                    $@ticket.PricePaid.ToString("N2")
+                                </td>
+                                <td class="py-3.5 px-4 text-right text-slate-500 text-[11px]">
+                                    @ticket.PurchaseDate.ToString("MMM dd, yyyy hh:mm tt")
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

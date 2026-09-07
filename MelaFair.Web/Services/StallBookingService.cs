@@ -192,10 +192,10 @@ public class StallBookingService
         return vm;
     }
 
-    public async Task<StallReceiptViewModel?> GetStallReceiptAsync(int bookingId, string vendorId)
+    public async Task<StallReceiptViewModel?> GetStallReceiptAsync(int bookingId, string vendorId, bool isAdmin = false)
     {
         var booking = await _stallRepository.GetBookingByIdAsync(bookingId);
-        if (booking == null || booking.VendorId != vendorId)
+        if (booking == null || (!isAdmin && booking.VendorId != vendorId))
         {
             return null;
         }
@@ -223,20 +223,20 @@ public class StallBookingService
         };
     }
 
-    public async Task<(bool success, string message)> CancelBookingAsync(int bookingId, string vendorId)
+    public async Task<(bool success, string message)> CancelBookingAsync(int bookingId, string vendorId, bool isAdmin = false)
     {
         var booking = await _stallRepository.GetBookingByIdAsync(bookingId);
-        if (booking == null || booking.VendorId != vendorId)
+        if (booking == null || (!isAdmin && booking.VendorId != vendorId))
         {
             return (false, "Stall booking record was not found or access is unauthorized.");
         }
 
-        if (booking.Fair != null && booking.Fair.StartDate <= DateTime.Today)
+        if (!isAdmin && booking.Fair != null && booking.Fair.StartDate <= DateTime.Today)
         {
             return (false, "Reservations cannot be cancelled for fairs that have already commenced or concluded.");
         }
 
-        bool cancelled = await _stallRepository.CancelBookingAsync(bookingId, vendorId);
+        bool cancelled = await _stallRepository.CancelBookingAsync(bookingId, vendorId, isAdmin);
         if (cancelled)
         {
             return (true, $"Stall {booking.Stall?.StallNumber} reservation has been successfully cancelled and marked for refund.");

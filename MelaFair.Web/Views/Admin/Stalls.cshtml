@@ -1,0 +1,242 @@
+@model MelaFair.Web.Models.ViewModels.AdminStallsViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Vendor Stalls Oversight";
+}
+
+<div class="space-y-6">
+    <!-- Header Title & Action Bar -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#e5efe2] text-[#2e5d26] text-xs font-bold uppercase tracking-wider mb-1 shadow-xs">
+                <i class="fa-solid fa-store"></i> Global Vendor Stalls Manager
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-black text-[#1c3c18] tracking-tight">Vendor Stall Leases & Inventory</h2>
+            <p class="text-xs sm:text-sm text-[#557b4f]">Unrestricted oversight of commercial stalls, real-time occupancy, lease certificates, and floor allocations.</p>
+        </div>
+        <div class="flex items-center gap-2">
+            <a asp-controller="Vendor" asp-action="Marketplace" class="px-4 py-2.5 rounded-full bg-white hover:bg-[#e5efe2] border border-[#dbe6d6] text-[#2e5d26] font-bold text-xs shadow-xs transition-all flex items-center gap-2">
+                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                <span>Vendor Marketplace</span>
+            </a>
+            @if (Model.SelectedFairId.HasValue && Model.SelectedFairId > 0)
+            {
+                <a asp-controller="Vendor" asp-action="StallBooking" asp-route-fairId="@Model.SelectedFairId" class="px-4 py-2.5 rounded-full bg-[#2e5d26] hover:bg-[#1c3c18] text-white font-bold text-xs shadow-sm shadow-[#2e5d26]/20 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-xs"></i>
+                    <span>Interactive Floor Map</span>
+                </a>
+            }
+        </div>
+    </div>
+
+    <!-- Metrics Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white rounded-3xl border border-[#dce8d8] p-5 shadow-sm space-y-1.5">
+            <div class="flex items-center justify-between text-xs font-bold text-[#557b4f] uppercase tracking-wider">
+                <span>Total Stalls</span>
+                <span class="w-8 h-8 rounded-xl bg-[#e5efe2] text-[#2e5d26] flex items-center justify-center text-sm shadow-xs"><i class="fa-solid fa-cubes"></i></span>
+            </div>
+            <div class="text-2xl sm:text-3xl font-black text-[#1c3c18]">@Model.TotalStalls</div>
+            <div class="text-[11px] text-slate-500">Across all scheduled fairs</div>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-[#dce8d8] p-5 shadow-sm space-y-1.5">
+            <div class="flex items-center justify-between text-xs font-bold text-[#557b4f] uppercase tracking-wider">
+                <span>Booked Stalls</span>
+                <span class="w-8 h-8 rounded-xl bg-[#e5efe2] text-[#2e5d26] flex items-center justify-center text-sm shadow-xs"><i class="fa-solid fa-circle-check"></i></span>
+            </div>
+            <div class="text-2xl sm:text-3xl font-black text-emerald-800">@Model.BookedStalls <span class="text-sm font-bold text-slate-400">(@Model.OccupancyRate%)</span></div>
+            <div class="w-full bg-[#eef3eb] rounded-full h-1.5 overflow-hidden">
+                <div class="bg-[#2e5d26] h-1.5 rounded-full" style="width: @Model.OccupancyRate%"></div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-[#dce8d8] p-5 shadow-sm space-y-1.5">
+            <div class="flex items-center justify-between text-xs font-bold text-[#557b4f] uppercase tracking-wider">
+                <span>Available Stalls</span>
+                <span class="w-8 h-8 rounded-xl bg-[#e5efe2] text-[#2e5d26] flex items-center justify-center text-sm shadow-xs"><i class="fa-solid fa-door-open"></i></span>
+            </div>
+            <div class="text-2xl sm:text-3xl font-black text-[#1c3c18]">@Model.AvailableStalls</div>
+            <div class="text-[11px] text-[#2e5d26] font-semibold">Ready for immediate lease</div>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-[#dce8d8] p-5 shadow-sm space-y-1.5">
+            <div class="flex items-center justify-between text-xs font-bold text-[#557b4f] uppercase tracking-wider">
+                <span>Stall Lease Revenue</span>
+                <span class="w-8 h-8 rounded-xl bg-[#e5efe2] text-[#2e5d26] flex items-center justify-center text-sm shadow-xs"><i class="fa-solid fa-money-bill-wave"></i></span>
+            </div>
+            <div class="text-2xl sm:text-3xl font-black text-[#1c3c18]">$@Model.TotalRevenue.ToString("N2")</div>
+            <div class="text-[11px] text-slate-500">Collected commercial lease fees</div>
+        </div>
+    </div>
+
+    <!-- Filter & Search Controls -->
+    <div class="bg-white rounded-3xl border border-[#dce8d8] p-5 shadow-sm">
+        <form method="get" asp-action="Stalls" class="flex flex-wrap items-center gap-3">
+            <!-- Fair Selector -->
+            <div class="flex-1 min-w-[200px]">
+                <label class="block text-[10px] font-bold uppercase tracking-wider text-[#557b4f] mb-1">Filter By Fair</label>
+                <select name="fairId" onchange="this.form.submit()" class="w-full text-xs font-semibold px-3 py-2 rounded-xl border border-[#dbe6d6] bg-[#f8faf7] text-[#1c3c18] focus:outline-none focus:ring-2 focus:ring-[#2e5d26]">
+                    <option value="">-- All Cultural Fairs --</option>
+                    @foreach (var fair in Model.Fairs)
+                    {
+                        <option value="@fair.FairId" selected="@(Model.SelectedFairId == fair.FairId)">@fair.Title</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Status Filter -->
+            <div class="min-w-[140px]">
+                <label class="block text-[10px] font-bold uppercase tracking-wider text-[#557b4f] mb-1">Status</label>
+                <select name="status" onchange="this.form.submit()" class="w-full text-xs font-semibold px-3 py-2 rounded-xl border border-[#dbe6d6] bg-[#f8faf7] text-[#1c3c18] focus:outline-none focus:ring-2 focus:ring-[#2e5d26]">
+                    <option value="all" selected="@(Model.SelectedStatus == "all" || string.IsNullOrEmpty(Model.SelectedStatus))">All Stalls</option>
+                    <option value="booked" selected="@(Model.SelectedStatus == "booked")">Booked / Leased</option>
+                    <option value="available" selected="@(Model.SelectedStatus == "available")">Available / Vacant</option>
+                </select>
+            </div>
+
+            <!-- Search Field -->
+            <div class="flex-1 min-w-[220px]">
+                <label class="block text-[10px] font-bold uppercase tracking-wider text-[#557b4f] mb-1">Search Stalls / Vendors</label>
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <input type="text" name="search" value="@Model.SearchQuery" placeholder="Stall number, vendor name, email..." class="w-full text-xs px-3 py-2 pl-9 rounded-xl border border-[#dbe6d6] bg-[#f8faf7] text-[#1c3c18] focus:outline-none focus:ring-2 focus:ring-[#2e5d26]" />
+                </div>
+            </div>
+
+            <div class="flex items-end gap-2 pt-4">
+                <button type="submit" class="px-5 py-2 rounded-xl bg-[#2e5d26] text-white font-bold text-xs shadow-xs hover:bg-[#1c3c18] transition">Filter</button>
+                @if (Model.SelectedFairId.HasValue || !string.IsNullOrEmpty(Model.SearchQuery) || Model.SelectedStatus != "all")
+                {
+                    <a asp-action="Stalls" class="px-3 py-2 rounded-xl bg-[#e5efe2] text-[#2e5d26] font-bold text-xs hover:bg-[#d8ebd4] transition">Reset</a>
+                }
+            </div>
+        </form>
+    </div>
+
+    <!-- Stalls Data Table -->
+    <div class="bg-white rounded-3xl border border-[#dce8d8] shadow-sm overflow-hidden">
+        <div class="p-5 border-b border-[#eef3eb] flex items-center justify-between">
+            <div>
+                <h3 class="font-black text-base text-[#1c3c18]">Stall Registry & Leaseholders</h3>
+                <p class="text-xs text-slate-500">Displaying @Model.StallItems.Count stall records</p>
+            </div>
+            <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-[#e5efe2] text-[#2e5d26]">Unrestricted Admin Access</span>
+        </div>
+
+        @if (!Model.StallItems.Any())
+        {
+            <div class="p-12 text-center space-y-3">
+                <div class="w-12 h-12 mx-auto rounded-2xl bg-[#e5efe2] text-[#2e5d26] flex items-center justify-center text-xl shadow-xs"><i class="fa-solid fa-store-slash"></i></div>
+                <h4 class="font-bold text-[#1c3c18]">No stalls match the selected criteria</h4>
+                <p class="text-xs text-slate-500">Try adjusting your fair filter, status, or search terms.</p>
+                <a asp-action="Stalls" class="inline-block px-4 py-2 rounded-full bg-[#2e5d26] text-white font-bold text-xs">Clear Filters</a>
+            </div>
+        }
+        else
+        {
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-[#eef5ec] text-[#2e5d26] font-bold uppercase tracking-wider text-[10px]">
+                        <tr>
+                            <th class="py-3.5 px-4 rounded-l-xl">Stall #</th>
+                            <th class="py-3.5 px-4">Event Fair</th>
+                            <th class="py-3.5 px-4">Category & Size</th>
+                            <th class="py-3.5 px-4">Base Price</th>
+                            <th class="py-3.5 px-4">Status</th>
+                            <th class="py-3.5 px-4">Leaseholder Vendor</th>
+                            <th class="py-3.5 px-4">Booked Date / Tx</th>
+                            <th class="py-3.5 px-4 text-right rounded-r-xl">Admin Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-[#f0f6ee] text-slate-700">
+                        @foreach (var stall in Model.StallItems)
+                        {
+                            <tr class="hover:bg-[#f8faf7] transition-colors">
+                                <td class="py-3.5 px-4 font-black text-[#1c3c18]">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-7 h-7 rounded-lg @(stall.IsBooked ? "bg-amber-100 text-amber-800" : "bg-[#e5efe2] text-[#2e5d26]") flex items-center justify-center font-mono font-bold text-xs">
+                                            @stall.StallNumber
+                                        </span>
+                                    </div>
+                                </td>
+                                <td class="py-3.5 px-4 font-semibold text-[#1c3c18]">
+                                    @stall.FairTitle
+                                </td>
+                                <td class="py-3.5 px-4">
+                                    <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#eef3eb] text-slate-700">@stall.Category</span>
+                                    <span class="text-[10px] text-slate-400 ml-1">(@stall.Size)</span>
+                                </td>
+                                <td class="py-3.5 px-4 font-bold text-emerald-800">
+                                    $@stall.Price.ToString("N2")
+                                </td>
+                                <td class="py-3.5 px-4">
+                                    @if (stall.IsBooked)
+                                    {
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> Leased
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#e5efe2] text-[#2e5d26]">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-[#2e5d26]"></span> Vacant
+                                        </span>
+                                    }
+                                </td>
+                                <td class="py-3.5 px-4">
+                                    @if (stall.IsBooked)
+                                    {
+                                        <div>
+                                            <span class="font-bold text-[#1c3c18] block">@stall.VendorName</span>
+                                            <span class="text-[10px] text-slate-500 font-mono">@stall.VendorEmail</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-slate-400 italic text-[11px]">&mdash;</span>
+                                    }
+                                </td>
+                                <td class="py-3.5 px-4">
+                                    @if (stall.IsBooked && stall.BookingDate.HasValue)
+                                    {
+                                        <div class="text-[11px]">
+                                            <span class="text-slate-600 block">@stall.BookingDate.Value.ToString("MMM dd, yyyy")</span>
+                                            <span class="text-[10px] font-mono text-slate-400">@stall.TransactionReference</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-slate-400 italic text-[11px]">&mdash;</span>
+                                    }
+                                </td>
+                                <td class="py-3.5 px-4 text-right whitespace-nowrap space-x-1.5">
+                                    @if (stall.IsBooked && stall.BookingId.HasValue)
+                                    {
+                                        <a asp-controller="Vendor" asp-action="StallReceipt" asp-route-id="@stall.BookingId.Value" target="_blank" class="px-2.5 py-1 rounded-full bg-[#e5efe2] hover:bg-[#2e5d26] text-[#2e5d26] hover:text-white text-[10px] font-bold transition shadow-xs" title="View Official Lease Certificate">
+                                            <i class="fa-solid fa-file-invoice mr-0.5"></i> Certificate
+                                        </a>
+                                        <form method="post" asp-action="CancelStallBooking" class="inline-block" onsubmit="return confirm('Are you sure you want to release and refund stall @stall.StallNumber?');">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="bookingId" value="@stall.BookingId.Value" />
+                                            <input type="hidden" name="fairId" value="@stall.FairId" />
+                                            <button type="submit" class="px-2.5 py-1 rounded-full bg-red-50 hover:bg-red-600 text-red-700 hover:text-white text-[10px] font-bold transition shadow-xs" title="Release reservation and refund">
+                                                <i class="fa-solid fa-rotate-left mr-0.5"></i> Release
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <a asp-controller="Vendor" asp-action="StallBooking" asp-route-fairId="@stall.FairId" class="px-2.5 py-1 rounded-full bg-[#e5efe2] hover:bg-[#2e5d26] text-[#2e5d26] hover:text-white text-[10px] font-bold transition shadow-xs">
+                                            <i class="fa-solid fa-layer-group mr-0.5"></i> Floor Grid
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

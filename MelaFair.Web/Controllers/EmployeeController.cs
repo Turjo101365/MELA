@@ -10,7 +10,7 @@ namespace MelaFair.Web.Controllers;
 /// <summary>
 /// Controller for Fair Staff & Employees to view job openings and submit employment applications
 /// </summary>
-[Authorize(Roles = RoleConstants.Employee)]
+[Authorize(Roles = $"{RoleConstants.Employee},{RoleConstants.Admin}")]
 public class EmployeeController : Controller
 {
     private readonly RecruitmentService _recruitmentService;
