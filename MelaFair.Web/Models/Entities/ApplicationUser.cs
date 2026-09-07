@@ -19,4 +19,5 @@ public class ApplicationUser : IdentityUser
     public virtual ICollection<StallBooking> StallBookings { get; set; } = new List<StallBooking>();
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
     public virtual ICollection<JobApplication> JobApplications { get; set; } = new List<JobApplication>();
+    public virtual ICollection<JobPosting> VendorJobPostings { get; set; } = new List<JobPosting>();
 }

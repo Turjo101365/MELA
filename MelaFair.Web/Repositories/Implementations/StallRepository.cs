@@ -108,4 +108,13 @@ public class StallRepository : IStallRepository
             .Include(b => b.Vendor)
             .FirstOrDefaultAsync(b => b.StallBookingId == bookingId);
     }
+
+    public async Task<IEnumerable<int>> GetVendorFairIdsAsync(string vendorId)
+    {
+        return await _context.StallBookings
+            .Where(b => b.VendorId == vendorId && b.PaymentStatus == PaymentStatus.Paid)
+            .Select(b => b.FairId)
+            .Distinct()
+            .ToListAsync();
+    }
 }

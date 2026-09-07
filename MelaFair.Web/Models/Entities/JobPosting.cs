@@ -14,6 +14,9 @@ public class JobPosting
     [Required]
     public int FairId { get; set; }
 
+    // Null preserves legacy fair-admin postings; vendor postings are always owned.
+    public string? VendorId { get; set; }
+
     [Required]
     [MaxLength(200)]
     public string Title { get; set; } = string.Empty;
@@ -41,6 +44,9 @@ public class JobPosting
     // Navigation
     [ForeignKey(nameof(FairId))]
     public virtual Fair Fair { get; set; } = null!;
+
+    [ForeignKey(nameof(VendorId))]
+    public virtual ApplicationUser? Vendor { get; set; }
 
     public virtual ICollection<JobApplication> Applications { get; set; } = new List<JobApplication>();
 }

@@ -207,6 +207,69 @@ public class JobApplicationItemDto
     public string ResumeSummary { get; set; } = string.Empty;
 }
 
+/// <summary>Vendor-owned temporary staff job posting editor.</summary>
+public class VendorJobPostingViewModel
+{
+    public int JobPostingId { get; set; }
+
+    [Required(ErrorMessage = "Select one of your leased fair locations")]
+    public int FairId { get; set; }
+
+    [Required, StringLength(200)]
+    public string Title { get; set; } = string.Empty;
+    [Required, StringLength(100)]
+    public string Department { get; set; } = "Stall Operations";
+    [Required]
+    public string Description { get; set; } = string.Empty;
+    [Required]
+    public string Requirements { get; set; } = string.Empty;
+    [Range(1, 1000000)]
+    public decimal DailyWage { get; set; }
+    [Range(1, 100)]
+    public int PositionsAvailable { get; set; } = 1;
+    [DataType(DataType.Date), Display(Name = "Application deadline")]
+    public DateTime ApplicationDeadline { get; set; } = DateTime.Today.AddDays(7);
+    public bool IsActive { get; set; } = true;
+    public List<FairOptionDto> AvailableFairs { get; set; } = new();
+}
+
+public class FairOptionDto
+{
+    public int FairId { get; set; }
+    public string Title { get; set; } = string.Empty;
+}
+
+public class VendorJobPostingItemDto
+{
+    public int JobPostingId { get; set; }
+    public string Title { get; set; } = string.Empty;
+    public string FairTitle { get; set; } = string.Empty;
+    public int PositionsAvailable { get; set; }
+    public int PositionsFilled { get; set; }
+    public int ApplicationCount { get; set; }
+    public bool IsActive { get; set; }
+    public DateTime ApplicationDeadline { get; set; }
+}
+
+public class VendorJobApplicationsViewModel
+{
+    public int JobPostingId { get; set; }
+    public string JobTitle { get; set; } = string.Empty;
+    public List<VendorApplicationItemDto> Applications { get; set; } = new();
+}
+
+public class VendorApplicationItemDto
+{
+    public int ApplicationId { get; set; }
+    public string EmployeeName { get; set; } = string.Empty;
+    public string EmployeeEmail { get; set; } = string.Empty;
+    public string ContactPhone { get; set; } = string.Empty;
+    public string ResumeSummary { get; set; } = string.Empty;
+    public int ExperienceYears { get; set; }
+    public DateTime ApplicationDate { get; set; }
+    public ApplicationStatus Status { get; set; }
+}
+
 /// <summary>
 /// Mapped to SQL View: vw_FairSummary
 /// </summary>

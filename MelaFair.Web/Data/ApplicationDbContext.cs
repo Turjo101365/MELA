@@ -134,6 +134,13 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
                   .WithMany(f => f.JobPostings)
                   .HasForeignKey(e => e.FairId)
                   .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Vendor)
+                  .WithMany(u => u.VendorJobPostings)
+                  .HasForeignKey(e => e.VendorId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(e => e.VendorId);
         });
 
         // Configure JobApplication

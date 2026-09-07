@@ -27,6 +27,17 @@ public static class DbInitializer
             // 1. Ensure database and core tables exist
             await context.Database.EnsureCreatedAsync();
 
+            // EnsureCreated does not evolve an existing database. Keep the vendor recruitment
+            // ownership column compatible with installations created before this module.
+            await context.Database.ExecuteSqlRawAsync(@"
+IF COL_LENGTH('dbo.JobPostings', 'VendorId') IS NULL
+    ALTER TABLE dbo.JobPostings ADD VendorId nvarchar(450) NULL;
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'IX_JobPostings_VendorId' AND object_id = OBJECT_ID('dbo.JobPostings'))
+    CREATE INDEX IX_JobPostings_VendorId ON dbo.JobPostings(VendorId);
+IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = 'FK_JobPostings_AspNetUsers_VendorId')
+    ALTER TABLE dbo.JobPostings ADD CONSTRAINT FK_JobPostings_AspNetUsers_VendorId
+        FOREIGN KEY (VendorId) REFERENCES dbo.AspNetUsers(Id) ON DELETE NO ACTION;");
+
             // 2. Execute raw SQL scripts (SPs, Triggers, Views)
             await DeploySqlArtifactsAsync(context, env, logger);
 
