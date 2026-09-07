@@ -5,76 +5,79 @@
     var initialRole = Model?.TargetRole ?? RoleConstants.Visitor;
 }
 
-<div class="max-w-xl mx-auto my-6 space-y-6">
+<div class="max-w-xl mx-auto my-8 space-y-6">
     <!-- Header -->
     <div class="text-center space-y-2">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-100 text-orange-800 text-xs font-bold uppercase tracking-wider">
-            🏮 MELA Multi-Role Authentication
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#e5efe2] text-[#2e5d26] border border-[#cce0c6] text-xs font-bold uppercase tracking-wider shadow-sm">
+            <i class="fa-solid fa-leaf text-[#4e8740]"></i>
+            <span>MELA Multi-Role Portal</span>
         </div>
-        <h1 class="text-3xl font-black text-slate-900 tracking-tight">Sign In to Your Account</h1>
-        <p class="text-xs text-slate-500">Choose your portal type and enter your login credentials</p>
+        <h1 class="text-3xl sm:text-4xl font-black text-[#1c3c18] tracking-tight">Sign In to Your Account</h1>
+        <p class="text-xs sm:text-sm text-[#557b4f]">Choose your portal type and enter your verified credentials</p>
     </div>
 
     <!-- 4 Role Selection Tabs -->
-    <div class="bg-white rounded-2xl border border-slate-200 p-1.5 shadow-sm grid grid-cols-2 sm:grid-cols-4 gap-1.5" id="roleTabs">
+    <div class="bg-white/90 backdrop-blur-md rounded-2xl border border-[#dce8d8] p-1.5 shadow-sm grid grid-cols-2 sm:grid-cols-4 gap-1.5" id="roleTabs">
         <!-- Tab 1: Admin -->
         <button type="button" 
-                onclick="selectRole('@RoleConstants.Admin', 'System Administrator', '👑', 'orange', 'admin@mela.com')"
+                onclick="selectRole('@RoleConstants.Admin', 'System Administrator', '👑', 'tanmoy.cse.20230104124@aust.edu')"
                 id="tab-@RoleConstants.Admin"
-                class="role-tab flex flex-col items-center justify-center p-3 rounded-xl border-2 transition text-center @(initialRole == RoleConstants.Admin ? "border-orange-500 bg-orange-50/70 text-orange-950 font-bold" : "border-transparent text-slate-600 hover:bg-slate-50")">
+                class="role-tab flex flex-col items-center justify-center p-3 rounded-xl border-2 transition text-center @(initialRole == RoleConstants.Admin ? "border-[#1c3c18] bg-[#e5efe2] text-[#1c3c18] font-bold shadow-sm" : "border-transparent text-slate-600 hover:text-[#1c3c18] hover:bg-[#f4f8f3]")">
             <span class="text-xl mb-1">👑</span>
             <span class="text-xs font-bold leading-tight">Admin</span>
-            <span class="text-[10px] text-slate-400 font-normal">Management</span>
+            <span class="text-[10px] text-[#557b4f] font-normal">Management</span>
         </button>
 
         <!-- Tab 2: Vendor -->
         <button type="button" 
-                onclick="selectRole('@RoleConstants.Vendor', 'Fair Vendor', '🎪', 'emerald', 'vendor@mela.com')"
+                onclick="selectRole('@RoleConstants.Vendor', 'Fair Vendor', '🎪', 'vendor@mela.com')"
                 id="tab-@RoleConstants.Vendor"
-                class="role-tab flex flex-col items-center justify-center p-3 rounded-xl border-2 transition text-center @(initialRole == RoleConstants.Vendor ? "border-emerald-500 bg-emerald-50/70 text-emerald-950 font-bold" : "border-transparent text-slate-600 hover:bg-slate-50")">
+                class="role-tab flex flex-col items-center justify-center p-3 rounded-xl border-2 transition text-center @(initialRole == RoleConstants.Vendor ? "border-[#2e5d26] bg-[#e5efe2] text-[#1c3c18] font-bold shadow-sm" : "border-transparent text-slate-600 hover:text-[#1c3c18] hover:bg-[#f4f8f3]")">
             <span class="text-xl mb-1">🎪</span>
             <span class="text-xs font-bold leading-tight">Vendor</span>
-            <span class="text-[10px] text-slate-400 font-normal">Stall Owner</span>
+            <span class="text-[10px] text-[#557b4f] font-normal">Stall Owner</span>
         </button>
 
         <!-- Tab 3: Visitor -->
         <button type="button" 
-                onclick="selectRole('@RoleConstants.Visitor', 'Fair Visitor', '🎟️', 'blue', 'visitor@mela.com')"
+                onclick="selectRole('@RoleConstants.Visitor', 'Fair Visitor', '🎟️', 'visitor@mela.com')"
                 id="tab-@RoleConstants.Visitor"
-                class="role-tab flex flex-col items-center justify-center p-3 rounded-xl border-2 transition text-center @(initialRole == RoleConstants.Visitor ? "border-blue-500 bg-blue-50/70 text-blue-950 font-bold" : "border-transparent text-slate-600 hover:bg-slate-50")">
+                class="role-tab flex flex-col items-center justify-center p-3 rounded-xl border-2 transition text-center @(initialRole == RoleConstants.Visitor ? "border-[#4e8740] bg-[#e5efe2] text-[#1c3c18] font-bold shadow-sm" : "border-transparent text-slate-600 hover:text-[#1c3c18] hover:bg-[#f4f8f3]")">
             <span class="text-xl mb-1">🎟️</span>
             <span class="text-xs font-bold leading-tight">Visitor</span>
-            <span class="text-[10px] text-slate-400 font-normal">Ticket Buyer</span>
+            <span class="text-[10px] text-[#557b4f] font-normal">Ticket Buyer</span>
         </button>
 
         <!-- Tab 4: Employee -->
         <button type="button" 
-                onclick="selectRole('@RoleConstants.Employee', 'Staff & Employee', '💼', 'purple', 'employee@mela.com')"
+                onclick="selectRole('@RoleConstants.Employee', 'Staff & Employee', '💼', 'employee@mela.com')"
                 id="tab-@RoleConstants.Employee"
-                class="role-tab flex flex-col items-center justify-center p-3 rounded-xl border-2 transition text-center @(initialRole == RoleConstants.Employee ? "border-purple-500 bg-purple-50/70 text-purple-950 font-bold" : "border-transparent text-slate-600 hover:bg-slate-50")">
+                class="role-tab flex flex-col items-center justify-center p-3 rounded-xl border-2 transition text-center @(initialRole == RoleConstants.Employee ? "border-[#386c2c] bg-[#e5efe2] text-[#1c3c18] font-bold shadow-sm" : "border-transparent text-slate-600 hover:text-[#1c3c18] hover:bg-[#f4f8f3]")">
             <span class="text-xl mb-1">💼</span>
             <span class="text-xs font-bold leading-tight">Employee</span>
-            <span class="text-[10px] text-slate-400 font-normal">Fair Staff</span>
+            <span class="text-[10px] text-[#557b4f] font-normal">Fair Staff</span>
         </button>
     </div>
 
     <!-- Main Form Card -->
-    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
+    <div class="bg-white rounded-3xl border border-[#dce8d8] shadow-lg p-6 sm:p-8 space-y-6 relative overflow-hidden">
+        <!-- Top subtle eco decorative bar -->
+        <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-[#1c3c18] via-[#2e5d26] to-[#4e8740]"></div>
         
         <!-- Active Role Portal Banner -->
-        <div id="roleBanner" class="p-4 rounded-2xl border flex items-center justify-between transition-all duration-300 @(initialRole == RoleConstants.Admin ? "bg-orange-50 border-orange-200" : initialRole == RoleConstants.Vendor ? "bg-emerald-50 border-emerald-200" : initialRole == RoleConstants.Employee ? "bg-purple-50 border-purple-200" : "bg-blue-50 border-blue-200")">
+        <div id="roleBanner" class="p-4 rounded-2xl border border-[#cce0c6] bg-gradient-to-r from-[#f4f8f3] to-[#e5efe2] flex items-center justify-between transition-all duration-300 shadow-xs">
             <div class="flex items-center gap-3">
-                <div id="roleIcon" class="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-xl shadow-sm border border-slate-100">
+                <div id="roleIcon" class="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-xl shadow-xs border border-[#cce0c6]">
                     @(initialRole == RoleConstants.Admin ? "👑" : initialRole == RoleConstants.Vendor ? "🎪" : initialRole == RoleConstants.Employee ? "💼" : "🎟️")
                 </div>
                 <div>
-                    <div class="text-[10px] uppercase font-bold tracking-wider text-slate-500">Selected Portal</div>
-                    <div id="roleTitle" class="text-sm font-black text-slate-900">
+                    <div class="text-[10px] uppercase font-bold tracking-wider text-[#557b4f]">Selected Portal</div>
+                    <div id="roleTitle" class="text-sm font-black text-[#1c3c18]">
                         @(initialRole == RoleConstants.Admin ? "System Administrator" : initialRole == RoleConstants.Vendor ? "Fair Vendor" : initialRole == RoleConstants.Employee ? "Staff & Employee" : "Fair Visitor")
                     </div>
                 </div>
             </div>
-            <span class="text-[11px] font-semibold text-slate-500 px-2.5 py-1 rounded-lg bg-white border border-slate-200">
+            <span class="text-[11px] font-bold text-[#2e5d26] px-3 py-1 rounded-full bg-white border border-[#cce0c6] shadow-xs">
                 Credentials Required
             </span>
         </div>
@@ -88,12 +91,14 @@
 
             <!-- Email Field -->
             <div>
-                <label asp-for="Email" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Email Address</label>
+                <label asp-for="Email" class="block text-xs font-bold text-[#1c3c18] uppercase tracking-wider mb-1.5">
+                    Email Address
+                </label>
                 <div class="relative">
                     <input asp-for="Email" 
                            id="loginEmail"
                            type="email"
-                           class="w-full pl-3.5 pr-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm transition placeholder-slate-400" 
+                           class="w-full px-3.5 py-2.5 rounded-xl border border-[#cce0c6] bg-[#fbfdfa] text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2e5d26]/40 focus:border-[#2e5d26] text-sm transition" 
                            placeholder="Enter your email" 
                            required 
                            autocomplete="username" />
@@ -104,17 +109,19 @@
             <!-- Password Field -->
             <div>
                 <div class="flex items-center justify-between mb-1.5">
-                    <label asp-for="Password" class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Password</label>
+                    <label asp-for="Password" class="block text-xs font-bold text-[#1c3c18] uppercase tracking-wider">
+                        Password
+                    </label>
                 </div>
                 <div class="relative">
                     <input asp-for="Password" 
                            id="loginPassword"
                            type="password" 
-                           class="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm transition placeholder-slate-400" 
+                           class="w-full pl-3.5 pr-12 py-2.5 rounded-xl border border-[#cce0c6] bg-[#fbfdfa] text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2e5d26]/40 focus:border-[#2e5d26] text-sm transition" 
                            placeholder="Enter your password" 
                            required 
                            autocomplete="current-password" />
-                    <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 text-xs">
+                    <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-xs font-bold text-[#557b4f] hover:text-[#1c3c18]">
                         <span id="eyeText">Show</span>
                     </button>
                 </div>
@@ -123,29 +130,60 @@
 
             <!-- Remember Me -->
             <div class="flex items-center justify-between text-xs pt-1">
-                <label class="flex items-center space-x-2 text-slate-600 cursor-pointer select-none">
-                    <input asp-for="RememberMe" type="checkbox" class="rounded border-slate-300 text-orange-600 focus:ring-orange-500 w-4 h-4" />
+                <label class="flex items-center space-x-2 text-[#40543e] cursor-pointer select-none">
+                    <input asp-for="RememberMe" type="checkbox" class="rounded border-[#cce0c6] text-[#2e5d26] focus:ring-[#2e5d26] w-4 h-4" />
                     <span class="font-medium">Remember me on this browser</span>
                 </label>
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" id="submitBtn" class="w-full py-3 px-4 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm shadow-md shadow-orange-600/20 transition flex items-center justify-center gap-2">
-                <span>Sign In &rarr;</span>
+            <button type="submit" id="submitBtn" class="w-full py-3.5 px-4 rounded-xl bg-[#2e5d26] hover:bg-[#1c3c18] text-white font-bold text-sm shadow-md shadow-[#2e5d26]/20 transition-all hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2">
+                <span>Sign In to Portal</span>
+                <i class="fa-solid fa-arrow-right text-xs"></i>
             </button>
         </form>
 
+        <!-- Quick Demo Credentials Fill -->
+        <div class="bg-[#f6f9f3] border border-[#dce8d8] rounded-2xl p-3.5 space-y-2.5">
+            <div class="flex items-center justify-between text-[11px] font-bold text-[#2e5d26]">
+                <span class="flex items-center gap-1.5">
+                    <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i>
+                    <span>Quick Demo Login Auto-Fill</span>
+                </span>
+                <span class="text-[10px] text-[#557b4f] font-normal">Click a role to fill test credentials</span>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                <button type="button" onclick="fillCredentials('@RoleConstants.Admin', 'tanmoy.cse.20230104124@aust.edu', 'Turjo124')" 
+                        class="px-2 py-1.5 rounded-lg bg-white border border-[#cce0c6] hover:bg-[#e5efe2] text-[#1c3c18] text-[10px] font-bold transition flex items-center justify-center gap-1">
+                    <span>👑</span> Admin
+                </button>
+                <button type="button" onclick="fillCredentials('@RoleConstants.Vendor', 'vendor@mela.com', 'Vendor@123456')" 
+                        class="px-2 py-1.5 rounded-lg bg-white border border-[#cce0c6] hover:bg-[#e5efe2] text-[#1c3c18] text-[10px] font-bold transition flex items-center justify-center gap-1">
+                    <span>🎪</span> Vendor
+                </button>
+                <button type="button" onclick="fillCredentials('@RoleConstants.Visitor', 'visitor@mela.com', 'Visitor@123456')" 
+                        class="px-2 py-1.5 rounded-lg bg-white border border-[#cce0c6] hover:bg-[#e5efe2] text-[#1c3c18] text-[10px] font-bold transition flex items-center justify-center gap-1">
+                    <span>🎟️</span> Visitor
+                </button>
+                <button type="button" onclick="fillCredentials('@RoleConstants.Employee', 'employee@mela.com', 'Employee@123456')" 
+                        class="px-2 py-1.5 rounded-lg bg-white border border-[#cce0c6] hover:bg-[#e5efe2] text-[#1c3c18] text-[10px] font-bold transition flex items-center justify-center gap-1">
+                    <span>💼</span> Staff
+                </button>
+            </div>
+        </div>
+
         <!-- Footer / Links -->
-        <div class="text-center pt-4 border-t border-slate-100 text-xs text-slate-500 space-y-2">
+        <div class="text-center pt-2 border-t border-[#eef3eb] text-xs text-slate-500 space-y-2">
             <div>
                 Need a new account? 
-                <a asp-controller="Account" asp-action="Register" asp-route-returnUrl="@returnUrl" class="font-bold text-orange-600 hover:text-orange-700">
+                <a asp-controller="Account" asp-action="Register" asp-route-returnUrl="@returnUrl" class="font-bold text-[#2e5d26] hover:text-[#1c3c18] underline-offset-4 hover:underline">
                     Register here
                 </a>
             </div>
             <div>
-                <a asp-controller="Home" asp-action="Index" class="text-slate-400 hover:text-slate-600 font-medium">
-                    &larr; Back to Public Festival Home
+                <a asp-controller="Home" asp-action="Index" class="text-[#557b4f] hover:text-[#1c3c18] font-semibold transition inline-flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                    <span>Back to Public Festival Home</span>
                 </a>
             </div>
         </div>
@@ -159,59 +197,53 @@
             '@RoleConstants.Admin': {
                 title: 'System Administrator',
                 icon: '👑',
-                tabClass: 'border-orange-500 bg-orange-50/70 text-orange-950 font-bold',
-                bannerClass: 'bg-orange-50 border-orange-200',
-                btnClass: 'bg-orange-600 hover:bg-orange-700 shadow-orange-600/20',
-                placeholder: 'admin@mela.com'
+                tabClass: 'border-[#1c3c18] bg-[#e5efe2] text-[#1c3c18] font-bold shadow-sm',
+                email: 'tanmoy.cse.20230104124@aust.edu',
+                placeholder: 'tanmoy.cse.20230104124@aust.edu'
             },
             '@RoleConstants.Vendor': {
                 title: 'Fair Vendor',
                 icon: '🎪',
-                tabClass: 'border-emerald-500 bg-emerald-50/70 text-emerald-950 font-bold',
-                bannerClass: 'bg-emerald-50 border-emerald-200',
-                btnClass: 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/20',
+                tabClass: 'border-[#2e5d26] bg-[#e5efe2] text-[#1c3c18] font-bold shadow-sm',
+                email: 'vendor@mela.com',
                 placeholder: 'vendor@mela.com'
             },
             '@RoleConstants.Visitor': {
                 title: 'Fair Visitor',
                 icon: '🎟️',
-                tabClass: 'border-blue-500 bg-blue-50/70 text-blue-950 font-bold',
-                bannerClass: 'bg-blue-50 border-blue-200',
-                btnClass: 'bg-blue-600 hover:bg-blue-700 shadow-blue-600/20',
+                tabClass: 'border-[#4e8740] bg-[#e5efe2] text-[#1c3c18] font-bold shadow-sm',
+                email: 'visitor@mela.com',
                 placeholder: 'visitor@mela.com'
             },
             '@RoleConstants.Employee': {
                 title: 'Staff & Employee',
                 icon: '💼',
-                tabClass: 'border-purple-500 bg-purple-50/70 text-purple-950 font-bold',
-                bannerClass: 'bg-purple-50 border-purple-200',
-                btnClass: 'bg-purple-600 hover:bg-purple-700 shadow-purple-600/20',
+                tabClass: 'border-[#386c2c] bg-[#e5efe2] text-[#1c3c18] font-bold shadow-sm',
+                email: 'employee@mela.com',
                 placeholder: 'employee@mela.com'
             }
         };
 
-        function selectRole(role, title, icon, color, placeholder) {
+        function selectRole(role, title, icon, emailPlaceholder) {
             document.getElementById('targetRoleInput').value = role;
             document.getElementById('roleTitle').innerText = title;
             document.getElementById('roleIcon').innerText = icon;
-            document.getElementById('loginEmail').placeholder = placeholder;
+            document.getElementById('loginEmail').placeholder = emailPlaceholder;
 
             // Update Tabs styling
             document.querySelectorAll('.role-tab').forEach(tab => {
-                tab.className = 'role-tab flex flex-col items-center justify-center p-3 rounded-xl border-2 transition text-center border-transparent text-slate-600 hover:bg-slate-50';
+                tab.className = 'role-tab flex flex-col items-center justify-center p-3 rounded-xl border-2 transition text-center border-transparent text-slate-600 hover:text-[#1c3c18] hover:bg-[#f4f8f3]';
             });
             const activeTab = document.getElementById('tab-' + role);
             if (activeTab && rolesConfig[role]) {
                 activeTab.className = 'role-tab flex flex-col items-center justify-center p-3 rounded-xl border-2 transition text-center ' + rolesConfig[role].tabClass;
             }
+        }
 
-            // Update Banner & Button styling
-            const banner = document.getElementById('roleBanner');
-            const submitBtn = document.getElementById('submitBtn');
-            if (banner && submitBtn && rolesConfig[role]) {
-                banner.className = 'p-4 rounded-2xl border flex items-center justify-between transition-all duration-300 ' + rolesConfig[role].bannerClass;
-                submitBtn.className = 'w-full py-3 px-4 rounded-xl text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2 ' + rolesConfig[role].btnClass;
-            }
+        function fillCredentials(role, email, password) {
+            selectRole(role, rolesConfig[role]?.title || '', rolesConfig[role]?.icon || '', email);
+            document.getElementById('loginEmail').value = email;
+            document.getElementById('loginPassword').value = password;
         }
 
         function togglePasswordVisibility() {

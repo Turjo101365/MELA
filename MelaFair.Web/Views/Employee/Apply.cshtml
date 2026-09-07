@@ -1,33 +1,63 @@
 @model MelaFair.Web.Models.ViewModels.ApplyJobViewModel
 @{
-    ViewData["Title"] = "Submit Job Application";
+    ViewData["Title"] = "Submit Job Application - " + Model.JobTitle;
 }
 
-<div class="max-w-2xl mx-auto space-y-6">
-    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
-        <div class="border-b border-slate-100 pb-4 space-y-2">
-            <div class="flex items-center gap-2">
-                <a asp-controller="Employee" asp-action="JobListings" class="text-xs font-bold text-slate-500 hover:text-slate-700">
-                    &larr; Back to Job Board
-                </a>
-                <span class="text-slate-300">&bull;</span>
-                <span class="text-xs font-bold text-purple-700 bg-purple-50 px-2.5 py-0.5 rounded-full">Recruitment Procedure</span>
+<div class="max-w-3xl mx-auto space-y-8 my-4">
+
+    <!-- Back Navigation & Breadcrumb -->
+    <div class="flex items-center gap-2">
+        <a asp-controller="Employee" asp-action="JobListings" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#2e5d26] hover:text-[#1c3c18] bg-white hover:bg-[#f6f9f4] px-4 py-2 rounded-full border border-[#dce8d8] shadow-sm transition">
+            <i class="fa-solid fa-arrow-left text-[10px]"></i>
+            <span>Back to Job Board</span>
+        </a>
+        <span class="text-slate-300">&bull;</span>
+        <span class="text-xs font-bold text-[#2e5d26] bg-[#e5efe2] px-3 py-1 rounded-full">
+            Official Candidate Application
+        </span>
+    </div>
+
+    <!-- Job Profile Highlight Card -->
+    <div class="bg-white rounded-[2.5rem] border border-[#dce8d8] p-6 sm:p-8 shadow-sm space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#eef3eb] pb-4">
+            <div class="space-y-1">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#e5efe2] text-[#2e5d26]">
+                    <i class="fa-solid fa-briefcase text-[10px]"></i>
+                    <span>@Model.Department</span>
+                </span>
+                <h1 class="text-2xl sm:text-3xl font-black text-[#142a12] tracking-tight">
+                    @Model.JobTitle
+                </h1>
+                <p class="text-xs text-slate-500 flex items-center gap-1.5 font-medium">
+                    <i class="fa-solid fa-landmark text-[#2e5d26]"></i>
+                    <span>@Model.FairTitle</span>
+                </p>
             </div>
-            <h1 class="text-2xl font-black text-slate-900">@Model.JobTitle</h1>
-            <div class="flex flex-wrap items-center gap-4 text-xs text-slate-500 font-medium">
-                <span>🎪 @Model.FairTitle</span>
-                <span>🏢 @Model.Department</span>
-                <span class="text-emerald-700 font-bold">💵 Daily Wage: $@Model.DailyWage.ToString("N0")</span>
+
+            <div class="bg-[#f4f8f3] rounded-2xl p-4 border border-[#dce8d8] text-right">
+                <span class="block text-[10px] text-slate-400 font-bold uppercase tracking-wider">Offered Daily Wage</span>
+                <span class="text-xl font-black text-[#2e5d26]">&#2547;@Model.DailyWage.ToString("N0")</span>
+                <span class="text-[10px] text-slate-500 block">/ active fair day</span>
             </div>
         </div>
 
         <!-- Position Requirements Alert -->
-        <div class="bg-purple-50 border border-purple-100 rounded-2xl p-4 text-xs space-y-1 text-purple-900">
-            <span class="font-bold block uppercase tracking-wider text-[10px] text-purple-700">Job Qualifications</span>
-            <p>@Model.Requirements</p>
+        <div class="bg-[#f6f9f4] border border-[#e2ece0] rounded-2xl p-4 text-xs space-y-1 text-slate-700">
+            <span class="font-bold block uppercase tracking-wider text-[10px] text-[#2e5d26]">
+                <i class="fa-solid fa-list-check mr-1"></i> Qualifications &amp; On-Site Responsibilities
+            </span>
+            <p class="leading-relaxed">@Model.Requirements</p>
+        </div>
+    </div>
+
+    <!-- Candidate Application Form Card -->
+    <div class="bg-white rounded-[2.5rem] border border-[#dce8d8] p-6 sm:p-10 shadow-lg space-y-6">
+        <div>
+            <h2 class="text-lg font-bold text-[#142a12]">Candidate Information &amp; Statement</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Please provide your contact details and relevant experience for review.</p>
         </div>
 
-        <form asp-controller="Employee" asp-action="Apply" method="post" class="space-y-4">
+        <form asp-controller="Employee" asp-action="Apply" method="post" class="space-y-6">
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="JobPostingId" />
             <input type="hidden" asp-for="JobTitle" />
@@ -36,36 +66,74 @@
             <input type="hidden" asp-for="DailyWage" />
             <input type="hidden" asp-for="Requirements" />
 
-            <div asp-validation-summary="ModelOnly" class="text-xs font-semibold text-rose-600 bg-rose-50 p-3 rounded-xl"></div>
+            <div asp-validation-summary="ModelOnly" class="text-xs font-semibold text-rose-600 bg-rose-50 border border-rose-200 p-3 rounded-2xl"></div>
 
-            <div>
-                <label asp-for="ContactPhone" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1"></label>
-                <input asp-for="ContactPhone" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" placeholder="+880 1700 000000" />
-                <span asp-validation-for="ContactPhone" class="text-xs text-rose-500"></span>
+            <!-- Contact Phone Number -->
+            <div class="space-y-2">
+                <label asp-for="ContactPhone" class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                    Primary Contact Phone Number <span class="text-rose-500">*</span>
+                </label>
+                <div class="relative">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 select-none">
+                        🇧🇩 +880
+                    </span>
+                    <input asp-for="ContactPhone" 
+                           class="w-full pl-20 pr-4 py-3 rounded-2xl border border-[#dce8d8] bg-[#f6f9f4] text-xs sm:text-sm font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2e5d26]/30 transition" 
+                           placeholder="1700-000000" />
+                </div>
+                <p class="text-[11px] text-slate-400">Our coordination desk will contact you at this number for interview scheduling.</p>
+                <span asp-validation-for="ContactPhone" class="text-xs text-rose-500 font-semibold block"></span>
             </div>
 
-            <div>
-                <label asp-for="ExperienceYears" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Years of Event / Relevant Experience</label>
-                <input asp-for="ExperienceYears" type="number" min="0" max="40" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" />
-                <span asp-validation-for="ExperienceYears" class="text-xs text-rose-500"></span>
+            <!-- Experience in Years -->
+            <div class="space-y-2">
+                <label asp-for="ExperienceYears" class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                    Years of Event or Relevant Experience <span class="text-rose-500">*</span>
+                </label>
+                <div class="flex items-center gap-4">
+                    <input asp-for="ExperienceYears" type="number" min="0" max="40" 
+                           class="w-32 px-4 py-3 rounded-2xl border border-[#dce8d8] bg-[#f6f9f4] text-center text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#2e5d26]/30 transition" />
+                    <span class="text-xs text-slate-500">
+                        (Enter 0 if this is your first cultural festival or entry-level role)
+                    </span>
+                </div>
+                <span asp-validation-for="ExperienceYears" class="text-xs text-rose-500 font-semibold block"></span>
             </div>
 
-            <div>
-                <label asp-for="ResumeSummary" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Resume Summary &amp; Key Skills</label>
-                <textarea asp-for="ResumeSummary" rows="4" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" placeholder="Summarize your previous event roles, crowd supervision background, certifications, and communication strengths..."></textarea>
-                <span asp-validation-for="ResumeSummary" class="text-xs text-rose-500"></span>
+            <!-- Resume / Skills Summary -->
+            <div class="space-y-2">
+                <label asp-for="ResumeSummary" class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                    Resume Summary &amp; Professional Qualifications <span class="text-rose-500">*</span>
+                </label>
+                <textarea asp-for="ResumeSummary" rows="5" 
+                          class="w-full px-5 py-3.5 rounded-3xl border border-[#dce8d8] bg-[#f6f9f4] text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2e5d26]/30 transition resize-none leading-relaxed" 
+                          placeholder="Summarize your past event experience, crowd coordination background, communication strengths, educational background, or relevant technical certifications..."></textarea>
+                <p class="text-[11px] text-slate-400">Highlight past voluntary work, language proficiencies (Bengali/English), and physical fitness if applicable.</p>
+                <span asp-validation-for="ResumeSummary" class="text-xs text-rose-500 font-semibold block"></span>
             </div>
 
-            <div class="pt-4 border-t border-slate-100 flex items-center justify-end space-x-3">
-                <a asp-controller="Employee" asp-action="JobListings" class="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">
+            <!-- Terms & Code of Conduct -->
+            <div class="p-4 rounded-2xl bg-[#f6f9f4] border border-[#dce8d8] flex items-start gap-3">
+                <input type="checkbox" id="termsCheck" required class="mt-1 rounded text-[#2e5d26] focus:ring-[#2e5d26]" />
+                <label for="termsCheck" class="text-xs text-slate-600 leading-relaxed cursor-pointer select-none">
+                    I confirm that the details provided are accurate. I commit to adhering to the festival code of conduct, attending the pre-event briefing, and maintaining punctuality throughout the scheduled fair days.
+                </label>
+            </div>
+
+            <!-- Form Action Buttons -->
+            <div class="pt-4 border-t border-[#eef3eb] flex items-center justify-between gap-4">
+                <a asp-controller="Employee" asp-action="JobListings" class="px-6 py-3 rounded-full bg-[#f6f9f4] hover:bg-[#eef4ed] text-slate-700 font-bold text-xs border border-[#dce8d8] transition">
                     Cancel
                 </a>
-                <button type="submit" class="px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-md shadow-purple-600/20 transition">
-                    Submit Job Application
+                <button type="submit" 
+                        class="px-8 py-3.5 rounded-full bg-[#2e5d26] hover:bg-[#1c3c18] text-white font-bold text-xs shadow-md transition-all hover:scale-105 flex items-center gap-2">
+                    <i class="fa-solid fa-paper-plane text-amber-300"></i>
+                    <span>Submit Job Application</span>
                 </button>
             </div>
         </form>
     </div>
+
 </div>
 
 @section Scripts {

@@ -1,70 +1,279 @@
 @model IEnumerable<MelaFair.Web.Models.Entities.JobPosting>
 @{
-    ViewData["Title"] = "Fair Staff Employment Opportunities";
+    ViewData["Title"] = "Fair Staff Employment & Opportunities";
 }
 
-<div class="space-y-8">
-    <!-- Header -->
-    <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div class="space-y-1">
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-100 text-purple-800">
-                💼 Employee Recruitment Board
-            </span>
-            <h1 class="text-2xl sm:text-3xl font-black text-slate-900">Fair Ground Employment Openings</h1>
-            <p class="text-xs sm:text-sm text-slate-500">
-                Apply for event operations, ticketing, sound engineering, and ground security positions (<code class="text-purple-700 font-mono">usp_RecruitEmployee</code>).
-            </p>
-        </div>
+<div class="space-y-10">
 
-        @if (User.IsInRole(RoleConstants.Employee))
-        {
-            <a asp-controller="Employee" asp-action="MyApplications" class="px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-md transition self-start md:self-auto whitespace-nowrap">
-                📋 My Applications
-            </a>
-        }
-    </div>
+    <!-- 1. Hero Recruitment Banner -->
+    <div class="relative rounded-[2.5rem] p-8 sm:p-12 lg:p-14 text-white shadow-xl overflow-hidden"
+         style="background: linear-gradient(135deg, #142a12 0%, #244f21 55%, #3d7034 100%);">
+        
+        <div class="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none"></div>
+        <div class="absolute right-1/4 -bottom-20 w-72 h-72 rounded-full bg-amber-400/10 blur-2xl pointer-events-none"></div>
 
-    <!-- Job Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        @foreach (var job in Model)
-        {
-            <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 flex flex-col justify-between hover:border-purple-300 transition festival-card space-y-4">
-                <div class="space-y-3">
-                    <div class="flex items-start justify-between">
-                        <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-purple-50 text-purple-700">
-                            @job.Department
-                        </span>
-                        <span class="text-xs font-black text-slate-900 bg-slate-100 px-2.5 py-1 rounded-lg">
-                            $@job.DailyWage.ToString("N0") / day
-                        </span>
-                    </div>
-
-                    <div>
-                        <h2 class="text-base font-bold text-slate-900">@job.Title</h2>
-                        <span class="text-xs text-slate-500 font-medium">🎪 @job.Fair?.Title</span>
-                    </div>
-
-                    <p class="text-xs text-slate-600 line-clamp-3 leading-relaxed">
-                        @job.Description
-                    </p>
-
-                    <div class="bg-slate-50 rounded-xl p-3 text-[11px] space-y-1 text-slate-600">
-                        <span class="font-bold text-slate-800 block">Requirements:</span>
-                        <p class="line-clamp-2">@job.Requirements</p>
-                    </div>
-
-                    <div class="flex items-center justify-between text-[11px] text-slate-500 pt-1">
-                        <span>Openings: @(job.PositionsAvailable - job.PositionsFilled) left</span>
-                        <span>Deadline: @job.ApplicationDeadline.ToString("MMM dd")</span>
-                    </div>
+        <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+            <div class="max-w-2xl space-y-4">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs font-bold tracking-wide text-[#dbead7] shadow-sm">
+                    <i class="fa-solid fa-briefcase text-amber-300"></i>
+                    <span>Official MELA Fair Staff &amp; Volunteer Recruitment</span>
                 </div>
+                
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
+                    Fair Staff Employment Openings
+                </h1>
 
-                <div class="pt-2 border-t border-slate-100">
-                    <a asp-controller="Employee" asp-action="Apply" asp-route-jobPostingId="@job.JobPostingId" class="block text-center w-full py-2.5 px-4 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-md shadow-purple-600/20 transition">
-                        Apply for Position &rarr;
-                    </a>
+                <p class="text-[#d0e5cc] text-xs sm:text-sm lg:text-base leading-relaxed max-w-xl">
+                    Join the dynamic on-ground workforce driving Bangladesh's cultural festivals. Competitive daily stipends, official event certifications, and verified recruitment.
+                </p>
+
+                <!-- Key Staff Perks -->
+                <div class="flex flex-wrap items-center gap-4 pt-1 text-xs text-[#e1f0de]">
+                    <span class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-check text-emerald-400"></i> Daily On-Time Wage Payouts
+                    </span>
+                    <span class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-award text-emerald-400"></i> Official Service Certificate
+                    </span>
+                    <span class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-utensils text-emerald-400"></i> Complimentary Daily Meals
+                    </span>
                 </div>
             </div>
-        }
+
+            <!-- Candidate Tracker / Status Card -->
+            <div class="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20 shadow-lg text-center max-w-sm w-full space-y-4 self-start lg:self-auto">
+                <div class="w-12 h-12 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center text-xl font-black mx-auto shadow-md">
+                    <i class="fa-solid fa-id-card-clip"></i>
+                </div>
+                <div>
+                    <h3 class="text-base font-bold text-white">Applied for a Position?</h3>
+                    <p class="text-xs text-[#d0e5cc] mt-1">Track your review status, interview shortlists, and onboarding calls.</p>
+                </div>
+                @if (User.IsInRole(RoleConstants.Employee))
+                {
+                    <a asp-controller="Employee" asp-action="MyApplications" class="block w-full py-3 px-5 rounded-full bg-white hover:bg-slate-100 text-[#1c3c18] font-bold text-xs shadow-md transition-all hover:scale-105">
+                        <i class="fa-solid fa-clipboard-list mr-1.5"></i> My Submitted Applications
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login" class="block w-full py-3 px-5 rounded-full bg-white hover:bg-slate-100 text-[#1c3c18] font-bold text-xs shadow-md transition-all hover:scale-105">
+                        <i class="fa-solid fa-right-to-bracket mr-1.5"></i> Sign In to Track Applications
+                    </a>
+                }
+            </div>
+        </div>
     </div>
+
+    <!-- 2. Search & Department Filters Bar -->
+    <div class="bg-white rounded-3xl p-4 sm:p-5 border border-[#dce8d8] shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+        <!-- Search Input -->
+        <div class="relative w-full md:w-80">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+            <input type="text" id="jobSearchInput" onkeyup="filterJobs()" placeholder="Search role title, department, or fair..." 
+                   class="w-full pl-10 pr-4 py-2.5 rounded-full bg-[#f6f9f4] border border-[#dce8d8] text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2e5d26]/40 transition" />
+        </div>
+
+        <!-- Filter Chips -->
+        <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0 scrollbar-none text-xs font-bold">
+            <button type="button" onclick="setDeptFilter('all', this)" class="dept-chip px-4 py-2 rounded-full bg-[#2e5d26] text-white shadow-sm transition">
+                All Roles
+            </button>
+            <button type="button" onclick="setDeptFilter('operations', this)" class="dept-chip px-4 py-2 rounded-full bg-[#f6f9f4] hover:bg-[#eef4ed] text-slate-700 border border-[#dce8d8] transition">
+                Operations
+            </button>
+            <button type="button" onclick="setDeptFilter('ticketing', this)" class="dept-chip px-4 py-2 rounded-full bg-[#f6f9f4] hover:bg-[#eef4ed] text-slate-700 border border-[#dce8d8] transition">
+                Ticketing
+            </button>
+            <button type="button" onclick="setDeptFilter('security', this)" class="dept-chip px-4 py-2 rounded-full bg-[#f6f9f4] hover:bg-[#eef4ed] text-slate-700 border border-[#dce8d8] transition">
+                Security
+            </button>
+        </div>
+    </div>
+
+    <!-- 3. Job Openings Grid -->
+    @if (Model != null && Model.Any())
+    {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7" id="jobsGrid">
+            @foreach (var job in Model)
+            {
+                var remainingSpots = job.PositionsAvailable - job.PositionsFilled;
+
+                <div class="job-card bg-white rounded-[2rem] border border-[#dce8d8] shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between p-6 sm:p-7 space-y-5 group"
+                     data-title="@job.Title.ToLower()" data-dept="@job.Department.ToLower()" data-fair="@(job.Fair?.Title.ToLower() ?? "")">
+                    
+                    <div class="space-y-4">
+                        <!-- Top Metadata Badges -->
+                        <div class="flex items-start justify-between gap-3">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#e5efe2] text-[#2e5d26] border border-[#dce8d8]">
+                                <i class="fa-solid fa-briefcase text-[10px]"></i>
+                                <span>@job.Department</span>
+                            </span>
+                            <div class="text-right">
+                                <span class="text-sm font-black text-[#142a12] bg-[#f4f8f3] px-3 py-1 rounded-full border border-[#dce8d8] block">
+                                    &#2547;@job.DailyWage.ToString("N0") <span class="text-[10px] text-slate-500 font-normal">/ day</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Role Title & Fair Affiliation -->
+                        <div>
+                            <h2 class="text-lg font-bold text-[#142a12] group-hover:text-[#2e5d26] transition leading-snug">
+                                @job.Title
+                            </h2>
+                            <p class="text-xs text-slate-500 flex items-center gap-1.5 mt-1 font-medium">
+                                <i class="fa-solid fa-landmark text-[#2e5d26]"></i>
+                                <span>@(job.Fair?.Title ?? "Cultural Fair Operations")</span>
+                            </p>
+                        </div>
+
+                        <!-- Description Snippet -->
+                        <p class="text-xs text-slate-600 line-clamp-3 leading-relaxed">
+                            @job.Description
+                        </p>
+
+                        <!-- Qualifications & Requirements Card -->
+                        <div class="bg-[#f6f9f4] border border-[#e2ece0] rounded-2xl p-3.5 space-y-1.5 text-xs text-slate-600">
+                            <span class="font-bold text-[#142a12] text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-list-check text-[#2e5d26]"></i>
+                                <span>Key Qualifications</span>
+                            </span>
+                            <p class="line-clamp-2 leading-relaxed text-[11px]">@job.Requirements</p>
+                        </div>
+
+                        <!-- Vacancies & Deadline Metrics -->
+                        <div class="flex items-center justify-between text-[11px] text-slate-500 pt-1 font-semibold border-t border-[#eef3eb]">
+                            <span class="flex items-center gap-1">
+                                <i class="fa-solid fa-user-group text-[#2e5d26]"></i>
+                                <span class="text-[#2e5d26] font-bold">@remainingSpots</span> open spots
+                            </span>
+                            <span class="flex items-center gap-1">
+                                <i class="fa-regular fa-clock text-slate-400"></i>
+                                <span>Deadline: @job.ApplicationDeadline.ToString("MMM dd")</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Card Footer CTA -->
+                    <div class="pt-2">
+                        <a asp-controller="Employee" asp-action="Apply" asp-route-jobPostingId="@job.JobPostingId" 
+                           class="w-full py-3 px-5 rounded-full bg-[#2e5d26] hover:bg-[#1c3c18] text-white font-bold text-xs shadow-md transition-all hover:scale-[1.02] flex items-center justify-center gap-2 group/btn">
+                            <i class="fa-solid fa-paper-plane text-amber-300"></i>
+                            <span>Apply for Position</span>
+                            <i class="fa-solid fa-arrow-right text-[10px] group-hover/btn:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="bg-white rounded-[2rem] border border-[#dce8d8] p-12 text-center space-y-4 shadow-sm max-w-lg mx-auto">
+            <div class="w-16 h-16 rounded-full bg-[#eef4ed] text-[#2e5d26] mx-auto flex items-center justify-center text-2xl font-bold">
+                <i class="fa-solid fa-briefcase"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900">No Open Job Postings</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">
+                There are currently no staff recruitment openings posted. Check back closer to the festival dates or contact our coordination desk.
+            </p>
+            <a asp-controller="Home" asp-action="Index" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#2e5d26] hover:bg-[#1c3c18] text-white text-xs font-bold transition">
+                Return to Home
+            </a>
+        </div>
+    }
+
+    <!-- 4. Staff Perks & Value Proposition -->
+    <div class="bg-[#f6f9f4] rounded-[2.5rem] p-8 sm:p-10 border border-[#dce8d8] space-y-6">
+        <div class="max-w-2xl space-y-2">
+            <span class="text-xs font-bold text-[#2e5d26] uppercase tracking-wider bg-[#e5efe2] px-3 py-1 rounded-full">
+                Employee Benefits &amp; Ethics
+            </span>
+            <h3 class="text-2xl font-black text-slate-900">Why Work with MELA Festival Operations?</h3>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 pt-2">
+            <div class="bg-white rounded-2xl p-5 border border-[#e2ece0] shadow-sm space-y-2">
+                <div class="w-9 h-9 rounded-xl bg-[#e5efe2] text-[#2e5d26] flex items-center justify-center text-sm font-bold">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                </div>
+                <h4 class="text-sm font-bold text-slate-900">Guaranteed Daily Payout</h4>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    Clear daily wages disbursed immediately at the conclusion of each fair day via bKash/Nagad or cash.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl p-5 border border-[#e2ece0] shadow-sm space-y-2">
+                <div class="w-9 h-9 rounded-xl bg-[#e5efe2] text-[#2e5d26] flex items-center justify-center text-sm font-bold">
+                    <i class="fa-solid fa-certificate"></i>
+                </div>
+                <h4 class="text-sm font-bold text-slate-900">Official Experience Letter</h4>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    Certificate of Event Management Operations signed by festival directors, ideal for your professional portfolio.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl p-5 border border-[#e2ece0] shadow-sm space-y-2">
+                <div class="w-9 h-9 rounded-xl bg-[#e5efe2] text-[#2e5d26] flex items-center justify-center text-sm font-bold">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h4 class="text-sm font-bold text-slate-900">On-Site Safety &amp; Training</h4>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    Full briefing, crowd communication workshops, uniform vests, and medical safety insurance on festival grounds.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl p-5 border border-[#e2ece0] shadow-sm space-y-2">
+                <div class="w-9 h-9 rounded-xl bg-[#e5efe2] text-[#2e5d26] flex items-center justify-center text-sm font-bold">
+                    <i class="fa-solid fa-bowl-food"></i>
+                </div>
+                <h4 class="text-sm font-bold text-slate-900">Daily Meals &amp; Refreshments</h4>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    Complimentary breakfast, lunch, and hydration stations provided across staff lounges during active duty.
+                </p>
+            </div>
+        </div>
+    </div>
+
 </div>
+
+@section Scripts {
+    <script>
+        function filterJobs() {
+            const query = document.getElementById('jobSearchInput').value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.job-card');
+            
+            cards.forEach(card => {
+                const title = card.getAttribute('data-title') || '';
+                const dept = card.getAttribute('data-dept') || '';
+                const fair = card.getAttribute('data-fair') || '';
+                if (title.includes(query) || dept.includes(query) || fair.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function setDeptFilter(dept, btn) {
+            document.querySelectorAll('.dept-chip').forEach(c => {
+                c.classList.remove('bg-[#2e5d26]', 'text-white');
+                c.classList.add('bg-[#f6f9f4]', 'text-slate-700', 'border', 'border-[#dce8d8]');
+            });
+            btn.classList.add('bg-[#2e5d26]', 'text-white');
+            btn.classList.remove('bg-[#f6f9f4]', 'text-slate-700', 'border', 'border-[#dce8d8]');
+
+            const cards = document.querySelectorAll('.job-card');
+            cards.forEach(card => {
+                const cardDept = card.getAttribute('data-dept') || '';
+                if (dept === 'all' || cardDept.includes(dept)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+}
