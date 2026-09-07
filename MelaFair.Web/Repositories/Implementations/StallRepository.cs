@@ -109,6 +109,15 @@ public class StallRepository : IStallRepository
             .FirstOrDefaultAsync(b => b.StallBookingId == bookingId);
     }
 
+    public async Task<IEnumerable<int>> GetVendorFairIdsAsync(string vendorId)
+    {
+        return await _context.StallBookings
+            .Where(b => b.VendorId == vendorId && b.PaymentStatus == PaymentStatus.Paid)
+            .Select(b => b.FairId)
+            .Distinct()
+            .ToListAsync();
+    }
+
     public async Task<bool> CancelBookingAsync(int bookingId, string vendorId)
     {
         var booking = await _context.StallBookings

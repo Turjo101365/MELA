@@ -1,0 +1,15 @@
+@model IEnumerable<MelaFair.Web.Models.ViewModels.VendorJobPostingItemDto>
+@{ ViewData["Title"] = "Staff Hiring"; }
+<div class="space-y-6">
+  <div class="bg-white rounded-3xl border border-slate-200 p-6 flex items-center justify-between gap-4 shadow-sm">
+    <div><p class="text-xs font-bold text-emerald-700 uppercase tracking-widest">Vendor recruitment</p><h1 class="text-2xl font-black text-slate-900">Your temporary staff jobs</h1><p class="text-sm text-slate-500">Hire staff for fairs where you lease a stall.</p></div>
+    <a asp-action="CreateJob" class="px-4 py-2.5 rounded-xl bg-emerald-600 text-white font-bold text-sm">+ Post a job</a>
+  </div>
+  @if (!Model.Any()) { <div class="bg-white rounded-3xl border border-slate-200 p-10 text-center text-slate-500">No job posts yet. Lease a stall, then create your first temporary staff opening.</div> }
+  else { <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">@foreach (var job in Model) {
+    <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-4">
+      <div class="flex justify-between gap-3"><div><h2 class="font-bold text-slate-900">@job.Title</h2><p class="text-xs text-slate-500">@job.FairTitle · Deadline @job.ApplicationDeadline.ToString("MMM dd, yyyy")</p></div><span class="px-2 py-1 h-fit rounded-full text-xs font-bold @(job.IsActive ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-600")">@(job.IsActive ? "Open" : "Closed")</span></div>
+      <div class="grid grid-cols-3 text-center text-xs"><div><b class="block text-lg">@job.ApplicationCount</b>Applications</div><div><b class="block text-lg">@job.PositionsFilled</b>Accepted</div><div><b class="block text-lg">@(job.PositionsAvailable-job.PositionsFilled)</b>Openings</div></div>
+      <div class="flex gap-2 pt-2 border-t"><a asp-action="JobApplications" asp-route-jobPostingId="@job.JobPostingId" class="px-3 py-2 rounded-lg bg-slate-900 text-white text-xs font-bold">Review applicants</a><a asp-action="EditJob" asp-route-jobPostingId="@job.JobPostingId" class="px-3 py-2 rounded-lg bg-slate-100 text-xs font-bold">Edit</a><form asp-action="DeleteJob" method="post">@Html.AntiForgeryToken()<input type="hidden" name="jobPostingId" value="@job.JobPostingId" /><button class="px-3 py-2 rounded-lg text-rose-700 bg-rose-50 text-xs font-bold">Close</button></form></div>
+    </div> }</div> }
+</div>

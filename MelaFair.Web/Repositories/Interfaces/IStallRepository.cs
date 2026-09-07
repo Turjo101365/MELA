@@ -11,5 +11,6 @@ public interface IStallRepository
     Task<int> BuyStallViaSpAsync(int fairId, int stallId, string vendorId, string? notes);
     Task<IEnumerable<StallBooking>> GetVendorBookingsAsync(string vendorId);
     Task<StallBooking?> GetBookingByIdAsync(int bookingId);
+    Task<IEnumerable<int>> GetVendorFairIdsAsync(string vendorId);
     Task<bool> CancelBookingAsync(int bookingId, string vendorId);
 }

@@ -12,4 +12,8 @@ public interface IEmployeeRepository
     Task<int> ApplyJobViaSpAsync(int jobPostingId, string employeeId, string resumeSummary, int experienceYears, string contactPhone);
     Task<IEnumerable<JobApplication>> GetEmployeeApplicationsAsync(string employeeId);
     Task<int> CreateJobPostingAsync(JobPosting posting);
+    Task<IEnumerable<JobPosting>> GetVendorJobPostingsAsync(string vendorId);
+    Task<JobPosting?> GetVendorJobPostingAsync(int jobPostingId, string vendorId);
+    Task<IEnumerable<JobApplication>> GetVendorApplicationsAsync(int jobPostingId, string vendorId);
+    Task SaveChangesAsync();
 }
