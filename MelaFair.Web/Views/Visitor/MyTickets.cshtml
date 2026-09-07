@@ -4,104 +4,240 @@
 }
 
 <div class="space-y-8">
-    <!-- Header -->
-    <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div class="space-y-1">
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800">
-                🎟️ E-Tickets Vault
-            </span>
-            <h1 class="text-2xl sm:text-3xl font-black text-slate-900">My Digital Admission Passes</h1>
+
+    <!-- 1. Header Banner -->
+    <div class="bg-white rounded-[2.5rem] border border-[#dce8d8] p-6 sm:p-8 lg:p-10 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="space-y-2">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#e5efe2] text-[#2e5d26] text-xs font-bold">
+                <i class="fa-solid fa-qrcode text-amber-600"></i>
+                <span>Official Digital Pass Vault</span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-[#142a12] tracking-tight">
+                My Digital Admission Passes
+            </h1>
             <p class="text-xs sm:text-sm text-slate-500">
-                Official electronic entry passes with unique verification codes and gate barcodes.
+                Official electronic gate passes with encrypted verification codes and turnstile barcodes.
             </p>
         </div>
 
-        <a asp-controller="Visitor" asp-action="BrowseFairs" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md shadow-blue-600/20 transition self-start md:self-auto">
-            + Purchase More Tickets
-        </a>
+        <div class="flex flex-wrap items-center gap-3">
+            @if (Model.Tickets.Any())
+            {
+                <button type="button" onclick="window.print()" class="px-5 py-2.5 rounded-full bg-[#f6f9f4] hover:bg-[#eef4ed] text-slate-700 font-bold text-xs border border-[#dce8d8] shadow-sm transition flex items-center gap-2">
+                    <i class="fa-solid fa-print"></i>
+                    <span>Print All Passes</span>
+                </button>
+            }
+            <a asp-controller="Visitor" asp-action="BrowseFairs" class="px-5 py-2.5 rounded-full bg-[#2e5d26] hover:bg-[#1c3c18] text-white font-bold text-xs shadow-md transition-all hover:scale-105 flex items-center gap-2">
+                <i class="fa-solid fa-plus"></i>
+                <span>Get More Passes</span>
+            </a>
+        </div>
     </div>
 
     @if (!Model.Tickets.Any())
     {
-        <div class="bg-white rounded-3xl border border-slate-200 p-12 text-center space-y-4 shadow-sm">
-            <div class="w-16 h-16 rounded-3xl bg-blue-50 text-blue-600 mx-auto flex items-center justify-center text-3xl font-bold">
-                🎟️
+        <div class="bg-white rounded-[2.5rem] border border-[#dce8d8] p-12 sm:p-16 text-center space-y-4 shadow-sm max-w-lg mx-auto">
+            <div class="w-16 h-16 rounded-full bg-[#eef4ed] text-[#2e5d26] mx-auto flex items-center justify-center text-2xl font-bold">
+                <i class="fa-solid fa-ticket"></i>
             </div>
             <h2 class="text-lg font-bold text-slate-900">No Admission Passes Yet</h2>
-            <p class="text-xs text-slate-500 max-w-sm mx-auto">
-                You haven't bought any festival tickets yet. Browse available fairs to book single or group entries!
+            <p class="text-xs text-slate-500 leading-relaxed max-w-sm mx-auto">
+                You haven't reserved any festival passes yet. Browse available cultural fairs to reserve your single or group entry passes!
             </p>
-            <a asp-controller="Visitor" asp-action="BrowseFairs" class="inline-block px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md transition">
-                Explore Fairs &amp; Passes
-            </a>
+            <div class="pt-2">
+                <a asp-controller="Visitor" asp-action="BrowseFairs" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#2e5d26] hover:bg-[#1c3c18] text-white font-bold text-xs shadow-md transition-all hover:scale-105">
+                    <i class="fa-solid fa-compass"></i>
+                    <span>Explore Fairs &amp; Passes</span>
+                </a>
+            </div>
         </div>
     }
     else
     {
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Pass Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 print:grid-cols-1">
             @foreach (var ticket in Model.Tickets)
             {
-                <div class="bg-white rounded-3xl border-2 border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between hover:border-blue-300 transition">
-                    <!-- Ticket Pass Top Section -->
-                    <div class="p-6 bg-gradient-to-r from-slate-900 to-slate-800 text-white space-y-3">
-                        <div class="flex items-center justify-between">
-                            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500 text-white uppercase tracking-wider">
-                                Official Pass
+                <div class="ticket-card bg-white rounded-[2rem] border-2 border-[#dce8d8] shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between">
+                    
+                    <!-- Top Pass Bar -->
+                    <div class="p-6 sm:p-7 bg-gradient-to-r from-[#142a12] via-[#244f21] to-[#1c3c18] text-white space-y-4 relative overflow-hidden">
+                        <!-- Hologram stamp badge -->
+                        <div class="absolute right-4 -top-2 opacity-15 text-7xl font-black select-none pointer-events-none text-white">
+                            MELA
+                        </div>
+
+                        <div class="flex items-center justify-between relative z-10">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-white/20 backdrop-blur-md text-[#dbead7] border border-white/20">
+                                <i class="fa-solid fa-certificate text-amber-300"></i> Official Mela Pass
                             </span>
-                            <span class="text-xs font-bold text-emerald-400">● @ticket.Status</span>
-                        </div>
-                        <h2 class="text-lg font-black tracking-tight leading-tight">@ticket.FairTitle</h2>
-                        <p class="text-xs text-slate-300">📍 @ticket.Location</p>
-                    </div>
-
-                    <!-- Ticket Perforated Divider Bar -->
-                    <div class="relative bg-white py-1 flex items-center justify-between border-y border-dashed border-slate-200 px-4">
-                        <span class="w-4 h-4 bg-slate-50 border-r border-slate-200 rounded-full -ml-6 inline-block"></span>
-                        <span class="text-[10px] font-mono text-slate-400 font-bold uppercase tracking-widest">
-                            ADMIT @ticket.Quantity PERSON(S)
-                        </span>
-                        <span class="w-4 h-4 bg-slate-50 border-l border-slate-200 rounded-full -mr-6 inline-block"></span>
-                    </div>
-
-                    <!-- Pass Details -->
-                    <div class="p-6 space-y-4">
-                        <div class="grid grid-cols-2 gap-3 text-xs">
-                            <div class="bg-slate-50 rounded-xl p-2.5">
-                                <span class="block text-[10px] text-slate-400 uppercase font-semibold">Valid Visit Date</span>
-                                <span class="font-bold text-slate-900">@ticket.VisitDate.ToString("ddd, MMM dd, yyyy")</span>
-                            </div>
-                            <div class="bg-slate-50 rounded-xl p-2.5">
-                                <span class="block text-[10px] text-slate-400 uppercase font-semibold">Amount Paid</span>
-                                <span class="font-bold text-blue-700">$@ticket.PricePaid.ToString("N2")</span>
-                            </div>
-                        </div>
-
-                        <!-- Barcode Mockup & Ticket Code -->
-                        <div class="bg-slate-50 border border-slate-100 rounded-2xl p-4 text-center space-y-2">
-                            <!-- SVG Barcode lines simulation -->
-                            <div class="h-10 w-full flex items-center justify-center space-x-1 opacity-70">
-                                <div class="w-1 h-full bg-slate-800"></div>
-                                <div class="w-0.5 h-full bg-slate-800"></div>
-                                <div class="w-2 h-full bg-slate-800"></div>
-                                <div class="w-1 h-full bg-slate-800"></div>
-                                <div class="w-0.5 h-full bg-slate-800"></div>
-                                <div class="w-1.5 h-full bg-slate-800"></div>
-                                <div class="w-1 h-full bg-slate-800"></div>
-                                <div class="w-2 h-full bg-slate-800"></div>
-                                <div class="w-0.5 h-full bg-slate-800"></div>
-                                <div class="w-1 h-full bg-slate-800"></div>
-                                <div class="w-2 h-full bg-slate-800"></div>
-                                <div class="w-0.5 h-full bg-slate-800"></div>
-                                <div class="w-1.5 h-full bg-slate-800"></div>
-                                <div class="w-1 h-full bg-slate-800"></div>
-                            </div>
-                            <span class="block font-mono text-xs font-black text-slate-800 tracking-wider">
-                                @ticket.TicketCode
+                            <span class="text-xs font-bold text-emerald-300 bg-emerald-950/60 px-3 py-1 rounded-full border border-emerald-500/30 flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                <span>@ticket.Status</span>
                             </span>
                         </div>
+
+                        <div class="relative z-10">
+                            <h2 class="text-xl sm:text-2xl font-black tracking-tight leading-tight">
+                                @ticket.FairTitle
+                            </h2>
+                            <p class="text-xs text-[#c0dec0] flex items-center gap-1.5 mt-1">
+                                <i class="fa-solid fa-location-dot text-amber-300"></i>
+                                <span>@ticket.Location</span>
+                            </p>
+                        </div>
                     </div>
+
+                    <!-- Perforated Ticket Notch Divider -->
+                    <div class="relative bg-white py-1 flex items-center justify-between border-y-2 border-dashed border-[#dce8d8] px-4">
+                        <span class="w-5 h-5 bg-[#eef3eb] border-r-2 border-[#dce8d8] rounded-full -ml-6 inline-block"></span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] font-mono text-[#2e5d26] font-black uppercase tracking-widest bg-[#e5efe2] px-3 py-0.5 rounded-full">
+                                ADMIT @ticket.Quantity PERSON(S)
+                            </span>
+                        </div>
+                        <span class="w-5 h-5 bg-[#eef3eb] border-l-2 border-[#dce8d8] rounded-full -mr-6 inline-block"></span>
+                    </div>
+
+                    <!-- Pass Details & Barcode Stub -->
+                    <div class="p-6 sm:p-7 space-y-6">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                            <div class="bg-[#f6f9f4] rounded-2xl p-3 border border-[#e2ece0]">
+                                <span class="block text-[10px] text-slate-400 uppercase font-bold tracking-wider">Valid Visit Date</span>
+                                <span class="font-bold text-slate-900 mt-0.5 block">@ticket.VisitDate.ToString("ddd, MMM dd, yyyy")</span>
+                            </div>
+                            <div class="bg-[#f6f9f4] rounded-2xl p-3 border border-[#e2ece0]">
+                                <span class="block text-[10px] text-slate-400 uppercase font-bold tracking-wider">Operating Hours</span>
+                                <span class="font-bold text-slate-900 mt-0.5 block">08:00 AM &ndash; 10:00 PM</span>
+                            </div>
+                            <div class="bg-[#f6f9f4] rounded-2xl p-3 border border-[#e2ece0] col-span-2 sm:col-span-1">
+                                <span class="block text-[10px] text-slate-400 uppercase font-bold tracking-wider">Amount Paid</span>
+                                <span class="font-black text-[#2e5d26] mt-0.5 block">&#2547;@ticket.PricePaid.ToString("N2")</span>
+                            </div>
+                        </div>
+
+                        <!-- Barcode & QR Code Section -->
+                        <div class="bg-[#f6f9f4] border border-[#dce8d8] rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-5">
+                            
+                            <!-- Simulated Scalable QR Code -->
+                            <div class="flex items-center gap-3">
+                                <div class="w-20 h-20 bg-white p-2 rounded-xl border border-slate-200 shadow-sm flex items-center justify-center shrink-0">
+                                    <svg viewBox="0 0 100 100" class="w-full h-full text-slate-900" fill="currentColor">
+                                        <!-- QR Corner Markers -->
+                                        <rect x="0" y="0" width="30" height="30" rx="4" />
+                                        <rect x="6" y="6" width="18" height="18" fill="white" />
+                                        <rect x="10" y="10" width="10" height="10" />
+                                        <rect x="70" y="0" width="30" height="30" rx="4" />
+                                        <rect x="76" y="6" width="18" height="18" fill="white" />
+                                        <rect x="80" y="10" width="10" height="10" />
+                                        <rect x="0" y="70" width="30" height="30" rx="4" />
+                                        <rect x="6" y="76" width="18" height="18" fill="white" />
+                                        <rect x="10" y="80" width="10" height="10" />
+                                        <!-- QR Data Patterns -->
+                                        <rect x="36" y="10" width="6" height="6" />
+                                        <rect x="46" y="16" width="8" height="8" />
+                                        <rect x="36" y="36" width="10" height="10" />
+                                        <rect x="52" y="36" width="6" height="12" />
+                                        <rect x="70" y="44" width="8" height="8" />
+                                        <rect x="84" y="52" width="6" height="6" />
+                                        <rect x="36" y="64" width="12" height="6" />
+                                        <rect x="54" y="64" width="8" height="12" />
+                                        <rect x="70" y="76" width="14" height="6" />
+                                        <rect x="70" y="88" width="6" height="8" />
+                                    </svg>
+                                </div>
+                                <div class="space-y-1">
+                                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Turnstile Pass ID</span>
+                                    <span class="font-mono text-xs font-black text-slate-900 bg-white px-2.5 py-1 rounded-lg border border-slate-200 inline-block">
+                                        @ticket.TicketCode
+                                    </span>
+                                    <span class="text-[10px] text-emerald-700 font-semibold block">
+                                        <i class="fa-solid fa-circle-check text-[9px]"></i> Ready for Gate Scan
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Barcode Lines Simulation -->
+                            <div class="w-full sm:w-44 space-y-1.5 text-center">
+                                <div class="h-10 w-full flex items-center justify-center space-x-1 opacity-80">
+                                    <div class="w-1 h-full bg-slate-900"></div>
+                                    <div class="w-0.5 h-full bg-slate-900"></div>
+                                    <div class="w-2 h-full bg-slate-900"></div>
+                                    <div class="w-1 h-full bg-slate-900"></div>
+                                    <div class="w-0.5 h-full bg-slate-900"></div>
+                                    <div class="w-2 h-full bg-slate-900"></div>
+                                    <div class="w-1 h-full bg-slate-900"></div>
+                                    <div class="w-1.5 h-full bg-slate-900"></div>
+                                    <div class="w-0.5 h-full bg-slate-900"></div>
+                                    <div class="w-2 h-full bg-slate-900"></div>
+                                    <div class="w-1 h-full bg-slate-900"></div>
+                                    <div class="w-0.5 h-full bg-slate-900"></div>
+                                    <div class="w-1.5 h-full bg-slate-900"></div>
+                                    <div class="w-1 h-full bg-slate-900"></div>
+                                </div>
+                                <span class="text-[9px] font-mono font-bold text-slate-400 tracking-widest block">
+                                    * @ticket.TicketCode *
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <!-- Card Action Buttons -->
+                        <div class="flex items-center justify-between pt-2 border-t border-[#eef3eb] text-xs">
+                            <span class="text-[11px] text-slate-400 font-medium">
+                                Issued: @ticket.PurchaseDate.ToString("MMM dd, yyyy")
+                            </span>
+                            <button type="button" onclick="window.print()" class="text-xs font-bold text-[#2e5d26] hover:text-[#142a12] flex items-center gap-1.5 transition">
+                                <i class="fa-solid fa-file-arrow-down"></i>
+                                <span>Download PDF / Print</span>
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
             }
         </div>
+
+        <!-- Gate Admission Instructions Banner -->
+        <div class="bg-white rounded-[2.5rem] border border-[#dce8d8] p-6 sm:p-8 space-y-4 shadow-sm">
+            <h3 class="text-xs font-black uppercase tracking-wider text-[#2e5d26] flex items-center gap-2">
+                <i class="fa-solid fa-circle-info"></i>
+                <span>Fairground Gate Access Guidelines</span>
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-slate-600">
+                <div class="flex items-start gap-2.5">
+                    <span class="w-5 h-5 rounded-full bg-[#e5efe2] text-[#2e5d26] text-[10px] font-black flex items-center justify-center shrink-0 mt-0.5">1</span>
+                    <p>Keep the QR code open on your phone or print a hard copy. Screen brightness at max recommended.</p>
+                </div>
+                <div class="flex items-start gap-2.5">
+                    <span class="w-5 h-5 rounded-full bg-[#e5efe2] text-[#2e5d26] text-[10px] font-black flex items-center justify-center shrink-0 mt-0.5">2</span>
+                    <p>Each pass accommodates the exact person count booked. Group members should enter simultaneously.</p>
+                </div>
+                <div class="flex items-start gap-2.5">
+                    <span class="w-5 h-5 rounded-full bg-[#e5efe2] text-[#2e5d26] text-[10px] font-black flex items-center justify-center shrink-0 mt-0.5">3</span>
+                    <p>Same-day re-entry is permitted with a valid gate hand-stamp. Prohibited items will be checked at security.</p>
+                </div>
+            </div>
+        </div>
     }
+
 </div>
+
+<style>
+    @@media print {
+        header, footer, button, nav {
+            display: none !important;
+        }
+        body {
+            background-color: white !important;
+        }
+        .ticket-card {
+            break-inside: avoid;
+            page-break-inside: avoid;
+            margin-bottom: 2rem;
+            box-shadow: none !important;
+            border: 2px solid #000 !important;
+        }
+    }
+</style>
