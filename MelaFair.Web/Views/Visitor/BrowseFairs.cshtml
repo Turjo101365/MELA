@@ -1,83 +1,289 @@
 @model IEnumerable<MelaFair.Web.Models.Entities.Fair>
 @{
-    ViewData["Title"] = "Explore Cultural Fairs & Tickets";
+    ViewData["Title"] = "Cultural Fair Entry Passes & Tickets";
+    var defaultImages = new[]
+    {
+        "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80"
+    };
+    int imgIndex = 0;
 }
 
-<div class="space-y-8">
-    <!-- Header -->
-    <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div class="space-y-1">
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800">
-                🎟️ Visitor Portal
-            </span>
-            <h1 class="text-2xl sm:text-3xl font-black text-slate-900">Cultural Fairs &amp; Admission Passes</h1>
-            <p class="text-xs sm:text-sm text-slate-500">
-                Reserve admission passes and group tickets with instant capacity validation (<code class="text-blue-700 font-mono">usp_BuyFairTicket</code>).
-            </p>
-        </div>
+<div class="space-y-10">
 
-        @if (User.IsInRole(RoleConstants.Visitor))
-        {
-            <a asp-controller="Visitor" asp-action="MyTickets" class="px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-md transition self-start md:self-auto whitespace-nowrap">
-                🎟️ My Digital Passes
-            </a>
-        }
-    </div>
+    <!-- 1. Premium Hero Header -->
+    <div class="relative rounded-[2.5rem] p-8 sm:p-12 lg:p-14 text-white shadow-xl overflow-hidden"
+         style="background: linear-gradient(135deg, #142a12 0%, #244f21 55%, #3d7034 100%);">
+        
+        <!-- Ambient decorative shapes -->
+        <div class="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none"></div>
+        <div class="absolute right-1/4 -bottom-20 w-72 h-72 rounded-full bg-amber-400/10 blur-2xl pointer-events-none"></div>
 
-    <!-- Fairs Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        @foreach (var fair in Model)
-        {
-            <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between festival-card">
-                <div>
-                    <div class="h-44 w-full bg-slate-200 relative overflow-hidden">
-                        @if (!string.IsNullOrWhiteSpace(fair.BannerImageUrl))
-                        {
-                            <img src="@fair.BannerImageUrl" alt="@fair.Title" class="w-full h-full object-cover" />
-                        }
-                        else
-                        {
-                            <div class="w-full h-full bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white text-3xl font-bold">
-                                🎪
-                            </div>
-                        }
-                        <div class="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-md text-white text-xs font-bold px-2.5 py-1 rounded-full">
-                            $@fair.BaseTicketPrice.ToString("N0") / person
-                        </div>
-                    </div>
-
-                    <div class="p-6 space-y-3">
-                        <h2 class="text-lg font-bold text-slate-900 leading-snug">@fair.Title</h2>
-                        <p class="text-xs text-slate-500 flex items-center gap-1.5">
-                            <svg class="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                            <span>@fair.Location</span>
-                        </p>
-                        <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed">
-                            @fair.Description
-                        </p>
-
-                        <div class="bg-blue-50 border border-blue-100 rounded-2xl p-3 flex items-center justify-between text-xs">
-                            <div>
-                                <span class="block text-[10px] text-blue-700 font-bold uppercase tracking-wider">Festival Dates</span>
-                                <span class="text-xs font-bold text-blue-950">@fair.StartDate.ToString("MMM dd") - @fair.EndDate.ToString("MMM dd")</span>
-                            </div>
-                            <div class="text-right">
-                                <span class="block text-[10px] text-slate-500 uppercase font-semibold">Daily Quota</span>
-                                <span class="text-xs font-black text-slate-900">@fair.DailyCapacity.ToString("N0") slots</span>
-                            </div>
-                        </div>
-                    </div>
+        <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+            <div class="max-w-2xl space-y-4">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs font-bold tracking-wide text-[#dbead7] shadow-sm">
+                    <i class="fa-solid fa-ticket-simple text-amber-300"></i>
+                    <span>Official MELA Visitor &amp; Admission Portal</span>
                 </div>
+                
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
+                    Cultural Fair Entry Passes &amp; Tickets
+                </h1>
 
-                <div class="p-6 pt-0">
-                    <a asp-controller="Visitor" asp-action="TicketBooking" asp-route-fairId="@fair.FairId" class="block text-center w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md shadow-blue-600/20 transition">
-                        Select Date &amp; Buy Tickets &rarr;
-                    </a>
+                <p class="text-[#d0e5cc] text-xs sm:text-sm lg:text-base leading-relaxed max-w-xl">
+                    Experience Bangladesh's vibrant heritage with verified admission passes. Instant digital e-tickets, guaranteed capacity allocation, and zero-wait QR turnstile entry.
+                </p>
+
+                <!-- Key Trust Highlights -->
+                <div class="flex flex-wrap items-center gap-4 pt-1 text-xs text-[#e1f0de]">
+                    <span class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-check text-emerald-400"></i> Instant QR E-Ticket
+                    </span>
+                    <span class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-users text-emerald-400"></i> Group Passes Up to 50
+                    </span>
+                    <span class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-shield-halved text-emerald-400"></i> Zero Overselling Safe
+                    </span>
                 </div>
             </div>
-        }
+
+            <!-- Quick Action / My Passes Card -->
+            <div class="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20 shadow-lg text-center max-w-sm w-full space-y-4 self-start lg:self-auto">
+                <div class="w-12 h-12 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center text-xl font-black mx-auto shadow-md">
+                    <i class="fa-solid fa-qrcode"></i>
+                </div>
+                <div>
+                    <h3 class="text-base font-bold text-white">Already Have a Pass?</h3>
+                    <p class="text-xs text-[#d0e5cc] mt-1">Access your purchased QR e-tickets and gate barcodes anytime.</p>
+                </div>
+                @if (User.IsInRole(RoleConstants.Visitor))
+                {
+                    <a asp-controller="Visitor" asp-action="MyTickets" class="block w-full py-3 px-5 rounded-full bg-white hover:bg-slate-100 text-[#1c3c18] font-bold text-xs shadow-md transition-all hover:scale-105">
+                        <i class="fa-solid fa-ticket mr-1.5"></i> Open My Passes Vault
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login" class="block w-full py-3 px-5 rounded-full bg-white hover:bg-slate-100 text-[#1c3c18] font-bold text-xs shadow-md transition-all hover:scale-105">
+                        <i class="fa-solid fa-right-to-bracket mr-1.5"></i> Sign In to View Passes
+                    </a>
+                }
+            </div>
+        </div>
     </div>
+
+    <!-- 2. Search & Filters Bar -->
+    <div class="bg-white rounded-3xl p-4 sm:p-5 border border-[#dce8d8] shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+        <!-- Search Input -->
+        <div class="relative w-full md:w-80">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+            <input type="text" id="fairSearchInput" onkeyup="filterFairs()" placeholder="Search fair title or venue..." 
+                   class="w-full pl-10 pr-4 py-2.5 rounded-full bg-[#f6f9f4] border border-[#dce8d8] text-xs font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2e5d26]/40 transition" />
+        </div>
+
+        <!-- Filter Chips -->
+        <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0 scrollbar-none text-xs font-bold">
+            <button type="button" onclick="setCategoryFilter('all', this)" class="category-chip px-4 py-2 rounded-full bg-[#2e5d26] text-white shadow-sm transition">
+                All Fairs
+            </button>
+            <button type="button" onclick="setCategoryFilter('open', this)" class="category-chip px-4 py-2 rounded-full bg-[#f6f9f4] hover:bg-[#eef4ed] text-slate-700 border border-[#dce8d8] transition">
+                Active Now
+            </button>
+            <button type="button" onclick="setCategoryFilter('fast', this)" class="category-chip px-4 py-2 rounded-full bg-[#f6f9f4] hover:bg-[#eef4ed] text-slate-700 border border-[#dce8d8] transition">
+                Fast Selling
+            </button>
+        </div>
+    </div>
+
+    <!-- 3. Fairs & Passes Grid -->
+    @if (Model != null && Model.Any())
+    {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7" id="fairsGrid">
+            @foreach (var fair in Model)
+            {
+                var cardImage = !string.IsNullOrWhiteSpace(fair.BannerImageUrl) && fair.BannerImageUrl.Contains("http") 
+                    ? fair.BannerImageUrl 
+                    : defaultImages[(imgIndex++) % defaultImages.Length];
+
+                <div class="fair-card bg-white rounded-[2rem] border border-[#dce8d8] shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group"
+                     data-title="@fair.Title.ToLower()" data-location="@fair.Location.ToLower()">
+                    
+                    <div>
+                        <!-- Card Banner Image -->
+                        <div class="h-48 w-full overflow-hidden relative bg-slate-100">
+                            <img src="@cardImage" alt="@fair.Title" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                            
+                            <!-- Price Pill Badge -->
+                            <div class="absolute top-3 right-3 bg-[#142a12]/85 backdrop-blur-md text-amber-300 text-xs font-black px-3 py-1.5 rounded-full shadow border border-white/20 flex items-center gap-1.5">
+                                <span>&#2547;@fair.BaseTicketPrice.ToString("N0")</span>
+                                <span class="text-[10px] text-white/80 font-normal">/ pass</span>
+                            </div>
+
+                            <!-- Live Status Badge -->
+                            <div class="absolute top-3 left-3 bg-white/95 backdrop-blur-md text-[#2e5d26] text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                <span>Passes Available</span>
+                            </div>
+                        </div>
+
+                        <!-- Card Body -->
+                        <div class="p-6 space-y-4">
+                            <!-- Title & Location -->
+                            <div>
+                                <h2 class="text-lg font-bold text-[#142a12] group-hover:text-[#2e5d26] transition leading-snug">
+                                    @fair.Title
+                                </h2>
+                                <p class="text-xs text-slate-500 flex items-center gap-1.5 mt-1 font-medium">
+                                    <i class="fa-solid fa-location-dot text-[#2e5d26]"></i>
+                                    <span>@fair.Location</span>
+                                </p>
+                            </div>
+
+                            <!-- Description -->
+                            <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+                                @fair.Description
+                            </p>
+
+                            <!-- Pass Features Checklist -->
+                            <div class="space-y-1.5 pt-1 text-[11px] text-slate-600">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-check text-emerald-600 text-xs"></i>
+                                    <span>Full day pavilion &amp; folk stage access</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-check text-emerald-600 text-xs"></i>
+                                    <span>Free admission for accompanied children &lt; 5 yrs</span>
+                                </div>
+                            </div>
+
+                            <!-- Capacity & Schedule Metrics Box -->
+                            <div class="bg-[#f6f9f4] border border-[#e2ece0] rounded-2xl p-3.5 space-y-2">
+                                <div class="flex items-center justify-between text-xs font-semibold">
+                                    <span class="text-slate-500 flex items-center gap-1">
+                                        <i class="fa-regular fa-calendar text-[#2e5d26]"></i>
+                                        <span>Festival Dates:</span>
+                                    </span>
+                                    <span class="text-slate-900 font-bold">
+                                        @fair.StartDate.ToString("MMM dd") &ndash; @fair.EndDate.ToString("MMM dd")
+                                    </span>
+                                </div>
+                                <div class="flex items-center justify-between text-xs font-semibold">
+                                    <span class="text-slate-500 flex items-center gap-1">
+                                        <i class="fa-solid fa-users-rays text-[#2e5d26]"></i>
+                                        <span>Daily Quota:</span>
+                                    </span>
+                                    <span class="text-[#2e5d26] font-black">
+                                        @fair.DailyCapacity.ToString("N0") passes / day
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Footer CTA -->
+                    <div class="p-6 pt-0">
+                        <a asp-controller="Visitor" asp-action="TicketBooking" asp-route-fairId="@fair.FairId" 
+                           class="w-full py-3 px-5 rounded-full bg-[#2e5d26] hover:bg-[#1c3c18] text-white font-bold text-xs shadow-md transition-all hover:scale-[1.02] flex items-center justify-center gap-2 group/btn">
+                            <i class="fa-solid fa-ticket text-amber-300"></i>
+                            <span>Select Date &amp; Get Passes</span>
+                            <i class="fa-solid fa-arrow-right text-[10px] group-hover/btn:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="bg-white rounded-[2rem] border border-[#dce8d8] p-12 text-center space-y-4 shadow-sm max-w-lg mx-auto">
+            <div class="w-16 h-16 rounded-full bg-[#eef4ed] text-[#2e5d26] mx-auto flex items-center justify-center text-2xl font-bold">
+                <i class="fa-solid fa-ticket"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900">No Active Fairs Found</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">
+                There are currently no active cultural fairs with open pass bookings. Please check back soon or visit our festival archive.
+            </p>
+            <a asp-controller="Home" asp-action="Index" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#2e5d26] hover:bg-[#1c3c18] text-white text-xs font-bold transition">
+                Return to Home
+            </a>
+        </div>
+    }
+
+    <!-- 4. Visitor Information & FAQ Banner -->
+    <div class="bg-[#f6f9f4] rounded-[2.5rem] p-8 sm:p-10 border border-[#dce8d8] space-y-6">
+        <div class="max-w-2xl space-y-2">
+            <span class="text-xs font-bold text-[#2e5d26] uppercase tracking-wider bg-[#e5efe2] px-3 py-1 rounded-full">
+                Visitor Experience Guide
+            </span>
+            <h3 class="text-2xl font-black text-slate-900">Everything You Need to Know About MELA Passes</h3>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+            <div class="bg-white rounded-2xl p-5 border border-[#e2ece0] shadow-sm space-y-2">
+                <div class="w-9 h-9 rounded-xl bg-[#e5efe2] text-[#2e5d26] flex items-center justify-center text-sm font-bold">
+                    <i class="fa-solid fa-mobile-screen-button"></i>
+                </div>
+                <h4 class="text-sm font-bold text-slate-900">Contactless QR Turnstiles</h4>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    Simply present your digital pass on your smartphone screen at the gate scanner for instant verification.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl p-5 border border-[#e2ece0] shadow-sm space-y-2">
+                <div class="w-9 h-9 rounded-xl bg-[#e5efe2] text-[#2e5d26] flex items-center justify-center text-sm font-bold">
+                    <i class="fa-solid fa-people-group"></i>
+                </div>
+                <h4 class="text-sm font-bold text-slate-900">Family &amp; Group Passes</h4>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    Book up to 50 passes in a single checkout. Children under 5 years enjoy complimentary entry accompanied by an adult.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl p-5 border border-[#e2ece0] shadow-sm space-y-2">
+                <div class="w-9 h-9 rounded-xl bg-[#e5efe2] text-[#2e5d26] flex items-center justify-center text-sm font-bold">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h4 class="text-sm font-bold text-slate-900">Guaranteed Entry Protection</h4>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    Our database enforces strict capacity limits so fairgrounds are never dangerously overcrowded.
+                </p>
+            </div>
+        </div>
+    </div>
+
 </div>
+
+@section Scripts {
+    <script>
+        function filterFairs() {
+            const query = document.getElementById('fairSearchInput').value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.fair-card');
+            
+            cards.forEach(card => {
+                const title = card.getAttribute('data-title') || '';
+                const loc = card.getAttribute('data-location') || '';
+                if (title.includes(query) || loc.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function setCategoryFilter(type, btn) {
+            document.querySelectorAll('.category-chip').forEach(c => {
+                c.classList.remove('bg-[#2e5d26]', 'text-white');
+                c.classList.add('bg-[#f6f9f4]', 'text-slate-700', 'border', 'border-[#dce8d8]');
+            });
+            btn.classList.add('bg-[#2e5d26]', 'text-white');
+            btn.classList.remove('bg-[#f6f9f4]', 'text-slate-700', 'border', 'border-[#dce8d8]');
+
+            const cards = document.querySelectorAll('.fair-card');
+            cards.forEach(card => {
+                card.style.display = 'flex';
+            });
+        }
+    </script>
+}

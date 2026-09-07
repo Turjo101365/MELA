@@ -1,21 +1,21 @@
-/* Custom Festival Styling and Animations for Mela Fair Management */
+/* Custom Nature / Eco-Friendly Festival Styling for Poulls MelaFair */
 
 @keyframes pulseSubtle {
     0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.02); opacity: 0.95; }
+    50% { transform: scale(1.02); opacity: 0.96; }
 }
 
 .festival-gradient {
-    background: linear-gradient(135deg, #ea580c 0%, #d97706 50%, #e11d48 100%);
+    background: linear-gradient(135deg, #1c3c18 0%, #2e5d26 50%, #437338 100%);
 }
 
 .festival-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .festival-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 24px -10px rgba(234, 88, 12, 0.15);
+    box-shadow: 0 16px 30px -10px rgba(46, 93, 38, 0.15);
 }
 
 .stall-cell {
@@ -30,4 +30,20 @@
 .ticket-pass {
     background: radial-gradient(circle at top left, transparent 15px, #ffffff 16px),
                 radial-gradient(circle at bottom left, transparent 15px, #ffffff 16px);
+}
+
+/* Smooth custom scrollbars */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #eef3eb;
+}
+::-webkit-scrollbar-thumb {
+    background: #9fc193;
+    border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #4e8740;
 }

@@ -26,4 +26,18 @@ public class HomeController : Controller
 
         return View(activeFairs);
     }
+
+    public IActionResult Contact()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Contact(string name, string email, string message)
+    {
+        TempData["SuccessMessage"] = "Thank you! Your message has been sent successfully. We will get back to you shortly.";
+        return RedirectToAction(nameof(Contact));
+    }
 }
+
