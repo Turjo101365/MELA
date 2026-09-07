@@ -1,0 +1,47 @@
+@model MelaFair.Web.Models.Entities.Fair
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="max-w-4xl mx-auto space-y-6 my-6">
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-8 space-y-6">
+        <div class="flex items-center justify-between">
+            <span class="text-xs font-bold px-3 py-1 bg-orange-100 text-orange-700 rounded-full">Fair ID: @Model.FairId</span>
+            <span class="text-sm font-medium text-slate-500">@Model.StartDate.ToString("MMM dd, yyyy") - @Model.EndDate.ToString("MMM dd, yyyy")</span>
+        </div>
+
+        <h1 class="text-3xl font-black text-slate-900">@Model.Title</h1>
+        <p class="text-slate-600 text-base leading-relaxed">@Model.Description</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-slate-100">
+            <div class="flex items-center gap-3 text-slate-700">
+                <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center font-bold">
+                    <i class="fa-solid fa-location-dot"></i>
+                </div>
+                <div>
+                    <span class="text-xs text-slate-400 block">Location</span>
+                    <span class="text-sm font-bold">@Model.Location</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 text-slate-700">
+                <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center font-bold">
+                    <i class="fa-solid fa-store"></i>
+                </div>
+                <div>
+                    <span class="text-xs text-slate-400 block">Total Stalls</span>
+                    <span class="text-sm font-bold">@Model.TotalStalls (Available: @Model.AvailableStalls)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-6 flex gap-4">
+            <a asp-action="Index" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm rounded-xl transition">
+                &larr; Back to Fairs
+            </a>
+            <a href="#" class="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-sm rounded-xl transition shadow-sm">
+                Book Ticket / Stall
+            </a>
+        </div>
+    </div>
+</div>

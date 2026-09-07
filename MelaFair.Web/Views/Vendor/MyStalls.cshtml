@@ -1,6 +1,6 @@
 @model MelaFair.Web.Models.ViewModels.MyStallsViewModel
 @{
-    ViewData["Title"] = "My Leased Stalls";
+    ViewData["Title"] = "My Leased Stalls & Permits";
 }
 
 <div class="space-y-8">
@@ -8,18 +8,59 @@
     <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div class="space-y-1">
             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
-                📜 Vendor Certificates
+                📜 Vendor Trade Permits
             </span>
-            <h1 class="text-2xl sm:text-3xl font-black text-slate-900">My Leased Fair Stalls</h1>
+            <h1 class="text-2xl sm:text-3xl font-black text-slate-900">My Leased Commercial Stalls</h1>
             <p class="text-xs sm:text-sm text-slate-500">
-                Official retail lease certificates, transaction references, and event stall numbers.
+                Official retail lease certificates, transaction references, booth allocation permits, and exhibition schedules.
             </p>
         </div>
 
-        <a asp-controller="Vendor" asp-action="Marketplace" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/20 transition self-start md:self-auto">
-            + Lease More Stalls
-        </a>
+        <div class="flex items-center gap-3 self-start md:self-auto">
+            <a asp-controller="Vendor" asp-action="Dashboard" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">
+                &larr; Dashboard
+            </a>
+            <a asp-controller="Vendor" asp-action="Marketplace" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/20 transition">
+                + Lease More Stalls
+            </a>
+        </div>
     </div>
+
+    <!-- Summary Stats Strip -->
+    @if (Model.Bookings.Any())
+    {
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex items-center justify-between">
+                <div>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Bookings</span>
+                    <span class="text-2xl font-black text-slate-900 block">@Model.TotalBookings Units</span>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+                    🎪
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex items-center justify-between">
+                <div>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Capital Paid</span>
+                    <span class="text-2xl font-black text-emerald-700 block">$@Model.TotalInvested.ToString("N2")</span>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
+                    💰
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex items-center justify-between">
+                <div>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Active &amp; Upcoming</span>
+                    <span class="text-2xl font-black text-blue-700 block">@Model.ActiveStallsCount Stalls</span>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+                    📅
+                </div>
+            </div>
+        </div>
+    }
 
     @if (!Model.Bookings.Any())
     {
@@ -41,43 +82,88 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             @foreach (var booking in Model.Bookings)
             {
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4 hover:border-emerald-300 transition">
-                    <div class="flex items-start justify-between border-b border-slate-100 pb-4">
-                        <div>
-                            <span class="text-[10px] font-mono font-bold text-emerald-600 uppercase tracking-widest block">
-                                Ref: @booking.TransactionReference
-                            </span>
-                            <h2 class="text-lg font-bold text-slate-900 mt-1">@booking.FairTitle</h2>
-                            <p class="text-xs text-slate-500">📍 @booking.Location</p>
+                <div class="bg-white rounded-3xl border-2 border-slate-200 shadow-sm p-6 space-y-5 hover:border-emerald-300 transition flex flex-col justify-between">
+                    <!-- Top Info -->
+                    <div class="space-y-4">
+                        <div class="flex items-start justify-between border-b border-slate-100 pb-4">
+                            <div>
+                                <span class="text-[10px] font-mono font-bold text-emerald-600 uppercase tracking-widest block">
+                                    Ref: @booking.TransactionReference
+                                </span>
+                                <h2 class="text-lg font-bold text-slate-900 mt-1">@booking.FairTitle</h2>
+                                <p class="text-xs text-slate-500">📍 @booking.Location</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="px-3 py-1 rounded-xl bg-emerald-100 text-emerald-800 font-mono font-black text-sm block">
+                                    Stall: @booking.StallNumber
+                                </span>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase mt-1 block">@booking.Size</span>
+                            </div>
                         </div>
-                        <div class="text-right">
-                            <span class="px-3 py-1 rounded-xl bg-emerald-100 text-emerald-800 font-mono font-black text-sm block">
-                                Stall: @booking.StallNumber
-                            </span>
-                            <span class="text-[10px] font-bold text-slate-400 uppercase mt-1 block">@booking.Size</span>
+
+                        <!-- 3 Badges Grid -->
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                            <div class="bg-slate-50 rounded-xl p-2.5">
+                                <span class="block text-[10px] text-slate-400 uppercase font-semibold">Category</span>
+                                <span class="font-bold text-slate-800">@booking.Category</span>
+                            </div>
+                            <div class="bg-slate-50 rounded-xl p-2.5">
+                                <span class="block text-[10px] text-slate-400 uppercase font-semibold">Amount Paid</span>
+                                <span class="font-bold text-emerald-700">$@booking.AmountPaid.ToString("N2")</span>
+                            </div>
+                            <div class="bg-slate-50 rounded-xl p-2.5 col-span-2 sm:col-span-1">
+                                <span class="block text-[10px] text-slate-400 uppercase font-semibold">Payment</span>
+                                @if (booking.PaymentStatus == MelaFair.Core.Enums.PaymentStatus.Paid)
+                                {
+                                    <span class="inline-flex items-center gap-1 font-bold text-emerald-700">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Confirmed
+                                    </span>
+                                }
+                                else if (booking.PaymentStatus == MelaFair.Core.Enums.PaymentStatus.Refunded)
+                                {
+                                    <span class="inline-flex items-center gap-1 font-bold text-slate-500">
+                                        Refunded
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="font-bold text-amber-700">@booking.PaymentStatus</span>
+                                }
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrWhiteSpace(booking.Notes))
+                        {
+                            <div class="bg-slate-50 rounded-xl p-3 text-xs text-slate-600 border border-slate-100">
+                                <span class="font-bold text-slate-700 block text-[10px] uppercase">Business Notes:</span>
+                                <p class="italic mt-0.5">"@booking.Notes"</p>
+                            </div>
+                        }
+
+                        <div class="flex items-center justify-between pt-1 text-[11px] text-slate-500">
+                            <span>📅 Fair: @booking.StartDate.ToString("MMM dd") - @booking.EndDate.ToString("MMM dd, yyyy")</span>
+                            <span class="font-mono text-[10px]">Booked: @booking.BookingDate.ToString("yyyy-MM-dd")</span>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
-                        <div class="bg-slate-50 rounded-xl p-2.5">
-                            <span class="block text-[10px] text-slate-400 uppercase font-semibold">Category</span>
-                            <span class="font-bold text-slate-800">@booking.Category</span>
-                        </div>
-                        <div class="bg-slate-50 rounded-xl p-2.5">
-                            <span class="block text-[10px] text-slate-400 uppercase font-semibold">Amount Paid</span>
-                            <span class="font-bold text-emerald-700">$@booking.AmountPaid.ToString("N2")</span>
-                        </div>
-                        <div class="bg-slate-50 rounded-xl p-2.5 col-span-2 sm:col-span-1">
-                            <span class="block text-[10px] text-slate-400 uppercase font-semibold">Payment</span>
-                            <span class="inline-flex items-center gap-1 font-bold text-emerald-700">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> @booking.PaymentStatus
-                            </span>
-                        </div>
-                    </div>
+                    <!-- Bottom Action Buttons -->
+                    <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+                        <a asp-controller="Vendor" asp-action="StallReceipt" asp-route-id="@booking.BookingId" class="flex-1 py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs text-center transition flex items-center justify-center gap-1.5 shadow-sm">
+                            <i class="fas fa-print text-xs"></i>
+                            <span>Print Permit / Invoice</span>
+                        </a>
 
-                    <div class="flex items-center justify-between pt-2 border-t border-slate-100 text-[11px] text-slate-500">
-                        <span>📅 Fair Dates: @booking.StartDate.ToString("MMM dd") - @booking.EndDate.ToString("MMM dd, yyyy")</span>
-                        <span class="font-mono text-[10px]">Booked: @booking.BookingDate.ToString("yyyy-MM-dd")</span>
+                        @if (booking.PaymentStatus == MelaFair.Core.Enums.PaymentStatus.Paid && booking.StartDate > DateTime.Today)
+                        {
+                            <form asp-controller="Vendor" asp-action="CancelStall" method="post" onsubmit="return confirm('Are you sure you want to cancel Stall @booking.StallNumber? This will release the booth back to the marketplace.');">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="bookingId" value="@booking.BookingId" />
+                                <button type="submit" class="py-2.5 px-3 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs transition flex items-center gap-1" title="Cancel Booking">
+                                    <i class="fas fa-times-circle"></i>
+                                    <span>Cancel</span>
+                                </button>
+                            </form>
+                        }
                     </div>
                 </div>
             }

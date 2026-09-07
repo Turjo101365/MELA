@@ -58,4 +58,34 @@ public class MelaSystemTests
 
         Assert.Equal(75000, summary.TotalRevenue);
     }
+
+    [Fact]
+    public void VendorDashboardViewModel_CalculatesAverageStallRateCorrectly()
+    {
+        var vm = new VendorDashboardViewModel
+        {
+            TotalStallsLeased = 4,
+            TotalAmountInvested = 10000
+        };
+
+        Assert.Equal(2500, vm.AverageStallRate);
+    }
+
+    [Fact]
+    public void MyStallsViewModel_CalculatesTotalInvestedAndActiveCorrectly()
+    {
+        var vm = new MyStallsViewModel
+        {
+            Bookings = new List<StallBookingItemDto>
+            {
+                new() { AmountPaid = 2500, PaymentStatus = PaymentStatus.Paid, EndDate = DateTime.Today.AddDays(5) },
+                new() { AmountPaid = 1500, PaymentStatus = PaymentStatus.Paid, EndDate = DateTime.Today.AddDays(-2) },
+                new() { AmountPaid = 2000, PaymentStatus = PaymentStatus.Refunded, EndDate = DateTime.Today.AddDays(10) }
+            }
+        };
+
+        Assert.Equal(3, vm.TotalBookings);
+        Assert.Equal(4000, vm.TotalInvested);
+        Assert.Equal(1, vm.ActiveStallsCount);
+    }
 }
