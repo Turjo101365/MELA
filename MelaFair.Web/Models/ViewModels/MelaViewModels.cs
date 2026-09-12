@@ -187,6 +187,11 @@ public class TicketPurchaseViewModel
     [Range(1, 50, ErrorMessage = "Group ticket bookings can be between 1 and 50 tickets")]
     public int Quantity { get; set; } = 1;
 
+    [Required(ErrorMessage = "Please select a payment mode")]
+    public string PaymentMethod { get; set; } = "bKash";
+
+    public decimal TotalAmount { get; set; }
+
     public List<FairDayOptionDto> AvailableDays { get; set; } = new();
 }
 

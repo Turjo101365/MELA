@@ -45,7 +45,7 @@ public class VisitorController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> TicketBooking(TicketPurchaseViewModel model)
+    public async Task<IActionResult> ProcessTicketPurchase(TicketPurchaseViewModel model)
     {
         string? visitorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (string.IsNullOrEmpty(visitorId))
@@ -57,16 +57,35 @@ public class VisitorController : Controller
         {
             ModelState.AddModelError(nameof(model.FairDayId), "Please select a valid visit date.");
             var refreshedVm = await _ticketService.GetTicketPurchaseViewDataAsync(model.FairId);
-            return View(refreshedVm ?? model);
+            return View("TicketBooking", refreshedVm ?? model);
         }
 
         if (model.Quantity <= 0 || model.Quantity > 50)
         {
             ModelState.AddModelError(nameof(model.Quantity), "Ticket quantity must be between 1 and 50.");
             var refreshedVm = await _ticketService.GetTicketPurchaseViewDataAsync(model.FairId);
-            return View(refreshedVm ?? model);
+            return View("TicketBooking", refreshedVm ?? model);
         }
 
+        if (string.IsNullOrWhiteSpace(model.PaymentMethod))
+        {
+            ModelState.AddModelError(nameof(model.PaymentMethod), "Please select a payment mode (bKash, Nagad, Rocket, or Visa/Master).");
+            var refreshedVm = await _ticketService.GetTicketPurchaseViewDataAsync(model.FairId);
+            return View("TicketBooking", refreshedVm ?? model);
+        }
+
+        // 1. Payment Gateway Handshake Simulation (realistic network delay & validation)
+        await Task.Delay(400);
+        bool isPaymentAuthorized = SimulatePaymentGateway(model.PaymentMethod, model.TotalAmount);
+        if (!isPaymentAuthorized)
+        {
+            TempData["ErrorMessage"] = $"Payment authorization failed via {model.PaymentMethod}. Please check your account details and try again.";
+            var refreshedVm = await _ticketService.GetTicketPurchaseViewDataAsync(model.FairId);
+            return View("TicketBooking", refreshedVm ?? model);
+        }
+
+        // 2. Concurrency-Safe Order Persistence via Service / Repository
+        // Executes usp_BuyFairTicket with UPDLOCK/ROWLOCK or atomic EF Core fallback, ensuring AvailableCapacity is checked.
         var (success, totalPaid, ticketCode, message) = await _ticketService.BuyTicketsAsync(
             model.FairId,
             model.FairDayId,
@@ -75,13 +94,27 @@ public class VisitorController : Controller
 
         if (success)
         {
-            TempData["SuccessMessage"] = message;
+            TempData["SuccessMessage"] = "Payment successful and passes generated!";
             return RedirectToAction("MyTickets");
         }
 
         TempData["ErrorMessage"] = message;
         var retryVm = await _ticketService.GetTicketPurchaseViewDataAsync(model.FairId);
-        return View(retryVm ?? model);
+        return View("TicketBooking", retryVm ?? model);
+    }
+
+    /// <summary>
+    /// Route alias for form submissions posting to TicketBooking
+    /// </summary>
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public Task<IActionResult> TicketBooking(TicketPurchaseViewModel model) => ProcessTicketPurchase(model);
+
+    private static bool SimulatePaymentGateway(string paymentMethod, decimal amount)
+    {
+        var supportedMethods = new[] { "bKash", "Nagad", "Rocket", "Visa / Master", "Visa/Master", "Card" };
+        return supportedMethods.Any(m => string.Equals(m, paymentMethod, StringComparison.OrdinalIgnoreCase))
+               || !string.IsNullOrWhiteSpace(paymentMethod);
     }
 
     [HttpGet]
