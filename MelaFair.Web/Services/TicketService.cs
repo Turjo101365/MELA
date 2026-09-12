@@ -75,6 +75,11 @@ public class TicketService
             _logger.LogError(ex, "SQL error buying tickets for FairDay {FairDayId}.", fairDayId);
             return (false, 0, string.Empty, $"Database error: {ex.Message}");
         }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogWarning(ex, "Capacity or validation issue buying tickets for FairDay {FairDayId}: {Message}", fairDayId, ex.Message);
+            return (false, 0, string.Empty, ex.Message);
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Unexpected error buying tickets.");
