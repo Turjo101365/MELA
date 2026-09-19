@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using MelaFair.Core.Constants;
 using MelaFair.Core.Enums;
 using MelaFair.Web.Models.Entities;
@@ -20,6 +21,7 @@ public static class DbInitializer
         UserManager<ApplicationUser> userManager,
         IFairRepository fairRepository,
         IWebHostEnvironment env,
+        IConfiguration config,
         ILogger logger)
     {
         try
@@ -50,8 +52,21 @@ IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = 'FK_JobPostings_AspNe
                 }
             }
 
-            // 4. Seed Demo Users
-            var adminUser = await SeedUserAsync(userManager, "tanmoy.cse.20230104124@aust.edu", "Turjo124", "System Administrator", RoleConstants.Admin);
+            // 4. Seed Users
+            // 4a. Admin User (Configured via User Secrets / Environment Variables)
+            var adminEmail = config["Seed:AdminEmail"];
+            var adminPassword = config["Seed:AdminPassword"];
+
+            if (!string.IsNullOrWhiteSpace(adminEmail) && !string.IsNullOrWhiteSpace(adminPassword))
+            {
+                await SeedUserAsync(userManager, adminEmail, adminPassword, "System Administrator", RoleConstants.Admin);
+            }
+            else
+            {
+                logger.LogWarning("Admin seeding skipped: 'Seed:AdminEmail' and/or 'Seed:AdminPassword' configuration keys are not set.");
+            }
+
+            // 4b. Seed Demo Users for Vendor, Visitor, Employee
             var vendorUser = await SeedUserAsync(userManager, "vendor@mela.com", "Vendor@123456", "Karupanna Crafts Ltd", RoleConstants.Vendor);
             var visitorUser = await SeedUserAsync(userManager, "visitor@mela.com", "Visitor@123456", "Rahim Ahmed", RoleConstants.Visitor);
             var employeeUser = await SeedUserAsync(userManager, "employee@mela.com", "Employee@123456", "Tanvir Hasan", RoleConstants.Employee);
@@ -175,7 +190,7 @@ IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = 'FK_JobPostings_AspNe
         var existingUser = await userManager.FindByEmailAsync(email);
         if (existingUser != null)
         {
-            if (!await userManager.CheckPasswordAsync(existingUser, password))
+            if (!string.IsNullOrWhiteSpace(password) && !await userManager.CheckPasswordAsync(existingUser, password))
             {
                 var token = await userManager.GeneratePasswordResetTokenAsync(existingUser);
                 await userManager.ResetPasswordAsync(existingUser, token, password);

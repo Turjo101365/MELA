@@ -84,8 +84,9 @@ using (var scope = app.Services.CreateScope())
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
     var fairRepo = services.GetRequiredService<IFairRepository>();
     var env = services.GetRequiredService<IWebHostEnvironment>();
+    var config = services.GetRequiredService<IConfiguration>();
 
-    await DbInitializer.InitializeAsync(context, roleManager, userManager, fairRepo, env, logger);
+    await DbInitializer.InitializeAsync(context, roleManager, userManager, fairRepo, env, config, logger);
 }
 
 app.Run();

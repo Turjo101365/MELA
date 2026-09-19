@@ -20,7 +20,7 @@
     <div class="bg-white/90 backdrop-blur-md rounded-2xl border border-[#dce8d8] p-1.5 shadow-sm grid grid-cols-2 sm:grid-cols-4 gap-1.5" id="roleTabs">
         <!-- Tab 1: Admin -->
         <button type="button" 
-                onclick="selectRole('@RoleConstants.Admin', 'System Administrator', '👑', 'tanmoy.cse.20230104124@aust.edu')"
+                onclick="selectRole('@RoleConstants.Admin', 'System Administrator', '👑', 'admin@example.com')"
                 id="tab-@RoleConstants.Admin"
                 class="role-tab flex flex-col items-center justify-center p-3 rounded-xl border-2 transition text-center @(initialRole == RoleConstants.Admin ? "border-[#1c3c18] bg-[#e5efe2] text-[#1c3c18] font-bold shadow-sm" : "border-transparent text-slate-600 hover:text-[#1c3c18] hover:bg-[#f4f8f3]")">
             <span class="text-xl mb-1">👑</span>
@@ -152,11 +152,7 @@
                 </span>
                 <span class="text-[10px] text-[#557b4f] font-normal">Click a role to fill test credentials</span>
             </div>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
-                <button type="button" onclick="fillCredentials('@RoleConstants.Admin', 'tanmoy.cse.20230104124@aust.edu', 'Turjo124')" 
-                        class="px-2 py-1.5 rounded-lg bg-white border border-[#cce0c6] hover:bg-[#e5efe2] text-[#1c3c18] text-[10px] font-bold transition flex items-center justify-center gap-1">
-                    <span>👑</span> Admin
-                </button>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-1.5">
                 <button type="button" onclick="fillCredentials('@RoleConstants.Vendor', 'vendor@mela.com', 'Vendor@123456')" 
                         class="px-2 py-1.5 rounded-lg bg-white border border-[#cce0c6] hover:bg-[#e5efe2] text-[#1c3c18] text-[10px] font-bold transition flex items-center justify-center gap-1">
                     <span>🎪</span> Vendor
@@ -198,8 +194,7 @@
                 title: 'System Administrator',
                 icon: '👑',
                 tabClass: 'border-[#1c3c18] bg-[#e5efe2] text-[#1c3c18] font-bold shadow-sm',
-                email: 'tanmoy.cse.20230104124@aust.edu',
-                placeholder: 'tanmoy.cse.20230104124@aust.edu'
+                placeholder: 'admin@example.com'
             },
             '@RoleConstants.Vendor': {
                 title: 'Fair Vendor',

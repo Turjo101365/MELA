@@ -4,7 +4,12 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>mela-fair-web-8c4b2e88-66cf-448f-9a1d-a3df83742467</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Database\**\*.sql" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MelaFair.Core\MelaFair.Core.csproj" />
