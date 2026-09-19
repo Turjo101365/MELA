@@ -41,6 +41,8 @@ out/
 # ASP.NET Core
 wwwroot/lib/
 appsettings.Development.json
+appsettings.Production.json
+publish-test/
 
 # Test results
 TestResults/

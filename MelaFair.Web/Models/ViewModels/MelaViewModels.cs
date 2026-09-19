@@ -224,6 +224,34 @@ public class VisitorTicketItemDto
     public decimal PricePaid { get; set; }
     public int Quantity { get; set; }
     public TicketStatus Status { get; set; }
+    public bool IsUpcoming => VisitDate.Date >= DateTime.Today && Status == TicketStatus.Valid;
+    public bool IsPast => VisitDate.Date < DateTime.Today;
+}
+
+/// <summary>
+/// Comprehensive dashboard view model for cultural fair visitors / attendees
+/// </summary>
+public class VisitorDashboardViewModel
+{
+    public string VisitorName { get; set; } = string.Empty;
+    public string VisitorEmail { get; set; } = string.Empty;
+
+    // KPI Metrics
+    public int TotalPassesPurchased { get; set; }
+    public int TotalBookingsCount { get; set; }
+    public int ActiveUpcomingPassesCount { get; set; }
+    public decimal TotalAmountSpent { get; set; }
+    public int FairsVisitedCount { get; set; }
+    public decimal AveragePassCost => TotalPassesPurchased > 0 ? TotalAmountSpent / TotalPassesPurchased : 0;
+
+    // Nearest upcoming festival visit
+    public VisitorTicketItemDto? NextUpcomingPass { get; set; }
+    public int DaysUntilNextVisit { get; set; }
+
+    // Lists & Collections
+    public List<VisitorTicketItemDto> RecentTickets { get; set; } = new();
+    public List<VisitorTicketItemDto> UpcomingPasses { get; set; } = new();
+    public List<Fair> RecommendedFairs { get; set; } = new();
 }
 
 /// <summary>
