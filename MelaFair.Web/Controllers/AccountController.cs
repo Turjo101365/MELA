@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using MelaFair.Core.Constants;
 using MelaFair.Web.Models.Entities;
 using MelaFair.Web.Models.ViewModels;
+using MelaFair.Web.Services;
 
 namespace MelaFair.Web.Controllers;
 
@@ -16,17 +18,23 @@ public class AccountController : Controller
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly ILogger<AccountController> _logger;
+    private readonly IPasswordResetService _passwordResetService;
+    private readonly IConfiguration _configuration;
 
     public AccountController(
         SignInManager<ApplicationUser> signInManager,
         UserManager<ApplicationUser> userManager,
         RoleManager<IdentityRole> roleManager,
-        ILogger<AccountController> logger)
+        ILogger<AccountController> logger,
+        IPasswordResetService passwordResetService,
+        IConfiguration configuration)
     {
         _signInManager = signInManager;
         _userManager = userManager;
         _roleManager = roleManager;
         _logger = logger;
+        _passwordResetService = passwordResetService;
+        _configuration = configuration;
     }
 
     [HttpGet]
@@ -92,6 +100,64 @@ public class AccountController : Controller
 
         TempData["SuccessMessage"] = $"Welcome back, {user.FullName}! Logged in as {user.UserRole}.";
         return RedirectToLocal(returnUrl);
+    }
+
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult ForgotPassword() => View(new ForgotPasswordViewModel());
+
+    [HttpPost]
+    [AllowAnonymous]
+    [EnableRateLimiting("password-reset")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+    {
+        if (!ModelState.IsValid) return View(model);
+
+        var resetPath = Url.Action(nameof(ResetPassword), "Account")!;
+        var publicBaseUrl = _configuration["Email:PublicBaseUrl"]?.TrimEnd('/');
+        var resetUrlBase = string.IsNullOrWhiteSpace(publicBaseUrl)
+            ? $"{Request.Scheme}://{Request.Host}{resetPath}"
+            : $"{publicBaseUrl}{resetPath}";
+
+        await _passwordResetService.RequestAsync(model.Email, resetUrlBase);
+        ViewBag.RequestSubmitted = true;
+        return View(new ForgotPasswordViewModel());
+    }
+
+    [HttpGet]
+    [AllowAnonymous]
+    public async Task<IActionResult> ResetPassword(string? token)
+    {
+        if (string.IsNullOrWhiteSpace(token) || !await _passwordResetService.IsValidAsync(token))
+        {
+            ViewBag.InvalidToken = true;
+            return View(new ResetPasswordViewModel());
+        }
+
+        return View(new ResetPasswordViewModel { Token = token });
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    [EnableRateLimiting("password-reset")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+    {
+        if (!ModelState.IsValid) return View(model);
+
+        var result = await _passwordResetService.ResetAsync(model.Token, model.NewPassword);
+        if (!result.Succeeded)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+            return View(model);
+        }
+
+        await _signInManager.SignOutAsync();
+        return View("ResetPasswordSuccess");
     }
 
     [HttpGet]

@@ -60,3 +60,29 @@ public class RegisterViewModel
     [Display(Name = "Phone Number")]
     public string? PhoneNumber { get; set; }
 }
+
+public class ForgotPasswordViewModel
+{
+    [Required(ErrorMessage = "Email address is required")]
+    [EmailAddress(ErrorMessage = "Please enter a valid email address")]
+    [Display(Name = "Email Address")]
+    public string Email { get; set; } = string.Empty;
+}
+
+public class ResetPasswordViewModel
+{
+    [Required]
+    public string Token { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "A new password is required")]
+    [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters")]
+    [DataType(DataType.Password)]
+    [Display(Name = "New Password")]
+    public string NewPassword { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Please confirm your new password")]
+    [DataType(DataType.Password)]
+    [Display(Name = "Confirm New Password")]
+    [Compare("NewPassword", ErrorMessage = "Passwords do not match")]
+    public string ConfirmNewPassword { get; set; } = string.Empty;
+}

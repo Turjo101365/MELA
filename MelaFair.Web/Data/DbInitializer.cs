@@ -40,6 +40,25 @@ IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = 'FK_JobPostings_AspNe
     ALTER TABLE dbo.JobPostings ADD CONSTRAINT FK_JobPostings_AspNetUsers_VendorId
         FOREIGN KEY (VendorId) REFERENCES dbo.AspNetUsers(Id) ON DELETE NO ACTION;");
 
+            // Existing deployments are initialized with EnsureCreated. Add the reset table safely
+            // until they adopt EF migrations, without modifying any existing user records.
+            await context.Database.ExecuteSqlRawAsync(@"
+IF OBJECT_ID(N'dbo.PasswordResetRequests', N'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.PasswordResetRequests (
+        PasswordResetRequestId int IDENTITY(1,1) NOT NULL PRIMARY KEY,
+        UserId nvarchar(450) NOT NULL,
+        TokenHash nvarchar(64) NOT NULL,
+        ExpiresAt datetime2 NOT NULL,
+        UsedAt datetime2 NULL,
+        CreatedAt datetime2 NOT NULL,
+        CONSTRAINT FK_PasswordResetRequests_AspNetUsers_UserId
+            FOREIGN KEY (UserId) REFERENCES dbo.AspNetUsers(Id) ON DELETE CASCADE
+    );
+    CREATE UNIQUE INDEX IX_PasswordResetRequests_TokenHash ON dbo.PasswordResetRequests(TokenHash);
+    CREATE INDEX IX_PasswordResetRequests_UserId_ExpiresAt ON dbo.PasswordResetRequests(UserId, ExpiresAt);
+END;");
+
             // 2. Execute raw SQL scripts (SPs, Triggers, Views)
             await DeploySqlArtifactsAsync(context, env, logger);
 
