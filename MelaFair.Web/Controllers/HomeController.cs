@@ -27,6 +27,17 @@ public class HomeController : Controller
         return View(activeFairs);
     }
 
+    public async Task<IActionResult> About()
+    {
+        var summaries = await _fairService.GetFairSummariesAsync();
+
+        ViewBag.TotalFairsCount = summaries.Count();
+        ViewBag.TotalTicketsSoldCount = summaries.Sum(s => s.TotalTicketsSold);
+        ViewBag.TotalStallsBookedCount = summaries.Sum(s => s.BookedStalls);
+
+        return View();
+    }
+
     public IActionResult Contact()
     {
         return View();
