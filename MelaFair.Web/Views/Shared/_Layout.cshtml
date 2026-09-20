@@ -104,6 +104,10 @@
                            class="px-3 py-1.5 rounded-full transition-all duration-200 @(currentCtrl == "Employee" && currentAct == "JobListings" ? "bg-[#e5efe2] text-[#2e5d26] font-bold shadow-xs" : "hover:text-[#2e5d26] hover:bg-[#e5efe2]/60")">
                             Staff Jobs
                         </a>
+                        <a asp-controller="Home" asp-action="About" 
+                           class="px-3 py-1.5 rounded-full transition-all duration-200 @(currentCtrl == "Home" && currentAct == "About" ? "bg-[#e5efe2] text-[#2e5d26] font-bold shadow-xs" : "hover:text-[#2e5d26] hover:bg-[#e5efe2]/60")">
+                            About Us
+                        </a>
                         <a asp-controller="Home" asp-action="Contact" 
                            class="px-3 py-1.5 rounded-full transition-all duration-200 @(currentCtrl == "Home" && currentAct == "Contact" ? "bg-[#e5efe2] text-[#2e5d26] font-bold shadow-xs" : "hover:text-[#2e5d26] hover:bg-[#e5efe2]/60")">
                             Contact
@@ -210,6 +214,10 @@
                     <a asp-controller="Employee" asp-action="JobListings" class="px-4 py-2.5 rounded-2xl text-sm font-semibold flex items-center gap-3 transition-colors @(currentCtrl == "Employee" ? "bg-[#e5efe2] text-[#2e5d26] font-bold" : "text-slate-700 hover:bg-[#eef5ec] hover:text-[#2e5d26]")">
                         <i class="fa-solid fa-briefcase w-5 text-center text-emerald-600"></i>
                         <span>Staff Jobs</span>
+                    </a>
+                    <a asp-controller="Home" asp-action="About" class="px-4 py-2.5 rounded-2xl text-sm font-semibold flex items-center gap-3 transition-colors @(currentCtrl == "Home" && currentAct == "About" ? "bg-[#e5efe2] text-[#2e5d26] font-bold" : "text-slate-700 hover:bg-[#eef5ec] hover:text-[#2e5d26]")">
+                        <i class="fa-solid fa-circle-info w-5 text-center text-emerald-600"></i>
+                        <span>About Us</span>
                     </a>
                     <a asp-controller="Home" asp-action="Contact" class="px-4 py-2.5 rounded-2xl text-sm font-semibold flex items-center gap-3 transition-colors @(currentCtrl == "Home" && currentAct == "Contact" ? "bg-[#e5efe2] text-[#2e5d26] font-bold" : "text-slate-700 hover:bg-[#eef5ec] hover:text-[#2e5d26]")">
                         <i class="fa-solid fa-headset w-5 text-center text-emerald-600"></i>
@@ -420,6 +428,12 @@
                             <a asp-controller="Employee" asp-action="JobListings" class="text-[#a2c59f] hover:text-white hover:translate-x-1.5 transition-all duration-200 flex items-center gap-2 group/item">
                                 <i class="fa-solid fa-briefcase text-[10px] text-emerald-400/80 group-hover/item:text-emerald-300 group-hover/item:translate-x-1 transition-transform"></i>
                                 <span>Job Board</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="Home" asp-action="About" class="text-[#a2c59f] hover:text-white hover:translate-x-1.5 transition-all duration-200 flex items-center gap-2 group/item">
+                                <i class="fa-solid fa-circle-info text-[10px] text-emerald-400/80 group-hover/item:text-emerald-300 group-hover/item:translate-x-1 transition-transform"></i>
+                                <span>About MELA</span>
                             </a>
                         </li>
                         <li>
