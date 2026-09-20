@@ -68,7 +68,12 @@ public class PasswordResetService : IPasswordResetService
         var request = await FindValidRequestAsync(token).Include(r => r.User).SingleOrDefaultAsync();
         if (request is null) return IdentityResult.Failed(new IdentityError { Description = "This password reset link is invalid, expired, or has already been used." });
 
-        request.UsedAt = DateTime.UtcNow;
+        // Claim the request atomically so concurrent submissions cannot use the same link twice.
+        var claimed = await _context.PasswordResetRequests
+            .Where(r => r.PasswordResetRequestId == request.PasswordResetRequestId && r.UsedAt == null && r.ExpiresAt > DateTime.UtcNow)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(r => r.UsedAt, DateTime.UtcNow));
+        if (claimed != 1) return IdentityResult.Failed(new IdentityError { Description = "This password reset link is invalid, expired, or has already been used." });
+
         var identityToken = await _userManager.GeneratePasswordResetTokenAsync(request.User);
         var result = await _userManager.ResetPasswordAsync(request.User, identityToken, newPassword);
         if (!result.Succeeded) return result;
