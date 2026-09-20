@@ -22,6 +22,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Ticket> Tickets => Set<Ticket>();
     public DbSet<JobPosting> JobPostings => Set<JobPosting>();
     public DbSet<JobApplication> JobApplications => Set<JobApplication>();
+    public DbSet<PasswordResetRequest> PasswordResetRequests => Set<PasswordResetRequest>();
 
     // Keyless View Mappings
     public DbSet<FairSummaryViewModel> FairSummaries => Set<FairSummaryViewModel>();
@@ -161,6 +162,20 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
             // Prevent duplicate applications per employee per job
             entity.HasIndex(e => new { e.JobPostingId, e.EmployeeId }).IsUnique();
+        });
+
+        builder.Entity<PasswordResetRequest>(entity =>
+        {
+            entity.ToTable(tb => tb.UseSqlOutputClause(false));
+            entity.HasKey(e => e.PasswordResetRequestId);
+            entity.Property(e => e.UserId).HasMaxLength(450).IsRequired();
+            entity.Property(e => e.TokenHash).HasMaxLength(64).IsRequired();
+            entity.HasIndex(e => e.TokenHash).IsUnique();
+            entity.HasIndex(e => new { e.UserId, e.ExpiresAt });
+            entity.HasOne(e => e.User)
+                  .WithMany()
+                  .HasForeignKey(e => e.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
         });
 
         // Configure Keyless Database Views
