@@ -1,0 +1,73 @@
+name: "CI/CD - Build, test and deploy to MonsterASP.NET"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build_and_test:
+    runs-on: windows-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore MelaFair.Tests/MelaFair.Tests.csproj
+
+      - name: Build tests
+        run: dotnet build MelaFair.Tests/MelaFair.Tests.csproj --configuration Release --no-restore
+
+      - name: Run tests
+        run: dotnet test MelaFair.Tests/MelaFair.Tests.csproj --configuration Release --no-build
+
+  deploy:
+    runs-on: windows-latest
+    needs: build_and_test
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Generate appsettings.Production.json
+        shell: pwsh
+        env:
+          PROD_CONNECTION_STRING: ${{ secrets.PROD_CONNECTION_STRING }}
+          SEED_ADMIN_EMAIL: ${{ secrets.SEED_ADMIN_EMAIL }}
+          SEED_ADMIN_PASSWORD: ${{ secrets.SEED_ADMIN_PASSWORD }}
+        run: |
+          $config = @{
+            ConnectionStrings = @{
+              DefaultConnection = $env:PROD_CONNECTION_STRING
+            }
+            Seed = @{
+              AdminEmail = $env:SEED_ADMIN_EMAIL
+              AdminPassword = $env:SEED_ADMIN_PASSWORD
+            }
+          }
+          $config | ConvertTo-Json -Depth 4 | Set-Content -Path "MelaFair.Web/appsettings.Production.json" -Encoding utf8
+
+      - name: Publish Web Project
+        run: dotnet publish MelaFair.Web/MelaFair.Web.csproj --configuration Release --output ./publish
+
+      - name: Deploy to MonsterASP.NET
+        uses: rasmusbuchholdt/simply-web-deploy@2.1.0
+        with:
+          website-name: ${{ secrets.WEBSITE_NAME }}
+          server-computer-name: ${{ secrets.SERVER_COMPUTER_NAME }}
+          server-username: ${{ secrets.SERVER_USERNAME }}
+          server-password: ${{ secrets.SERVER_PASSWORD }}
