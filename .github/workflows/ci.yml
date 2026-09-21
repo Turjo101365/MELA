@@ -1,0 +1,123 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 'true'
+  DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+
+jobs:
+  build_and_test:
+    name: Build, Verify & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out repository source code
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      # Step 2: Setup .NET SDK matching TargetFramework net8.0
+      - name: Setup .NET 8.0 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      # Step 3: Cache NuGet packages to speed up builds
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/*.slnx') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      # Step 4: Regression Check - Prohibited files tracking
+      - name: Regression Check - Verify no bin/obj/.vs/*.user tracked
+        run: |
+          echo "Checking for prohibited build and IDE files in git tracking..."
+          TRACKED_FORBIDDEN=$(git ls-files bin obj .vs "*.user" "*/*.user" "**/bin/*" "**/obj/*" "**/.vs/*")
+          if [ -n "$TRACKED_FORBIDDEN" ]; then
+            echo "::error::Prohibited build or IDE files are tracked in git:"
+            echo "$TRACKED_FORBIDDEN"
+            exit 1
+          fi
+          echo "Git tracking check passed: No prohibited files tracked."
+
+      # Step 5: Regression Check - Presence of .gitattributes and .gitignore
+      - name: Regression Check - Verify .gitattributes and .gitignore exist
+        run: |
+          echo "Verifying presence of essential repository configuration files..."
+          if [ ! -f .gitattributes ]; then
+            echo "::error::.gitattributes file is missing from repository root."
+            exit 1
+          fi
+          if [ ! -f .gitignore ]; then
+            echo "::error::.gitignore file is missing from repository root."
+            exit 1
+          fi
+          echo "Configuration check passed: .gitattributes and .gitignore are present."
+
+      # Step 6: Regression Check - Verify icon CSS and webfonts in wwwroot
+      - name: Regression Check - Verify icon CSS and webfonts in wwwroot
+        run: |
+          echo "Verifying icon CSS and webfont assets in wwwroot..."
+          CSS_FILE="MelaFair.Web/wwwroot/lib/font-awesome/css/all.min.css"
+          FONTS_DIR="MelaFair.Web/wwwroot/lib/font-awesome/webfonts"
+
+          if [ ! -f "$CSS_FILE" ]; then
+            echo "::error::Icon CSS stylesheet not found at $CSS_FILE"
+            exit 1
+          fi
+
+          if [ ! -d "$FONTS_DIR" ]; then
+            echo "::error::Webfonts directory not found at $FONTS_DIR"
+            exit 1
+          fi
+
+          FONT_COUNT=$(find "$FONTS_DIR" -type f \( -name "*.woff2" -o -name "*.woff" -o -name "*.ttf" \) | wc -l | tr -d ' ')
+          if [ "$FONT_COUNT" -eq 0 ]; then
+            echo "::error::No font files (.woff2, .woff, .ttf) found in $FONTS_DIR"
+            exit 1
+          fi
+          echo "Icon assets check passed: Found $FONT_COUNT font files and CSS stylesheet."
+
+      # Step 7: Regression Check - Verify README.md exists and is not empty
+      - name: Regression Check - Verify README.md exists and is not empty
+        run: |
+          echo "Verifying README.md exists and is not empty..."
+          if [ ! -s README.md ]; then
+            echo "::error::README.md is missing or empty."
+            exit 1
+          fi
+          echo "README check passed: README.md exists and has content."
+
+      # Step 8: Restore NuGet dependencies
+      - name: Restore dependencies
+        run: dotnet restore
+
+      # Step 9: Build solution in Release configuration
+      - name: Build solution
+        run: dotnet build --configuration Release --no-restore
+
+      # Step 10: Run test suite
+      - name: Run unit tests
+        run: dotnet test --configuration Release --no-build --verbosity normal
+
+      # Step 11: Publish web project
+      - name: Publish web application
+        run: dotnet publish MelaFair.Web/MelaFair.Web.csproj --configuration Release --no-build --output ./publish
+
+      # Step 12: Upload publish output as a build artifact
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mela-web-publish
+          path: ./publish
+          if-no-files-found: error

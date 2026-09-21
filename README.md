@@ -1,5 +1,7 @@
 # MELA Fair and Event Management System
 
+[![CI](https://github.com/Turjo101365/MELA/actions/workflows/ci.yml/badge.svg)](https://github.com/Turjo101365/MELA/actions/workflows/ci.yml)
+
 An enterprise cultural fair, exhibition, and festival management platform built with ASP.NET Core MVC (C#) and Microsoft SQL Server. The system coordinates multi-day cultural events, handles high-concurrency stall leasing and visitor ticketing through database stored procedures with row-level locking, and provides a seasonal recruitment board for event staff.
 
 ## Features
@@ -27,6 +29,7 @@ An enterprise cultural fair, exhibition, and festival management platform built 
 MELA/
 ├── .github/
 │   └── workflows/
+│       ├── ci.yml
 │       └── deploy.yml
 ├── .gitattributes
 ├── .gitignore

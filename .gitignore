@@ -39,7 +39,8 @@ out/
 *.sln.docstates
 
 # ASP.NET Core
-wwwroot/lib/
+**/wwwroot/lib/*
+!**/wwwroot/lib/font-awesome/
 appsettings.Development.json
 appsettings.Production.json
 publish-test/
@@ -64,4 +65,6 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 *.lnk
+.local/
+Library/
 .env

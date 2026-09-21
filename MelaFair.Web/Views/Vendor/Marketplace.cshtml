@@ -38,7 +38,7 @@
                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Search Fairs</label>
                 <div class="relative">
                     <input type="text" name="search" value="@search" placeholder="e.g. Boishakhi, Folk, Tea..." class="w-full pl-9 pr-3.5 py-2.5 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
-                    <i class="fas fa-search absolute left-3 top-3 text-slate-400 text-xs"></i>
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
                 </div>
             </div>
 
@@ -47,7 +47,7 @@
                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Venue / City</label>
                 <div class="relative">
                     <input type="text" name="location" value="@location" placeholder="e.g. Dhaka, Chattogram..." class="w-full pl-9 pr-3.5 py-2.5 text-xs rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
-                    <i class="fas fa-map-marker-alt absolute left-3 top-3 text-slate-400 text-xs"></i>
+                    <i class="fa-solid fa-location-dot absolute left-3 top-3 text-slate-400 text-xs"></i>
                 </div>
             </div>
 
@@ -65,13 +65,13 @@
             <!-- Action Buttons -->
             <div class="flex items-end gap-2">
                 <button type="submit" class="flex-1 py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/20 transition flex items-center justify-center gap-1.5">
-                    <i class="fas fa-filter text-xs"></i>
+                    <i class="fa-solid fa-filter text-xs"></i>
                     <span>Apply Filters</span>
                 </button>
                 @if (!string.IsNullOrWhiteSpace(search) || !string.IsNullOrWhiteSpace(location) || sortOrder != "date_asc")
                 {
                     <a asp-controller="Vendor" asp-action="Marketplace" class="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs transition" title="Clear Filters">
-                        <i class="fas fa-undo"></i>
+                        <i class="fa-solid fa-rotate-left"></i>
                     </a>
                 }
             </div>
@@ -122,7 +122,7 @@
                         <div class="p-6 space-y-3">
                             <h2 class="text-lg font-bold text-slate-900 leading-snug">@fair.Title</h2>
                             <p class="text-xs text-slate-500 flex items-center gap-1.5">
-                                <i class="fas fa-map-marker-alt text-slate-400"></i>
+                                <i class="fa-solid fa-location-dot text-slate-400"></i>
                                 <span>@fair.Location</span>
                             </p>
                             <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed">

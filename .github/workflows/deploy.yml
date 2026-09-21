@@ -1,48 +1,58 @@
-name: "CI/CD - Build, test and deploy to MonsterASP.NET"
+name: Deploy
 
 on:
-  push:
+  # Triggers automatically after the CI workflow completes successfully on the main branch
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
     branches:
       - main
-  pull_request:
-    branches:
-      - main
+  # Allows manual triggering from the GitHub Actions tab if needed
   workflow_dispatch:
 
 jobs:
-  build_and_test:
-    runs-on: windows-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-
-      - name: Restore dependencies
-        run: dotnet restore MelaFair.Tests/MelaFair.Tests.csproj
-
-      - name: Build tests
-        run: dotnet build MelaFair.Tests/MelaFair.Tests.csproj --configuration Release --no-restore
-
-      - name: Run tests
-        run: dotnet test MelaFair.Tests/MelaFair.Tests.csproj --configuration Release --no-build
-
   deploy:
+    name: Deploy to MonsterASP.NET
     runs-on: windows-latest
-    needs: build_and_test
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    # Execute only on manual trigger or when CI concluded with success on main branch
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main') }}
+
     steps:
+      # Step 1: Check out repository
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Setup .NET
+      # Step 2: Setup .NET SDK
+      - name: Setup .NET 8.0 SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
+      # Step 3: Validate that required deployment secrets are configured in GitHub Secrets
+      - name: Validate GitHub Secrets
+        shell: pwsh
+        env:
+          WEBSITE_NAME: ${{ secrets.WEBSITE_NAME }}
+          SERVER_COMPUTER_NAME: ${{ secrets.SERVER_COMPUTER_NAME }}
+          SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}
+          SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
+          PROD_CONNECTION_STRING: ${{ secrets.PROD_CONNECTION_STRING }}
+        run: |
+          $missing = @()
+          if (-not $env:WEBSITE_NAME) { $missing += "WEBSITE_NAME" }
+          if (-not $env:SERVER_COMPUTER_NAME) { $missing += "SERVER_COMPUTER_NAME" }
+          if (-not $env:SERVER_USERNAME) { $missing += "SERVER_USERNAME" }
+          if (-not $env:SERVER_PASSWORD) { $missing += "SERVER_PASSWORD" }
+          if (-not $env:PROD_CONNECTION_STRING) { $missing += "PROD_CONNECTION_STRING" }
+
+          if ($missing.Count -gt 0) {
+            Write-Error "Missing required GitHub repository secrets: $($missing -join ', '). Please configure them under Repository Settings -> Secrets and variables -> Actions."
+            exit 1
+          }
+          Write-Host "All required deployment secrets are present."
+
+      # Step 4: Securely generate production appsettings with secrets (never stored in git)
       - name: Generate appsettings.Production.json
         shell: pwsh
         env:
@@ -60,10 +70,13 @@ jobs:
             }
           }
           $config | ConvertTo-Json -Depth 4 | Set-Content -Path "MelaFair.Web/appsettings.Production.json" -Encoding utf8
+          Write-Host "appsettings.Production.json created securely for publish."
 
+      # Step 5: Publish application for release
       - name: Publish Web Project
         run: dotnet publish MelaFair.Web/MelaFair.Web.csproj --configuration Release --output ./publish
 
+      # Step 6: Deploy to MonsterASP.NET using Web Deploy (IIS MSDeploy)
       - name: Deploy to MonsterASP.NET
         uses: rasmusbuchholdt/simply-web-deploy@2.1.0
         with:
