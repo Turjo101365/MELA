@@ -1,0 +1,25 @@
+# Auto-detect text files and perform LF normalization
+* text=auto
+*.cs text diff=csharp
+*.cshtml text diff=html
+*.sql text
+*.json text
+*.md text
+
+# Reclassify Razor view files as C# instead of HTML
+*.cshtml linguist-language=C#
+*.razor linguist-language=C#
+
+# Vendor third-party libraries (Bootstrap, jQuery, etc.)
+wwwroot/lib/** linguist-vendored
+**/wwwroot/lib/** linguist-vendored
+
+# Ignore source maps and package locks
+*.map linguist-generated
+package-lock.json linguist-generated
+package-lock.json linguist-vendored
+
+# Mark auto-generated EF Core migrations and model snapshots
+**/Migrations/*_*.cs linguist-generated
+**/Migrations/*.Designer.cs linguist-generated
+**/Migrations/*ModelSnapshot.cs linguist-generated
