@@ -68,3 +68,7 @@ $RECYCLE.BIN/
 .local/
 Library/
 .env
+
+# Project documentation & reports
+*.docx
+*.pdf
